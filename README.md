@@ -1,5 +1,12 @@
 # SuperClaude
 
+[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Test Coverage](https://img.shields.io/badge/coverage-57%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Tests](https://img.shields.io/badge/tests-57%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](docs/DOCKER.md)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 A pytest plugin framework with AI agent capabilities for project management, research, and code indexing.
 
 ## Features
@@ -105,6 +112,25 @@ make lint
 ```bash
 make doctor
 ```
+
+## Docker Support
+
+SuperClaude is fully containerized for easy deployment and development.
+
+### Quick Start with Docker
+
+```bash
+# Build and run verification
+docker-compose up superclaude
+
+# Run tests in Docker
+docker-compose --profile test up superclaude-test
+
+# Start development shell
+docker-compose --profile dev run superclaude-dev
+```
+
+See [Docker Documentation](docs/DOCKER.md) for complete deployment guide.
 
 ## Documentation
 

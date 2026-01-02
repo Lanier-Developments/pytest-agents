@@ -81,3 +81,80 @@ class TestSuperClaudeConfig:
             project_root=temp_project_dir, agent_pm_path=custom_pm_path
         )
         assert config.agent_pm_path == custom_pm_path
+
+    def test_feature_flags_default_values(self) -> None:
+        """Test that feature flags have correct default values."""
+        config = SuperClaudeConfig()
+        assert config.enable_agent_caching is True
+        assert config.enable_parallel_agents is False
+
+    def test_feature_flags_custom_values(self) -> None:
+        """Test that feature flags can be customized."""
+        config = SuperClaudeConfig(
+            enable_agent_caching=False, enable_parallel_agents=True
+        )
+        assert config.enable_agent_caching is False
+        assert config.enable_parallel_agents is True
+
+    def test_log_file_configuration(self, temp_project_dir: Path) -> None:
+        """Test log file path configuration."""
+        log_file = temp_project_dir / "superclaude.log"
+        config = SuperClaudeConfig(log_file=log_file)
+        assert config.log_file == log_file
+
+    def test_from_env_comprehensive(self, monkeypatch, temp_project_dir: Path) -> None:
+        """Test creating config from all environment variables."""
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "false")
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_RESEARCH_ENABLED", "false")
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_INDEX_ENABLED", "true")
+        monkeypatch.setenv("SUPERCLAUDE_PROJECT_ROOT", str(temp_project_dir))
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_TIMEOUT", "60")
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_RETRY_COUNT", "5")
+        monkeypatch.setenv("SUPERCLAUDE_LOG_LEVEL", "DEBUG")
+        monkeypatch.setenv("SUPERCLAUDE_ENABLE_AGENT_CACHING", "false")
+        monkeypatch.setenv("SUPERCLAUDE_ENABLE_PARALLEL_AGENTS", "true")
+
+        config = SuperClaudeConfig.from_env()
+        assert config.agent_pm_enabled is False
+        assert config.agent_research_enabled is False
+        assert config.agent_index_enabled is True
+        assert config.project_root == temp_project_dir
+        assert config.agent_timeout == 60
+        assert config.agent_retry_count == 5
+        assert config.log_level == "DEBUG"
+        assert config.enable_agent_caching is False
+        assert config.enable_parallel_agents is True
+
+    def test_to_dict_includes_all_fields(self) -> None:
+        """Test that to_dict includes all configuration fields."""
+        config = SuperClaudeConfig()
+        config_dict = config.to_dict()
+
+        expected_keys = {
+            "agent_pm_enabled",
+            "agent_research_enabled",
+            "agent_index_enabled",
+            "project_root",
+            "agent_pm_path",
+            "agent_research_path",
+            "agent_index_path",
+            "agent_timeout",
+            "agent_retry_count",
+            "log_level",
+            "log_file",
+            "enable_agent_caching",
+            "enable_parallel_agents",
+        }
+        assert set(config_dict.keys()) == expected_keys
+
+    def test_to_dict_paths_as_strings(self, temp_project_dir: Path) -> None:
+        """Test that to_dict converts Path objects to strings."""
+        log_file = temp_project_dir / "test.log"
+        config = SuperClaudeConfig(
+            project_root=temp_project_dir, log_file=log_file
+        )
+        config_dict = config.to_dict()
+
+        assert isinstance(config_dict["project_root"], str)
+        assert isinstance(config_dict["log_file"], str)
+        assert config_dict["log_file"] == str(log_file)

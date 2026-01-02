@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # SuperClaude main service
+  superclaude:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: superclaude
+    volumes:
+      # Mount source code for development
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      # Mount for agent state persistence (optional)
+      - agent-data:/app/.agent-memory
+    environment:
+      # SuperClaude configuration
+      - SUPERCLAUDE_PROJECT_ROOT=/app
+      - SUPERCLAUDE_AGENT_PM_ENABLED=true
+      - SUPERCLAUDE_AGENT_RESEARCH_ENABLED=true
+      - SUPERCLAUDE_AGENT_INDEX_ENABLED=true
+      - SUPERCLAUDE_AGENT_TIMEOUT=30
+      - SUPERCLAUDE_AGENT_RETRY_COUNT=3
+      - SUPERCLAUDE_LOG_LEVEL=INFO
+      - SUPERCLAUDE_ENABLE_AGENT_CACHING=true
+      - SUPERCLAUDE_ENABLE_PARALLEL_AGENTS=false
+    command: ["superclaude", "verify"]
+    networks:
+      - superclaude-network
+
+  # Test runner service
+  superclaude-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: superclaude-test
+    volumes:
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - test-coverage:/app/htmlcov
+    environment:
+      - SUPERCLAUDE_PROJECT_ROOT=/app
+      - PYTHONUNBUFFERED=1
+    command: ["uv", "run", "pytest", "-v", "--cov=src/superclaude", "--cov-report=html"]
+    networks:
+      - superclaude-network
+    profiles:
+      - test
+
+  # Development shell service
+  superclaude-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: superclaude-dev
+    volumes:
+      - .:/app
+      - agent-data:/app/.agent-memory
+    environment:
+      - SUPERCLAUDE_PROJECT_ROOT=/app
+      - SUPERCLAUDE_LOG_LEVEL=DEBUG
+    command: ["/bin/bash"]
+    stdin_open: true
+    tty: true
+    networks:
+      - superclaude-network
+    profiles:
+      - dev
+
+networks:
+  superclaude-network:
+    driver: bridge
+
+volumes:
+  agent-data:
+    driver: local
+  test-coverage:
+    driver: local

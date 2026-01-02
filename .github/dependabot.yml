@@ -1,0 +1,54 @@
+version: 2
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "python"
+    open-pull-requests-limit: 5
+
+  # PM Agent dependencies
+  - package-ecosystem: "npm"
+    directory: "/pm"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "typescript"
+      - "pm-agent"
+    open-pull-requests-limit: 5
+
+  # Research Agent dependencies
+  - package-ecosystem: "npm"
+    directory: "/research"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "typescript"
+      - "research-agent"
+    open-pull-requests-limit: 5
+
+  # Index Agent dependencies
+  - package-ecosystem: "npm"
+    directory: "/index"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "typescript"
+      - "index-agent"
+    open-pull-requests-limit: 5
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    open-pull-requests-limit: 5

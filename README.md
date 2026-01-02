@@ -1,5 +1,6 @@
 # SuperClaude
 
+[![CI](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Test Coverage](https://img.shields.io/badge/coverage-57%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
 [![Tests](https://img.shields.io/badge/tests-57%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)

@@ -38,7 +38,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir uv
 
 # Copy Python package files
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 COPY src/ ./src/
 
 # Install Python dependencies

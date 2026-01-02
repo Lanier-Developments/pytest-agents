@@ -38,9 +38,7 @@ def pytest_configure(config: Any) -> None:
         config._superclaude_bridge = None
 
 
-def pytest_collection_modifyitems(
-    session: Any, config: Any, items: List[Any]
-) -> None:
+def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -> None:
     """Hook called after test collection.
 
     Args:
@@ -89,7 +87,7 @@ def pytest_runtest_setup(item: Any) -> None:
                 item.config, "_superclaude_bridge", None
             )
             if bridge is None:
-                pytest.skip(f"Agent bridge not available")
+                pytest.skip("Agent bridge not available")
             elif not bridge.is_agent_available(agent_name):
                 pytest.skip(f"Agent '{agent_name}' not available")
 

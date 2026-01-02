@@ -61,9 +61,7 @@ class SuperClaudeConfig:
             agent_research_enabled=ini_config.get(
                 "superclaude_agent_research_enabled", True
             ),
-            agent_index_enabled=ini_config.get(
-                "superclaude_agent_index_enabled", True
-            ),
+            agent_index_enabled=ini_config.get("superclaude_agent_index_enabled", True),
             project_root=Path(config.rootpath),
             agent_timeout=int(ini_config.get("superclaude_agent_timeout", 30)),
             agent_retry_count=int(ini_config.get("superclaude_agent_retry_count", 3)),

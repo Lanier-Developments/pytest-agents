@@ -27,7 +27,9 @@ class AgentClient:
         self.agent_path = agent_path
         self.timeout = timeout
 
-    def invoke(self, action: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def invoke(
+        self, action: str, params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Invoke agent with specified action and parameters.
 
         Args:

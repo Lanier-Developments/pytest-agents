@@ -2,8 +2,6 @@
 
 from typing import Any
 
-import pytest
-
 from superclaude import __version__
 from superclaude.hooks import (
     pytest_collection_modifyitems,

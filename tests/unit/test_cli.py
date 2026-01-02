@@ -2,7 +2,6 @@
 
 import argparse
 import json
-from io import StringIO
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
 
@@ -142,9 +141,7 @@ class TestCLICommands:
         }
         mock_bridge_class.return_value = mock_bridge
 
-        args = argparse.Namespace(
-            name="pm", action="test", params=None, json=False
-        )
+        args = argparse.Namespace(name="pm", action="test", params=None, json=False)
         exit_code = cmd_agent(args)
 
         assert exit_code == 0
@@ -170,9 +167,7 @@ class TestCLICommands:
         }
         mock_bridge_class.return_value = mock_bridge
 
-        args = argparse.Namespace(
-            name="pm", action="test", params=None, json=True
-        )
+        args = argparse.Namespace(name="pm", action="test", params=None, json=True)
         exit_code = cmd_agent(args)
 
         assert exit_code == 0
@@ -205,9 +200,7 @@ class TestCLICommands:
         exit_code = cmd_agent(args)
 
         assert exit_code == 0
-        mock_bridge.invoke_agent.assert_called_with(
-            "pm", "test", {"key": "value"}
-        )
+        mock_bridge.invoke_agent.assert_called_with("pm", "test", {"key": "value"})
 
     @patch("superclaude.cli.AgentBridge")
     @patch("superclaude.cli.SuperClaudeConfig.from_env")
@@ -227,9 +220,7 @@ class TestCLICommands:
         }
         mock_bridge_class.return_value = mock_bridge
 
-        args = argparse.Namespace(
-            name="pm", action="test", params=None, json=False
-        )
+        args = argparse.Namespace(name="pm", action="test", params=None, json=False)
         exit_code = cmd_agent(args)
 
         assert exit_code == 1

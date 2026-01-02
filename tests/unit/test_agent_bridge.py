@@ -1,6 +1,5 @@
 """Unit tests for agent bridge functionality."""
 
-import json
 import subprocess
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
@@ -33,9 +32,7 @@ class TestAgentClient:
             client.invoke("test_action")
 
     @patch("subprocess.run")
-    def test_invoke_success(
-        self, mock_run: Mock, temp_project_dir: Path
-    ) -> None:
+    def test_invoke_success(self, mock_run: Mock, temp_project_dir: Path) -> None:
         """Test successful agent invocation."""
         agent_path = temp_project_dir / "agent.js"
         agent_path.touch()
@@ -78,9 +75,7 @@ class TestAgentClient:
         assert response["agent"] == "test"
 
     @patch("subprocess.run")
-    def test_invoke_timeout(
-        self, mock_run: Mock, temp_project_dir: Path
-    ) -> None:
+    def test_invoke_timeout(self, mock_run: Mock, temp_project_dir: Path) -> None:
         """Test invoke when agent times out."""
         agent_path = temp_project_dir / "agent.js"
         agent_path.touch()
@@ -95,9 +90,7 @@ class TestAgentClient:
         assert response["agent"] == "test"
 
     @patch("subprocess.run")
-    def test_invoke_invalid_json(
-        self, mock_run: Mock, temp_project_dir: Path
-    ) -> None:
+    def test_invoke_invalid_json(self, mock_run: Mock, temp_project_dir: Path) -> None:
         """Test invoke when agent returns invalid JSON."""
         agent_path = temp_project_dir / "agent.js"
         agent_path.touch()
@@ -202,9 +195,7 @@ class TestAgentBridge:
 
     def test_is_agent_available(self, temp_project_dir: Path) -> None:
         """Test checking if agent is available."""
-        config = SuperClaudeConfig(
-            project_root=temp_project_dir, agent_pm_enabled=True
-        )
+        config = SuperClaudeConfig(project_root=temp_project_dir, agent_pm_enabled=True)
 
         bridge = AgentBridge(config)
 
@@ -212,18 +203,14 @@ class TestAgentBridge:
         assert bridge.is_agent_available("nonexistent") is False
 
     @patch("subprocess.run")
-    def test_invoke_agent_success(
-        self, mock_run: Mock, temp_project_dir: Path
-    ) -> None:
+    def test_invoke_agent_success(self, mock_run: Mock, temp_project_dir: Path) -> None:
         """Test successful agent invocation through bridge."""
         # Create agent file
         pm_path = temp_project_dir / "pm" / "dist" / "index.js"
         pm_path.parent.mkdir(parents=True, exist_ok=True)
         pm_path.touch()
 
-        config = SuperClaudeConfig(
-            project_root=temp_project_dir, agent_pm_enabled=True
-        )
+        config = SuperClaudeConfig(project_root=temp_project_dir, agent_pm_enabled=True)
         bridge = AgentBridge(config)
 
         # Mock successful response
@@ -240,17 +227,13 @@ class TestAgentBridge:
 
     def test_invoke_agent_not_available(self, temp_project_dir: Path) -> None:
         """Test invoking unavailable agent raises error."""
-        config = SuperClaudeConfig(
-            project_root=temp_project_dir, agent_pm_enabled=True
-        )
+        config = SuperClaudeConfig(project_root=temp_project_dir, agent_pm_enabled=True)
         bridge = AgentBridge(config)
 
         with pytest.raises(ValueError, match="Agent 'nonexistent' not available"):
             bridge.invoke_agent("nonexistent", "test_action")
 
-    def test_initialization_with_disabled_agents(
-        self, temp_project_dir: Path
-    ) -> None:
+    def test_initialization_with_disabled_agents(self, temp_project_dir: Path) -> None:
         """Test initialization with all agents disabled."""
         config = SuperClaudeConfig(
             project_root=temp_project_dir,

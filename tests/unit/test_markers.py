@@ -2,7 +2,7 @@
 
 import pytest
 
-from superclaude.markers import MarkerRegistry, MARKERS
+from superclaude.markers import MARKERS, MarkerRegistry
 
 
 @pytest.mark.unit
@@ -35,10 +35,14 @@ class TestMarkerRegistry:
     def test_validate_markers_with_valid_markers(self) -> None:
         """Test validation with valid markers."""
         registry = MarkerRegistry()
-        mock_item = type("MockItem", (), {
-            "nodeid": "test_file.py::test_func",
-            "iter_markers": lambda self: [type("Marker", (), {"name": "unit"})()]
-        })()
+        mock_item = type(
+            "MockItem",
+            (),
+            {
+                "nodeid": "test_file.py::test_func",
+                "iter_markers": lambda self: [type("Marker", (), {"name": "unit"})()],
+            },
+        )()
         items = [mock_item]
         assert registry.validate_markers(items) is True
 

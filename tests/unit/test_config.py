@@ -1,6 +1,5 @@
 """Unit tests for configuration management."""
 
-import os
 from pathlib import Path
 
 import pytest
@@ -150,9 +149,7 @@ class TestSuperClaudeConfig:
     def test_to_dict_paths_as_strings(self, temp_project_dir: Path) -> None:
         """Test that to_dict converts Path objects to strings."""
         log_file = temp_project_dir / "test.log"
-        config = SuperClaudeConfig(
-            project_root=temp_project_dir, log_file=log_file
-        )
+        config = SuperClaudeConfig(project_root=temp_project_dir, log_file=log_file)
         config_dict = config.to_dict()
 
         assert isinstance(config_dict["project_root"], str)

@@ -3,7 +3,6 @@
 import argparse
 import json
 import sys
-from pathlib import Path
 
 from superclaude import __version__
 from superclaude.agent_bridge import AgentBridge
@@ -62,7 +61,8 @@ def cmd_verify(args: argparse.Namespace) -> int:
                 if result.get("status") == "success":
                     print(f"  ✓ {agent_name}")
                 else:
-                    print(f"  ✗ {agent_name}: {result.get('data', {}).get('error', 'Unknown error')}")
+                    error = result.get('data', {}).get('error', 'Unknown error')
+                    print(f"  ✗ {agent_name}: {error}")
                     all_ok = False
             except Exception as e:
                 print(f"  ✗ {agent_name}: {e}")
@@ -133,7 +133,9 @@ def main() -> int:
         description="SuperClaude - Pytest plugin framework with AI agents",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--version", action="version", version=f"SuperClaude v{__version__}")
+    parser.add_argument(
+        "--version", action="version", version=f"SuperClaude v{__version__}"
+    )
 
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
@@ -148,7 +150,9 @@ def main() -> int:
 
     # Agent command
     agent_parser = subparsers.add_parser("agent", help="Invoke an agent")
-    agent_parser.add_argument("name", choices=["pm", "research", "index"], help="Agent name")
+    agent_parser.add_argument(
+        "name", choices=["pm", "research", "index"], help="Agent name"
+    )
     agent_parser.add_argument("action", help="Action to perform")
     agent_parser.add_argument("--params", help="JSON parameters for the action")
     agent_parser.add_argument("--json", action="store_true", help="Output as JSON")

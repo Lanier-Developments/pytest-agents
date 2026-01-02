@@ -19,7 +19,13 @@ class TestPytestPluginIntegration:
         marker_names = [m.split(":")[0] for m in markers]
 
         # Check for our custom markers
-        expected_markers = ["unit", "integration", "agent_pm", "agent_research", "agent_index"]
+        expected_markers = [
+            "unit",
+            "integration",
+            "agent_pm",
+            "agent_research",
+            "agent_index",
+        ]
         for marker in expected_markers:
             assert marker in marker_names, f"Marker '{marker}' not registered"
 

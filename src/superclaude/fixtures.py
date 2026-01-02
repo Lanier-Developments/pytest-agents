@@ -53,7 +53,9 @@ def project_context(request: Any) -> Dict[str, Any]:
     """
     return {
         "root_path": Path(request.config.rootpath),
-        "test_path": Path(request.node.fspath) if hasattr(request.node, "fspath") else None,
+        "test_path": Path(request.node.fspath)
+        if hasattr(request.node, "fspath")
+        else None,
         "test_name": request.node.name,
         "markers": [marker.name for marker in request.node.iter_markers()],
     }

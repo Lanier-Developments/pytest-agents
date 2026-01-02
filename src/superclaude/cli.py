@@ -61,7 +61,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
                 if result.get("status") == "success":
                     print(f"  ✓ {agent_name}")
                 else:
-                    error = result.get('data', {}).get('error', 'Unknown error')
+                    error = result.get("data", {}).get("error", "Unknown error")
                     print(f"  ✗ {agent_name}: {error}")
                     all_ok = False
             except Exception as e:

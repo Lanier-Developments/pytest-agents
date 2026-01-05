@@ -153,6 +153,10 @@ SuperClaude implements enterprise-grade security practices:
 - Comprehensive test coverage (57%)
 - Automated security updates grouped by severity
 
+### Setup and Configuration
+
+**New to security scanning?** See [Security Setup Guide](docs/SECURITY_SETUP.md) for step-by-step instructions to activate CodeQL, Snyk, and Dependabot.
+
 ### Reporting Vulnerabilities
 
 Please report security vulnerabilities privately via [GitHub Security Advisories](https://github.com/kmcallorum/pytest-agents/security/advisories).
@@ -163,6 +167,7 @@ See [SECURITY.md](SECURITY.md) for complete security policy and disclosure guide
 
 See `docs/` directory for detailed documentation:
 
+- [Security Setup Guide](docs/SECURITY_SETUP.md) - Activate security scanning
 - [Developer Guide](docs/developer-guide/README.md)
 - [Architecture Overview](docs/developer-guide/architecture.md)
 - [Python API Reference](docs/api/python-api.md)

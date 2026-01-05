@@ -164,18 +164,21 @@ docker pull ghcr.io/kmcallorum/pytest-agents:0.2.0
 
 ### PyPI Publishing
 
-Required: `PYPI_API_TOKEN` secret
+SuperClaude uses **Trusted Publishing** (recommended by PyPI) instead of API tokens.
 
-**Setup:**
+**Quick Setup:**
 
 1. Create PyPI account at https://pypi.org
-2. Generate API token:
-   - Account Settings → API tokens → Add API token
-   - Scope: Entire account or specific project
-3. Add to GitHub secrets:
-   - Repository Settings → Secrets → Actions
-   - Name: `PYPI_API_TOKEN`
-   - Value: `pypi-...` (your token)
+2. Configure trusted publisher:
+   - Go to https://pypi.org/manage/account/publishing/
+   - Add pending publisher:
+     - Project: `superclaude`
+     - Owner: `kmcallorum`
+     - Repo: `pytest-agents`
+     - Workflow: `release.yml`
+3. Done! Next release will auto-publish to PyPI
+
+**Full Guide:** See [PyPI Setup Guide](PYPI_SETUP.md) for detailed step-by-step instructions.
 
 ### Docker Publishing
 

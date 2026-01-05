@@ -187,6 +187,7 @@ See [SECURITY.md](SECURITY.md) for complete security policy and disclosure guide
 See `docs/` directory for detailed documentation:
 
 - [Release Process](docs/RELEASE.md) - Automated releases and versioning
+- [PyPI Publishing Setup](docs/PYPI_SETUP.md) - Configure PyPI trusted publishing
 - [Security Setup Guide](docs/SECURITY_SETUP.md) - Activate security scanning
 - [Developer Guide](docs/developer-guide/README.md)
 - [Architecture Overview](docs/developer-guide/architecture.md)

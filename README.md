@@ -1,6 +1,8 @@
 # SuperClaude
 
 [![CI](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml)
+[![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Test Coverage](https://img.shields.io/badge/coverage-57%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
 [![Tests](https://img.shields.io/badge/tests-57%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
@@ -132,6 +134,30 @@ docker-compose --profile dev run superclaude-dev
 ```
 
 See [Docker Documentation](docs/DOCKER.md) for complete deployment guide.
+
+## Security
+
+SuperClaude implements enterprise-grade security practices:
+
+### Automated Security Scanning
+
+- **CodeQL Analysis**: Continuous security scanning for Python and TypeScript code
+- **Dependency Scanning**: Automated vulnerability detection via Dependabot and Snyk
+- **Container Scanning**: Docker image vulnerability assessment
+- **Code Quality**: Ruff linting with security-focused rules
+
+### Security Features
+
+- Multi-stage Docker builds with minimal attack surface
+- Dependency pinning for reproducible builds
+- Comprehensive test coverage (57%)
+- Automated security updates grouped by severity
+
+### Reporting Vulnerabilities
+
+Please report security vulnerabilities privately via [GitHub Security Advisories](https://github.com/kmcallorum/pytest-agents/security/advisories).
+
+See [SECURITY.md](SECURITY.md) for complete security policy and disclosure guidelines.
 
 ## Documentation
 

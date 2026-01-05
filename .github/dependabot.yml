@@ -9,6 +9,12 @@ updates:
       - "dependencies"
       - "python"
     open-pull-requests-limit: 5
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
 
   # PM Agent dependencies
   - package-ecosystem: "npm"
@@ -20,6 +26,12 @@ updates:
       - "typescript"
       - "pm-agent"
     open-pull-requests-limit: 5
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
 
   # Research Agent dependencies
   - package-ecosystem: "npm"
@@ -31,6 +43,12 @@ updates:
       - "typescript"
       - "research-agent"
     open-pull-requests-limit: 5
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
 
   # Index Agent dependencies
   - package-ecosystem: "npm"
@@ -42,6 +60,12 @@ updates:
       - "typescript"
       - "index-agent"
     open-pull-requests-limit: 5
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
@@ -52,3 +76,9 @@ updates:
       - "dependencies"
       - "github-actions"
     open-pull-requests-limit: 5
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security"

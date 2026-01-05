@@ -22,6 +22,10 @@ on:
           - minor
           - patch
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   check-version:
     name: Check Version Bump

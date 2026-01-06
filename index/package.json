@@ -17,7 +17,7 @@
   "author": "Kevin McAllorum",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^20.10.0"
+    "@types/node": "^25.0.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

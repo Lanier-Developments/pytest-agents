@@ -58,7 +58,7 @@ export class TaskParser {
         } else if (extensions.some((ext) => file.endsWith(ext))) {
           try {
             tasks.push(...this.parseFile(filePath));
-          } catch (error) {
+          } catch {
             // Skip files that can't be read
           }
         }

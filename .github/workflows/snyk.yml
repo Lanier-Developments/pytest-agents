@@ -68,21 +68,22 @@ jobs:
       working-directory: ./${{ matrix.agent }}
       run: npm ci
 
+    - name: Install Snyk CLI
+      run: npm install -g snyk
+
     - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/node@master
       continue-on-error: true
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        args: --severity-threshold=high --sarif-file-output=snyk.sarif
-        command: test
-        working-directory: ${{ matrix.agent }}
+      run: |
+        cd ${{ matrix.agent }}
+        snyk test --severity-threshold=high --sarif-file-output=../snyk-${{ matrix.agent }}.sarif || true
 
     - name: Upload Snyk results to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v3
       if: always()
       with:
-        sarif_file: snyk.sarif
+        sarif_file: snyk-${{ matrix.agent }}.sarif
 
   snyk-docker:
     name: Snyk Docker Security Scan

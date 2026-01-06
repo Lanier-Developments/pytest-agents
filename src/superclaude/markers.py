@@ -3,8 +3,6 @@
 import warnings
 from typing import Any, Dict, List
 
-import pytest
-
 # Define all custom markers
 MARKERS: Dict[str, str] = {
     "unit": "Unit tests",

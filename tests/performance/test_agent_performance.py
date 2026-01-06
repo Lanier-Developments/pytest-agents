@@ -1,7 +1,9 @@
 """Performance benchmark tests for SuperClaude agents."""
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from superclaude.agent_bridge import AgentBridge, AgentClient
 from superclaude.config import SuperClaudeConfig
 

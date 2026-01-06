@@ -44,8 +44,8 @@ jobs:
         args: --severity-threshold=high --sarif-file-output=snyk.sarif
 
     - name: Upload Snyk results to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
+      uses: github/codeql-action/upload-sarif@v4
+      if: always() && hashFiles('snyk.sarif') != ''
       with:
         sarif_file: snyk.sarif
 
@@ -80,8 +80,8 @@ jobs:
         snyk test --severity-threshold=high --sarif-file-output=../snyk-${{ matrix.agent }}.sarif || true
 
     - name: Upload Snyk results to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
+      uses: github/codeql-action/upload-sarif@v4
+      if: always() && hashFiles(format('snyk-{0}.sarif', matrix.agent)) != ''
       with:
         sarif_file: snyk-${{ matrix.agent }}.sarif
 
@@ -114,7 +114,7 @@ jobs:
         args: --severity-threshold=high --sarif-file-output=snyk.sarif
 
     - name: Upload Snyk results to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
+      uses: github/codeql-action/upload-sarif@v4
+      if: always() && hashFiles('snyk.sarif') != ''
       with:
         sarif_file: snyk.sarif

@@ -201,3 +201,4 @@ MIT
 ## Author
 
 Kevin McAllorum
+# Security scanning now enabled!

@@ -25,9 +25,7 @@ def agent_bridge(tmp_path: Path) -> AgentBridge:
 class TestAgentBridgePerformance:
     """Performance benchmarks for AgentBridge."""
 
-    def test_bridge_initialization_performance(
-        self, benchmark, tmp_path: Path
-    ) -> None:
+    def test_bridge_initialization_performance(self, benchmark, tmp_path: Path) -> None:
         """Benchmark AgentBridge initialization time."""
 
         def create_bridge():
@@ -49,9 +47,7 @@ class TestAgentBridgePerformance:
 class TestAgentClientPerformance:
     """Performance benchmarks for AgentClient."""
 
-    def test_client_initialization_performance(
-        self, benchmark, tmp_path: Path
-    ) -> None:
+    def test_client_initialization_performance(self, benchmark, tmp_path: Path) -> None:
         """Benchmark AgentClient initialization time."""
         agent_path = tmp_path / "test_agent.js"
         agent_path.write_text('console.log("test");')

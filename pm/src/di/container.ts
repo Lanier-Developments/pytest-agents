@@ -11,6 +11,7 @@ import { FsFileReader } from '../infrastructure/fs-file-reader';
 import { FsFileWriter } from '../infrastructure/fs-file-writer';
 import { ConsoleLogger } from '../infrastructure/console-logger';
 import { PathResolver } from '../infrastructure/path-resolver';
+import { PrometheusMetrics } from '../infrastructure/prometheus-metrics';
 
 // Capability implementations
 import { TaskTracker } from '../capabilities/task-tracking';
@@ -27,10 +28,11 @@ export { TOKENS };
  */
 export function setupContainer(): void {
   // Register infrastructure implementations
-  container.register(TOKENS.IFileReader, { useClass: FsFileReader });
-  container.register(TOKENS.IFileWriter, { useClass: FsFileWriter });
-  container.register(TOKENS.ILogger, { useClass: ConsoleLogger });
-  container.register(TOKENS.IPathResolver, { useClass: PathResolver });
+  container.registerSingleton(TOKENS.IFileReader, FsFileReader);
+  container.registerSingleton(TOKENS.IFileWriter, FsFileWriter);
+  container.registerSingleton(TOKENS.ILogger, ConsoleLogger);
+  container.registerSingleton(TOKENS.IPathResolver, PathResolver);
+  container.registerSingleton(TOKENS.IMetrics, PrometheusMetrics);
 
   // Register capability implementations
   container.register(TOKENS.ITaskParser, { useClass: TaskParser });

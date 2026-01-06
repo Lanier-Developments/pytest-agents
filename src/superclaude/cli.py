@@ -7,6 +7,8 @@ import sys
 from superclaude import __version__
 from superclaude.agent_bridge import AgentBridge
 from superclaude.config import SuperClaudeConfig
+from superclaude.di.container import ApplicationContainer
+from superclaude.metrics_server import start_metrics_server
 from superclaude.utils.logging import setup_logger
 
 logger = setup_logger(__name__)
@@ -123,6 +125,54 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     return cmd_verify(args)
 
 
+def cmd_metrics(args: argparse.Namespace) -> int:
+    """Start the metrics HTTP server.
+
+    Args:
+        args: Command arguments
+
+    Returns:
+        int: Exit code
+    """
+    config = SuperClaudeConfig.from_env()
+
+    # Override with CLI arguments
+    port = args.port if args.port else config.metrics_port
+    host = args.host if args.host else config.metrics_host
+
+    print(f"Starting SuperClaude metrics server")
+    print(f"Listening on http://{host}:{port}/metrics")
+    print("Press Ctrl+C to stop")
+
+    try:
+        # Setup DI container
+        container = ApplicationContainer()
+        container.wire(modules=["superclaude.cli"])
+
+        # Get instances from container
+        metrics = container.metrics()
+        bridge = container.agent_bridge()
+
+        # Start server (blocks until Ctrl+C)
+        start_metrics_server(
+            port=port,
+            host=host,
+            metrics=metrics,
+            agent_bridge=bridge,
+            block=True,
+        )
+
+        return 0
+
+    except KeyboardInterrupt:
+        print("\nShutting down...")
+        return 0
+    except Exception as e:
+        logger.exception("Error starting metrics server")
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+
 def main() -> int:
     """Main CLI entry point.
 
@@ -157,6 +207,15 @@ def main() -> int:
     agent_parser.add_argument("--params", help="JSON parameters for the action")
     agent_parser.add_argument("--json", action="store_true", help="Output as JSON")
 
+    # Metrics command
+    metrics_parser = subparsers.add_parser("metrics", help="Start metrics HTTP server")
+    metrics_parser.add_argument(
+        "--port", type=int, help="Port to listen on (default: 9090)"
+    )
+    metrics_parser.add_argument(
+        "--host", help="Host to bind to (default: 0.0.0.0)"
+    )
+
     args = parser.parse_args()
 
     if not args.command:
@@ -168,6 +227,7 @@ def main() -> int:
         "verify": cmd_verify,
         "doctor": cmd_doctor,
         "agent": cmd_agent,
+        "metrics": cmd_metrics,
     }
 
     return commands[args.command](args)

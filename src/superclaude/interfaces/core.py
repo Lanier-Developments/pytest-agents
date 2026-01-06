@@ -89,3 +89,50 @@ class IConfigFactory(Protocol):
             SuperClaudeConfig instance
         """
         ...
+
+
+class IMetrics(Protocol):
+    """Metrics collection abstraction."""
+
+    def increment_counter(
+        self, name: str, labels: Dict[str, str] | None = None
+    ) -> None:
+        """Increment a counter metric.
+
+        Args:
+            name: Metric name
+            labels: Optional labels for the metric
+        """
+        ...
+
+    def set_gauge(
+        self, name: str, value: float, labels: Dict[str, str] | None = None
+    ) -> None:
+        """Set a gauge metric value.
+
+        Args:
+            name: Metric name
+            value: Metric value
+            labels: Optional labels for the metric
+        """
+        ...
+
+    def observe_histogram(
+        self, name: str, value: float, labels: Dict[str, str] | None = None
+    ) -> None:
+        """Observe a value in a histogram.
+
+        Args:
+            name: Metric name
+            value: Value to observe
+            labels: Optional labels for the metric
+        """
+        ...
+
+    def get_metrics(self) -> str:
+        """Get metrics in Prometheus text format.
+
+        Returns:
+            Metrics in Prometheus exposition format
+        """
+        ...

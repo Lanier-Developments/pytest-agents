@@ -8,6 +8,7 @@ export const TOKENS = {
   IFileWriter: Symbol.for('IFileWriter'),
   ILogger: Symbol.for('ILogger'),
   IPathResolver: Symbol.for('IPathResolver'),
+  IMetrics: Symbol.for('IMetrics'),
 
   // Capabilities
   IDocumentAnalyzer: Symbol.for('IDocumentAnalyzer'),

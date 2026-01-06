@@ -57,3 +57,14 @@ export interface IStorage<T> {
   exists(key: string): Promise<boolean>;
   clear(key: string): Promise<void>;
 }
+
+/**
+ * Metrics collection abstraction
+ */
+export interface IMetrics {
+  incrementCounter(name: string, labels?: Record<string, string>): void;
+  setGauge(name: string, value: number, labels?: Record<string, string>): void;
+  observeHistogram(name: string, value: number, labels?: Record<string, string>): void;
+  startTimer(name: string, labels?: Record<string, string>): () => void;
+  getMetrics(): Promise<string>;
+}

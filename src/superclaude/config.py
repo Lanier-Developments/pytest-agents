@@ -33,6 +33,11 @@ class SuperClaudeConfig:
     enable_agent_caching: bool = True
     enable_parallel_agents: bool = False
 
+    # Metrics server configuration
+    metrics_enabled: bool = False
+    metrics_port: int = 9090
+    metrics_host: str = "0.0.0.0"
+
     def __post_init__(self) -> None:
         """Initialize paths after dataclass creation."""
         if self.agent_pm_path is None:
@@ -104,6 +109,10 @@ class SuperClaudeConfig:
                 "SUPERCLAUDE_ENABLE_PARALLEL_AGENTS", "false"
             ).lower()
             == "true",
+            metrics_enabled=os.getenv("SUPERCLAUDE_METRICS_ENABLED", "false").lower()
+            == "true",
+            metrics_port=int(os.getenv("SUPERCLAUDE_METRICS_PORT", "9090")),
+            metrics_host=os.getenv("SUPERCLAUDE_METRICS_HOST", "0.0.0.0"),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -130,4 +139,7 @@ class SuperClaudeConfig:
             "log_file": str(self.log_file) if self.log_file else None,
             "enable_agent_caching": self.enable_agent_caching,
             "enable_parallel_agents": self.enable_parallel_agents,
+            "metrics_enabled": self.metrics_enabled,
+            "metrics_port": self.metrics_port,
+            "metrics_host": self.metrics_host,
         }

@@ -11,7 +11,7 @@ import {
   ISummarizer,
   IKnowledgeGraphManager,
 } from './interfaces/capabilities';
-import { ILogger } from './interfaces/core';
+import { ILogger, IMetrics } from './interfaces/core';
 import { TOKENS } from './di/tokens';
 
 @injectable()
@@ -22,46 +22,79 @@ export class ResearchAgent {
     @inject(TOKENS.ISourceEvaluator) private sourceEvaluator: ISourceEvaluator,
     @inject(TOKENS.ISummarizer) private summarizer: ISummarizer,
     @inject(TOKENS.IKnowledgeGraphManager) private knowledgeGraph: IKnowledgeGraphManager,
-    @inject(TOKENS.ILogger) private logger: ILogger
+    @inject(TOKENS.ILogger) private logger: ILogger,
+    @inject(TOKENS.IMetrics) private metrics: IMetrics
   ) {}
 
   async processRequest(request: AgentRequest): Promise<AgentResponse> {
     this.logger.info(`Processing action: ${request.action}`);
 
+    // Track total requests
+    this.metrics.incrementCounter('research_agent_requests_total', { action: request.action });
+
+    // Start timer for request duration
+    const endTimer = this.metrics.startTimer('research_agent_request_duration_seconds', { action: request.action });
+
     try {
+      let response: AgentResponse;
+
       switch (request.action) {
         case 'ping':
-          return this.handlePing();
+          response = this.handlePing();
+          break;
 
         case 'analyze_document':
-          return this.handleAnalyzeDocument(request.params);
+          response = this.handleAnalyzeDocument(request.params);
+          break;
 
         case 'summarize':
-          return this.handleSummarize(request.params);
+          response = this.handleSummarize(request.params);
+          break;
 
         case 'add_source':
-          return this.handleAddSource(request.params);
+          response = this.handleAddSource(request.params);
+          break;
 
         case 'create_citation':
-          return this.handleCreateCitation(request.params);
+          response = this.handleCreateCitation(request.params);
+          break;
 
         case 'generate_bibliography':
-          return this.handleGenerateBibliography(request.params);
+          response = this.handleGenerateBibliography(request.params);
+          break;
 
         case 'add_knowledge':
-          return this.handleAddKnowledge(request.params);
+          response = this.handleAddKnowledge(request.params);
+          break;
 
         case 'find_related':
-          return this.handleFindRelated(request.params);
+          response = this.handleFindRelated(request.params);
+          break;
+
+        case 'get_metrics':
+          response = await this.handleGetMetrics();
+          break;
 
         default:
-          return {
+          response = {
             status: 'error',
             data: { error: `Unknown action: ${request.action}` },
           };
       }
+
+      // Track success/error
+      if (response.status === 'success') {
+        this.metrics.incrementCounter('research_agent_requests_success_total', { action: request.action });
+      } else {
+        this.metrics.incrementCounter('research_agent_requests_error_total', { action: request.action });
+      }
+
+      endTimer();
+      return response;
     } catch (error) {
       this.logger.error(`Error processing request: ${error}`);
+      this.metrics.incrementCounter('research_agent_requests_error_total', { action: request.action });
+      endTimer();
       return {
         status: 'error',
         data: { error: String(error) },
@@ -91,6 +124,10 @@ export class ResearchAgent {
     const sections = this.documentAnalyzer.extractSections(content);
     const readability = this.documentAnalyzer.analyzeReadability(content);
 
+    // Track metrics
+    this.metrics.incrementCounter('research_agent_documents_analyzed_total');
+    this.metrics.incrementCounter('research_agent_sections_extracted_total');
+
     return {
       status: 'success',
       data: {
@@ -115,6 +152,9 @@ export class ResearchAgent {
 
     const summary = this.summarizer.summarize(text, maxLength);
     const keyPhrases = this.summarizer.extractKeyPhrases(text);
+
+    // Track metrics
+    this.metrics.incrementCounter('research_agent_summaries_generated_total');
 
     return {
       status: 'success',
@@ -157,6 +197,9 @@ export class ResearchAgent {
 
     this.citationTracker.addSource(evaluatedSource);
 
+    // Track metrics
+    this.metrics.incrementCounter('research_agent_sources_added_total', { type });
+
     return {
       status: 'success',
       data: { source: { ...evaluatedSource, date: evaluatedSource.date.toISOString() } },
@@ -183,6 +226,9 @@ export class ResearchAgent {
         data: { error: 'Failed to create citation' },
       };
     }
+
+    // Track metrics
+    this.metrics.incrementCounter('research_agent_citations_created_total');
 
     return {
       status: 'success',
@@ -218,6 +264,9 @@ export class ResearchAgent {
 
     const node = this.knowledgeGraph.addNode(concept, description, sources);
 
+    // Track metrics
+    this.metrics.incrementCounter('research_agent_knowledge_nodes_total');
+
     return {
       status: 'success',
       data: { node },
@@ -242,6 +291,18 @@ export class ResearchAgent {
       data: {
         relatedNodes,
         count: relatedNodes.length,
+      },
+    };
+  }
+
+  private async handleGetMetrics(): Promise<AgentResponse> {
+    const metrics = await this.metrics.getMetrics();
+
+    return {
+      status: 'success',
+      data: {
+        metrics,
+        format: 'prometheus',
       },
     };
   }

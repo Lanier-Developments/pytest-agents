@@ -57,3 +57,33 @@ export interface IStorage<T> {
   exists(key: string): Promise<boolean>;
   clear(key: string): Promise<void>;
 }
+
+/**
+ * Metrics collection abstraction
+ */
+export interface IMetrics {
+  /**
+   * Increment a counter metric
+   */
+  incrementCounter(name: string, labels?: Record<string, string>): void;
+
+  /**
+   * Record a gauge value
+   */
+  setGauge(name: string, value: number, labels?: Record<string, string>): void;
+
+  /**
+   * Record a histogram observation (for durations)
+   */
+  observeHistogram(name: string, value: number, labels?: Record<string, string>): void;
+
+  /**
+   * Start a timer for duration tracking
+   */
+  startTimer(name: string, labels?: Record<string, string>): () => void;
+
+  /**
+   * Get all metrics in Prometheus format
+   */
+  getMetrics(): Promise<string>;
+}

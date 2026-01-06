@@ -4,7 +4,7 @@
 
 import { injectable, inject } from 'tsyringe';
 import { ICodeIndexer, ISymbolMapper, ISearchBuilder, IIndexStorage } from './interfaces/capabilities';
-import { ILogger } from './interfaces/core';
+import { ILogger, IMetrics } from './interfaces/core';
 import { TOKENS } from './di/tokens';
 import { CodeIndex, SearchQuery } from './types';
 
@@ -28,46 +28,79 @@ export class IndexAgent {
     @inject(TOKENS.ISymbolMapper) private mapper: ISymbolMapper,
     @inject(TOKENS.ISearchBuilder) private searchBuilder: ISearchBuilder,
     @inject(TOKENS.IIndexStorage) private storage: IIndexStorage,
-    @inject(TOKENS.ILogger) private logger: ILogger
+    @inject(TOKENS.ILogger) private logger: ILogger,
+    @inject(TOKENS.IMetrics) private metrics: IMetrics
   ) {}
 
   async processRequest(request: AgentRequest): Promise<AgentResponse> {
+    this.logger.info(`Processing request: ${request.action}`);
+
+    // Track total requests
+    this.metrics.incrementCounter('index_agent_requests_total', { action: request.action });
+
+    // Start timer for request duration
+    const endTimer = this.metrics.startTimer('index_agent_request_duration_seconds', { action: request.action });
+
     try {
-      this.logger.info(`Processing request: ${request.action}`);
+      let response: AgentResponse;
 
       switch (request.action) {
         case 'ping':
-          return this.handlePing();
+          response = this.handlePing();
+          break;
 
         case 'index_repository':
-          return await this.handleIndexRepository(request.params);
+          response = await this.handleIndexRepository(request.params);
+          break;
 
         case 'search':
-          return this.handleSearch(request.params);
+          response = this.handleSearch(request.params);
+          break;
 
         case 'get_symbol':
-          return this.handleGetSymbol(request.params);
+          response = this.handleGetSymbol(request.params);
+          break;
 
         case 'find_references':
-          return this.handleFindReferences(request.params);
+          response = this.handleFindReferences(request.params);
+          break;
 
         case 'get_stats':
-          return this.handleGetStats();
+          response = this.handleGetStats();
+          break;
 
         case 'save_index':
-          return await this.handleSaveIndex();
+          response = await this.handleSaveIndex();
+          break;
 
         case 'load_index':
-          return await this.handleLoadIndex();
+          response = await this.handleLoadIndex();
+          break;
+
+        case 'get_metrics':
+          response = await this.handleGetMetrics();
+          break;
 
         default:
-          return {
+          response = {
             status: 'error',
             error: `Unknown action: ${request.action}`,
           };
       }
+
+      // Track success/error
+      if (response.status === 'success') {
+        this.metrics.incrementCounter('index_agent_requests_success_total', { action: request.action });
+      } else {
+        this.metrics.incrementCounter('index_agent_requests_error_total', { action: request.action });
+      }
+
+      endTimer();
+      return response;
     } catch (error) {
       this.logger.error(`Error processing request: ${error}`);
+      this.metrics.incrementCounter('index_agent_requests_error_total', { action: request.action });
+      endTimer();
       return {
         status: 'error',
         error: error instanceof Error ? error.message : String(error),
@@ -107,6 +140,20 @@ export class IndexAgent {
       this.mapper.addSymbol(symbol);
     }
 
+    // Track metrics
+    this.metrics.incrementCounter('index_agent_repositories_indexed_total');
+    this.metrics.setGauge('index_agent_symbols_total', index.symbols.size);
+    this.metrics.setGauge('index_agent_files_indexed_total', index.files.size);
+
+    // Track symbols by type
+    const symbolsByType = new Map<string, number>();
+    for (const symbol of index.symbols.values()) {
+      symbolsByType.set(symbol.type, (symbolsByType.get(symbol.type) || 0) + 1);
+    }
+    symbolsByType.forEach((count, type) => {
+      this.metrics.setGauge('index_agent_symbols_by_type', count, { type });
+    });
+
     return {
       status: 'success',
       data: {
@@ -135,6 +182,9 @@ export class IndexAgent {
 
     const symbols = Array.from(this.currentIndex.symbols.values());
     const results = this.searchBuilder.search(symbols, query);
+
+    // Track metrics
+    this.metrics.incrementCounter('index_agent_searches_performed_total');
 
     return {
       status: 'success',
@@ -189,6 +239,9 @@ export class IndexAgent {
     }
 
     const references = this.mapper.getReferences(symbolId);
+
+    // Track metrics
+    this.metrics.incrementCounter('index_agent_references_found_total');
 
     return {
       status: 'success',
@@ -254,6 +307,18 @@ export class IndexAgent {
         symbolCount: index.symbols.size,
         fileCount: index.files.size,
         lastUpdated: index.lastUpdated.toISOString(),
+      },
+    };
+  }
+
+  private async handleGetMetrics(): Promise<AgentResponse> {
+    const metrics = await this.metrics.getMetrics();
+
+    return {
+      status: 'success',
+      data: {
+        metrics,
+        format: 'prometheus',
       },
     };
   }

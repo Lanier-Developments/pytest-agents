@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+import time
 from pathlib import Path
 from typing import Any, Dict, Optional, Protocol
 
@@ -150,7 +151,8 @@ class AgentBridge:
         self,
         config: Optional[SuperClaudeConfig] = None,
         client_factory: Optional[Any] = None,
-        process_runner: Optional[IProcessRunner] = None
+        process_runner: Optional[IProcessRunner] = None,
+        metrics: Optional[Any] = None
     ) -> None:
         """Initialize agent bridge.
 
@@ -158,11 +160,13 @@ class AgentBridge:
             config: Optional configuration, defaults to environment config
             client_factory: Optional factory for creating AgentClient instances
             process_runner: Optional process runner for direct client creation
+            metrics: Optional metrics collector
         """
         self.config = config or SuperClaudeConfig.from_env()
         self.agents: Dict[str, AgentClient] = {}
         self._client_factory = client_factory
         self._process_runner = process_runner
+        self._metrics = metrics
 
         # Initialize enabled agents
         if self.config.agent_pm_enabled and self.config.agent_pm_path:
@@ -180,6 +184,13 @@ class AgentBridge:
         if self.config.agent_index_enabled and self.config.agent_index_path:
             self.agents["index"] = self._create_client(
                 "index", self.config.agent_index_path, self.config.agent_timeout
+            )
+
+        # Track initialized agents count
+        if self._metrics:
+            self._metrics.set_gauge(
+                "superclaude_bridge_initialized_agents_total",
+                len(self.agents)
             )
 
         logger.info(f"Initialized bridge with agents: {list(self.agents.keys())}")
@@ -227,7 +238,53 @@ class AgentBridge:
                 f"Agent '{agent_name}' not available. Available agents: {available}"
             )
 
-        return self.agents[agent_name].invoke(action, params)
+        # Track total invocations
+        if self._metrics:
+            self._metrics.increment_counter(
+                "superclaude_agent_invocations_total",
+                {"agent": agent_name, "action": action}
+            )
+
+        # Track invocation duration
+        start_time = time.time()
+        try:
+            response = self.agents[agent_name].invoke(action, params)
+
+            # Track success/error
+            if self._metrics:
+                duration = time.time() - start_time
+                self._metrics.observe_histogram(
+                    "superclaude_agent_invocation_duration_seconds",
+                    duration,
+                    {"agent": agent_name, "action": action}
+                )
+
+                if response.get("status") == "success":
+                    self._metrics.increment_counter(
+                        "superclaude_agent_invocations_success_total",
+                        {"agent": agent_name, "action": action}
+                    )
+                else:
+                    self._metrics.increment_counter(
+                        "superclaude_agent_invocations_error_total",
+                        {"agent": agent_name, "action": action}
+                    )
+
+            return response
+        except Exception:
+            # Track error
+            if self._metrics:
+                duration = time.time() - start_time
+                self._metrics.observe_histogram(
+                    "superclaude_agent_invocation_duration_seconds",
+                    duration,
+                    {"agent": agent_name, "action": action}
+                )
+                self._metrics.increment_counter(
+                    "superclaude_agent_invocations_error_total",
+                    {"agent": agent_name, "action": action}
+                )
+            raise
 
     def get_available_agents(self) -> list[str]:
         """Get list of available agent names.

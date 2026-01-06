@@ -143,6 +143,9 @@ class TestSuperClaudeConfig:
             "log_file",
             "enable_agent_caching",
             "enable_parallel_agents",
+            "metrics_enabled",
+            "metrics_port",
+            "metrics_host",
         }
         assert set(config_dict.keys()) == expected_keys
 

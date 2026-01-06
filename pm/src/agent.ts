@@ -5,7 +5,7 @@
 import { injectable, inject } from 'tsyringe';
 import { AgentRequest, AgentResponse, ProjectState } from './types';
 import { ITaskTracker, IMilestonePlanner, IDependencyAnalyzer, IProjectStateManager } from './interfaces/capabilities';
-import { ILogger } from './interfaces/core';
+import { ILogger, IMetrics } from './interfaces/core';
 import { TOKENS } from './di/tokens';
 
 @injectable()
@@ -15,43 +15,75 @@ export class PMAgent {
     @inject(TOKENS.IMilestonePlanner) private milestonePlanner: IMilestonePlanner,
     @inject(TOKENS.IDependencyAnalyzer) private dependencyAnalyzer: IDependencyAnalyzer,
     @inject(TOKENS.IProjectStateManager) private stateManager: IProjectStateManager,
-    @inject(TOKENS.ILogger) private logger: ILogger
+    @inject(TOKENS.ILogger) private logger: ILogger,
+    @inject(TOKENS.IMetrics) private metrics: IMetrics
   ) {}
 
   async processRequest(request: AgentRequest): Promise<AgentResponse> {
     this.logger.info(`Processing action: ${request.action}`);
 
+    // Track total requests
+    this.metrics.incrementCounter('pm_agent_requests_total', { action: request.action });
+
+    // Start timer for request duration
+    const endTimer = this.metrics.startTimer('pm_agent_request_duration_seconds', { action: request.action });
+
     try {
+      let response: AgentResponse;
+
       switch (request.action) {
         case 'ping':
-          return this.handlePing();
+          response = this.handlePing();
+          break;
 
         case 'track_tasks':
-          return await this.handleTrackTasks(request.params);
+          response = await this.handleTrackTasks(request.params);
+          break;
 
         case 'get_tasks':
-          return this.handleGetTasks(request.params);
+          response = this.handleGetTasks(request.params);
+          break;
 
         case 'create_milestone':
-          return this.handleCreateMilestone(request.params);
+          response = this.handleCreateMilestone(request.params);
+          break;
 
         case 'analyze_dependencies':
-          return this.handleAnalyzeDependencies();
+          response = this.handleAnalyzeDependencies();
+          break;
 
         case 'save_state':
-          return await this.handleSaveState();
+          response = await this.handleSaveState();
+          break;
 
         case 'load_state':
-          return await this.handleLoadState();
+          response = await this.handleLoadState();
+          break;
+
+        case 'get_metrics':
+          response = await this.handleGetMetrics();
+          break;
 
         default:
-          return {
+          response = {
             status: 'error',
             data: { error: `Unknown action: ${request.action}` },
           };
       }
+
+      // Track success/error
+      if (response.status === 'success') {
+        this.metrics.incrementCounter('pm_agent_requests_success_total', { action: request.action });
+      } else {
+        this.metrics.incrementCounter('pm_agent_requests_error_total', { action: request.action });
+      }
+
+      endTimer();
+      return response;
     } catch (error) {
       this.logger.error(`Error processing request: ${error}`);
+      this.metrics.incrementCounter('pm_agent_requests_error_total', { action: request.action });
+      endTimer();
       return {
         status: 'error',
         data: { error: String(error) },
@@ -69,6 +101,18 @@ export class PMAgent {
   private async handleTrackTasks(params: Record<string, unknown>): Promise<AgentResponse> {
     const projectPath = params.path as string || process.cwd();
     const tasks = await this.taskTracker.trackTasks(projectPath);
+
+    // Track tasks found
+    this.metrics.setGauge('pm_agent_tasks_total', tasks.length);
+
+    // Track tasks by type
+    const tasksByType = new Map<string, number>();
+    tasks.forEach((task) => {
+      tasksByType.set(task.type, (tasksByType.get(task.type) || 0) + 1);
+    });
+    tasksByType.forEach((count, type) => {
+      this.metrics.setGauge('pm_agent_tasks_by_type', count, { type });
+    });
 
     return {
       status: 'success',
@@ -182,6 +226,18 @@ export class PMAgent {
         message: 'State loaded successfully',
         taskCount: state.tasks.size,
         milestoneCount: state.milestones.length,
+      },
+    };
+  }
+
+  private async handleGetMetrics(): Promise<AgentResponse> {
+    const metrics = await this.metrics.getMetrics();
+
+    return {
+      status: 'success',
+      data: {
+        metrics,
+        format: 'prometheus',
       },
     };
   }

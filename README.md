@@ -4,7 +4,6 @@
 [![Release](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/kmcallorum/pytest-agents)](https://github.com/kmcallorum/pytest-agents/releases)
 [![PyPI](https://img.shields.io/pypi/v/superclaude)](https://pypi.org/project/superclaude/)
-[![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml)
 [![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Test Coverage](https://img.shields.io/badge/coverage-56%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
@@ -179,8 +178,8 @@ SuperClaude implements enterprise-grade security practices:
 
 ### Automated Security Scanning
 
-- **CodeQL Analysis**: Continuous security scanning for Python and TypeScript code
-- **Dependency Scanning**: Automated vulnerability detection via Dependabot and Snyk
+- **Snyk Security**: Continuous vulnerability scanning for dependencies and code
+- **Dependency Scanning**: Automated vulnerability detection via Dependabot
 - **Container Scanning**: Docker image vulnerability assessment
 - **Code Quality**: Ruff linting with security-focused rules
 
@@ -193,7 +192,7 @@ SuperClaude implements enterprise-grade security practices:
 
 ### Setup and Configuration
 
-**New to security scanning?** See [Security Setup Guide](docs/SECURITY_SETUP.md) for step-by-step instructions to activate CodeQL, Snyk, and Dependabot.
+**New to security scanning?** See [Security Setup Guide](docs/SECURITY_SETUP.md) for step-by-step instructions to activate Snyk and Dependabot.
 
 ### Reporting Vulnerabilities
 

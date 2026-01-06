@@ -10,10 +10,16 @@ on:
     - cron: '0 0 * * 0'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   performance-tests:
     name: Run Performance Benchmarks
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
     - uses: actions/checkout@v6

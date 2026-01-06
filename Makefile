@@ -1,4 +1,4 @@
-.PHONY: help install test test-python test-ts lint format clean doctor verify install-plugin reinstall-plugin test-plugin
+.PHONY: help install test test-python test-ts lint format clean doctor verify install-plugin reinstall-plugin test-plugin benchmark benchmark-compare benchmark-save
 
 help:
 	@echo "SuperClaude Development Commands"
@@ -7,6 +7,9 @@ help:
 	@echo "make test            - Run all tests (Python + TypeScript)"
 	@echo "make test-python     - Run Python tests only"
 	@echo "make test-ts         - Run TypeScript tests only"
+	@echo "make benchmark       - Run performance benchmarks"
+	@echo "make benchmark-compare - Compare with saved benchmarks"
+	@echo "make benchmark-save  - Run and save benchmark results"
 	@echo "make lint            - Run linting (Ruff + ESLint)"
 	@echo "make format          - Format code (Ruff + Prettier)"
 	@echo "make doctor          - Check plugin health"
@@ -69,9 +72,37 @@ test-plugin:
 	@echo "Testing plugin detection..."
 	@uv run pytest --markers | grep -A 5 "superclaude markers"
 
+benchmark:
+	@echo "Running performance benchmarks..."
+	pytest tests/performance/ \
+		-m performance \
+		--benchmark-only \
+		--benchmark-columns=min,max,mean,stddev,median,ops \
+		--benchmark-sort=name
+
+benchmark-compare:
+	@echo "Running benchmarks and comparing with baseline..."
+	pytest tests/performance/ \
+		-m performance \
+		--benchmark-only \
+		--benchmark-compare=.benchmarks/baseline.json \
+		--benchmark-compare-fail=mean:10% \
+		--benchmark-columns=min,max,mean,stddev,median,ops
+
+benchmark-save:
+	@echo "Running benchmarks and saving as baseline..."
+	@mkdir -p .benchmarks
+	pytest tests/performance/ \
+		-m performance \
+		--benchmark-only \
+		--benchmark-save=baseline \
+		--benchmark-save-data \
+		--benchmark-columns=min,max,mean,stddev,median,ops
+	@echo "Baseline saved to .benchmarks/baseline.json"
+
 clean:
 	rm -rf build/ dist/ *.egg-info
-	rm -rf .pytest_cache .coverage htmlcov
+	rm -rf .pytest_cache .coverage htmlcov .benchmarks
 	rm -rf pm/dist pm/node_modules
 	rm -rf research/dist research/node_modules
 	rm -rf index/dist index/node_modules

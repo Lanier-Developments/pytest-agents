@@ -27,6 +27,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest-cov>=4.1.0",
+    "pytest-benchmark>=4.0.0",
     "ruff>=0.1.0",
     "mypy>=1.8.0",
 ]
@@ -56,6 +57,7 @@ addopts = [
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
+    "performance: Performance benchmark tests",
     "agent_pm: Tests requiring PM agent",
     "agent_research: Tests requiring Research agent",
     "agent_index: Tests requiring Index agent",

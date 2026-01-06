@@ -1,0 +1,222 @@
+name: Performance Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  performance-tests:
+    name: Run Performance Benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        uv pip install --system -e ".[dev]"
+
+    - name: Run performance benchmarks
+      run: |
+        pytest tests/performance/ \
+          -m performance \
+          --benchmark-only \
+          --benchmark-json=benchmark-results.json \
+          --benchmark-columns=min,max,mean,stddev,median,ops \
+          --benchmark-sort=name
+
+    - name: Store benchmark results
+      uses: actions/upload-artifact@v4
+      with:
+        name: benchmark-results
+        path: benchmark-results.json
+        retention-days: 90
+
+    - name: Download previous benchmark results
+      uses: actions/download-artifact@v4
+      continue-on-error: true
+      with:
+        name: benchmark-results-main
+        path: previous/
+
+    - name: Compare with previous results
+      if: hashFiles('previous/benchmark-results.json') != ''
+      run: |
+        echo "## Performance Comparison" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        python3 << 'EOF'
+        import json
+        import sys
+
+        # Load current results
+        with open('benchmark-results.json', 'r') as f:
+            current = json.load(f)
+
+        # Load previous results
+        try:
+            with open('previous/benchmark-results.json', 'r') as f:
+                previous = json.load(f)
+        except FileNotFoundError:
+            print("No previous results found for comparison")
+            sys.exit(0)
+
+        # Create lookup for previous benchmarks
+        prev_benchmarks = {b['name']: b for b in previous['benchmarks']}
+
+        print("| Benchmark | Current (μs) | Previous (μs) | Change | Status |")
+        print("|-----------|--------------|---------------|--------|--------|")
+
+        regression_found = False
+
+        for bench in current['benchmarks']:
+            name = bench['name']
+            current_mean = bench['stats']['mean'] * 1_000_000  # Convert to microseconds
+
+            if name in prev_benchmarks:
+                prev_mean = prev_benchmarks[name]['stats']['mean'] * 1_000_000
+                change_pct = ((current_mean - prev_mean) / prev_mean) * 100
+
+                # Determine status
+                if change_pct > 10:  # Regression threshold: 10% slower
+                    status = "⚠️ REGRESSION"
+                    regression_found = True
+                elif change_pct < -10:  # Improvement: 10% faster
+                    status = "✅ IMPROVED"
+                else:
+                    status = "✓ OK"
+
+                print(f"| {name} | {current_mean:.2f} | {prev_mean:.2f} | {change_pct:+.1f}% | {status} |")
+            else:
+                print(f"| {name} | {current_mean:.2f} | N/A | N/A | 🆕 NEW |")
+
+        if regression_found:
+            print("\n⚠️ **Performance regression detected!**")
+            sys.exit(1)
+        else:
+            print("\n✅ All benchmarks within acceptable thresholds")
+        EOF
+
+    - name: Comment PR with results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+
+          // Read benchmark results
+          const results = JSON.parse(fs.readFileSync('benchmark-results.json', 'utf8'));
+
+          // Format results as markdown table
+          let comment = '## Performance Benchmark Results\n\n';
+          comment += '| Benchmark | Mean (μs) | StdDev | Min | Max | Ops/sec |\n';
+          comment += '|-----------|-----------|--------|-----|--------|--------|\n';
+
+          for (const bench of results.benchmarks) {
+            const stats = bench.stats;
+            comment += `| ${bench.name} | `;
+            comment += `${(stats.mean * 1_000_000).toFixed(2)} | `;
+            comment += `${(stats.stddev * 1_000_000).toFixed(2)} | `;
+            comment += `${(stats.min * 1_000_000).toFixed(2)} | `;
+            comment += `${(stats.max * 1_000_000).toFixed(2)} | `;
+            comment += `${(1 / stats.mean).toFixed(0)} |\n`;
+          }
+
+          comment += '\n*Benchmark run on Python 3.11 (ubuntu-latest)*';
+
+          // Post comment
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+    - name: Save results for next comparison
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-artifact@v4
+      with:
+        name: benchmark-results-main
+        path: benchmark-results.json
+        retention-days: 90
+
+  performance-report:
+    name: Generate Performance Report
+    runs-on: ubuntu-latest
+    needs: performance-tests
+    if: always()
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download benchmark results
+      uses: actions/download-artifact@v4
+      with:
+        name: benchmark-results
+        path: results/
+
+    - name: Generate performance report
+      run: |
+        python3 << 'EOF'
+        import json
+        from datetime import datetime
+
+        with open('results/benchmark-results.json', 'r') as f:
+            results = json.load(f)
+
+        print(f"# Performance Report - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print()
+        print("## Summary")
+        print()
+        print(f"- **Total Benchmarks**: {len(results['benchmarks'])}")
+        print(f"- **Python Version**: {results['machine_info']['python_version']}")
+        print(f"- **Platform**: {results['machine_info']['platform']}")
+        print(f"- **CPU**: {results['machine_info']['processor']}")
+        print()
+        print("## Detailed Results")
+        print()
+        print("| Benchmark | Mean | StdDev | Min | Max | Rounds |")
+        print("|-----------|------|--------|-----|-----|--------|")
+
+        for bench in sorted(results['benchmarks'], key=lambda x: x['stats']['mean']):
+            stats = bench['stats']
+            print(f"| {bench['name']} | "
+                  f"{stats['mean']:.6f}s | "
+                  f"{stats['stddev']:.6f}s | "
+                  f"{stats['min']:.6f}s | "
+                  f"{stats['max']:.6f}s | "
+                  f"{stats['rounds']} |")
+
+        print()
+        print("## Performance Insights")
+        print()
+
+        # Find fastest and slowest
+        fastest = min(results['benchmarks'], key=lambda x: x['stats']['mean'])
+        slowest = max(results['benchmarks'], key=lambda x: x['stats']['mean'])
+
+        print(f"- **Fastest**: `{fastest['name']}` ({fastest['stats']['mean']:.6f}s)")
+        print(f"- **Slowest**: `{slowest['name']}` ({slowest['stats']['mean']:.6f}s)")
+
+        # Calculate total time
+        total_time = sum(b['stats']['mean'] for b in results['benchmarks'])
+        print(f"- **Total Time**: {total_time:.6f}s")
+        EOF

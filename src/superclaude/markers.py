@@ -1,5 +1,6 @@
 """Custom pytest marker definitions and management."""
 
+import warnings
 from typing import Any, Dict, List
 
 import pytest
@@ -8,6 +9,7 @@ import pytest
 MARKERS: Dict[str, str] = {
     "unit": "Unit tests",
     "integration": "Integration tests",
+    "performance": "Performance benchmark tests",
     "agent_pm": "Tests requiring PM agent",
     "agent_research": "Tests requiring Research agent",
     "agent_index": "Tests requiring Index agent",
@@ -46,8 +48,10 @@ class MarkerRegistry:
                 if marker.name not in self.markers and not marker.name.startswith(
                     "pytest"
                 ):
-                    pytest.warns(
-                        UserWarning, f"Unknown marker: {marker.name} on {item.nodeid}"
+                    warnings.warn(
+                        f"Unknown marker: {marker.name} on {item.nodeid}",
+                        UserWarning,
+                        stacklevel=2,
                     )
         return True
 

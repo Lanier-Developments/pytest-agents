@@ -7,8 +7,9 @@
 [![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml)
 [![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Test Coverage](https://img.shields.io/badge/coverage-57%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
-[![Tests](https://img.shields.io/badge/tests-57%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Test Coverage](https://img.shields.io/badge/coverage-56%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Tests](https://img.shields.io/badge/tests-163%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Metrics](https://img.shields.io/badge/metrics-prometheus-blue.svg)](docs/METRICS.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](docs/DOCKER.md)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -21,6 +22,8 @@ A pytest plugin framework with AI agent capabilities for project management, res
 - **PM Agent**: TypeScript-based project management agent for task tracking and planning
 - **Research Agent**: AI-powered research and documentation analysis
 - **Index Agent**: Code indexing and intelligent search capabilities
+- **Prometheus Metrics**: Comprehensive observability with metrics collection and HTTP endpoint
+- **Dependency Injection**: Full DI implementation across Python and TypeScript components
 - **Skills System**: Extensible runtime skills for specialized tasks
 
 ## Quick Start
@@ -117,6 +120,22 @@ result = bridge.invoke_agent('pm', 'track_tasks', {'path': './src'})
 superclaude agent pm --action track_tasks --path ./src
 ```
 
+### Metrics and Observability
+
+```bash
+# Start Prometheus metrics server
+superclaude metrics
+
+# Custom port
+superclaude metrics --port 8080
+
+# Configure via environment
+export SUPERCLAUDE_METRICS_ENABLED=true
+export SUPERCLAUDE_METRICS_PORT=9090
+```
+
+View metrics at `http://localhost:9090/metrics`. See [Metrics Documentation](docs/METRICS.md) for Prometheus and Grafana integration.
+
 ## Development
 
 ### Code Quality
@@ -169,7 +188,7 @@ SuperClaude implements enterprise-grade security practices:
 
 - Multi-stage Docker builds with minimal attack surface
 - Dependency pinning for reproducible builds
-- Comprehensive test coverage (57%)
+- Comprehensive test coverage (56%, 163 tests)
 - Automated security updates grouped by severity
 
 ### Setup and Configuration
@@ -186,13 +205,15 @@ See [SECURITY.md](SECURITY.md) for complete security policy and disclosure guide
 
 See `docs/` directory for detailed documentation:
 
+- [Metrics Guide](docs/METRICS.md) - Prometheus metrics and observability
 - [Release Process](docs/RELEASE.md) - Automated releases and versioning
 - [PyPI Publishing Setup](docs/PYPI_SETUP.md) - Configure PyPI trusted publishing
 - [Security Setup Guide](docs/SECURITY_SETUP.md) - Activate security scanning
-- [Developer Guide](docs/developer-guide/README.md)
-- [Architecture Overview](docs/developer-guide/architecture.md)
-- [Python API Reference](docs/api/python-api.md)
-- [TypeScript API Reference](docs/api/typescript-api.md)
+- [Docker Guide](docs/DOCKER.md) - Container deployment and development
+- [Developer Guide](docs/developer-guide/README.md) - Development workflow
+- [Architecture Overview](docs/developer-guide/architecture.md) - System design
+- [Python API Reference](docs/api/python-api.md) - Python API documentation
+- [TypeScript API Reference](docs/api/typescript-api.md) - TypeScript API documentation
 
 ## License
 

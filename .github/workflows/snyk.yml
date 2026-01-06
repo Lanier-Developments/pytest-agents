@@ -9,6 +9,10 @@ on:
     # Run daily at 02:00 UTC
     - cron: '0 2 * * *'
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   snyk-python:
     name: Snyk Python Security Scan
@@ -37,7 +41,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high --file=pyproject.toml
+        args: --severity-threshold=high --file=pyproject.toml --sarif-file-output=snyk.sarif
 
     - name: Upload Snyk results to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v3
@@ -70,7 +74,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high
+        args: --severity-threshold=high --sarif-file-output=snyk.sarif
         command: test
         working-directory: ${{ matrix.agent }}
 
@@ -106,7 +110,7 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: superclaude:test
-        args: --severity-threshold=high
+        args: --severity-threshold=high --sarif-file-output=snyk.sarif
 
     - name: Upload Snyk results to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v3

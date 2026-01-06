@@ -1,7 +1,6 @@
 {
   "name": "@superclaude/index-agent",
   "version": "0.1.0",
-  "type": "module",
   "description": "Code Indexing AI Agent for SuperClaude",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

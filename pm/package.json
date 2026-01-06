@@ -1,7 +1,6 @@
 {
   "name": "@superclaude/pm-agent",
   "version": "0.1.0",
-  "type": "module",
   "description": "Project Management AI Agent for SuperClaude",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

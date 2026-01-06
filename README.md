@@ -206,6 +206,7 @@ See [SECURITY.md](SECURITY.md) for complete security policy and disclosure guide
 See `docs/` directory for detailed documentation:
 
 - [Metrics Guide](docs/METRICS.md) - Prometheus metrics and observability
+- [Performance Benchmarks](docs/BENCHMARKS.md) - Performance baselines and optimization
 - [Release Process](docs/RELEASE.md) - Automated releases and versioning
 - [PyPI Publishing Setup](docs/PYPI_SETUP.md) - Configure PyPI trusted publishing
 - [Security Setup Guide](docs/SECURITY_SETUP.md) - Activate security scanning

@@ -2,6 +2,9 @@
  * Tests for task tracking functionality
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { TaskTracker } from '../src/capabilities/task-tracking';
 import { Task } from '../src/types';
 
@@ -9,7 +12,9 @@ describe('TaskTracker', () => {
   let tracker: TaskTracker;
 
   beforeEach(() => {
-    tracker = new TaskTracker();
+    resetContainer();
+    setupContainer();
+    tracker = container.resolve(TaskTracker);
   });
 
   describe('addTask', () => {

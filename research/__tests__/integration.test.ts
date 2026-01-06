@@ -2,12 +2,20 @@
  * Integration tests for Research Agent
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { ResearchAgent } from '../src/agent';
 
 describe('Research Agent Integration Tests', () => {
+  beforeEach(() => {
+    resetContainer();
+    setupContainer();
+  });
+
   describe('Full workflow', () => {
     it('should handle complete research workflow', async () => {
-      const agent = new ResearchAgent();
+      const agent = container.resolve(ResearchAgent);
 
       // Add a source
       const sourceResponse = await agent.processRequest({
@@ -47,7 +55,7 @@ describe('Research Agent Integration Tests', () => {
     });
 
     it('should handle knowledge graph workflow', async () => {
-      const agent = new ResearchAgent();
+      const agent = container.resolve(ResearchAgent);
 
       // Add knowledge
       const knowledgeResponse = await agent.processRequest({

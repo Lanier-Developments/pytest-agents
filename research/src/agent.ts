@@ -2,31 +2,31 @@
  * Research Agent - Core agent implementation
  */
 
+import { injectable, inject } from 'tsyringe';
 import { AgentRequest, AgentResponse } from './types';
-import { DocumentAnalyzer } from './capabilities/document-analysis';
-import { CitationTracker } from './capabilities/citation-tracker';
-import { SourceEvaluator } from './tools/source-evaluator';
-import { Summarizer } from './tools/summarizer';
-import { KnowledgeGraphManager } from './memory/knowledge-graph';
-import { logger } from './utils/logger';
+import {
+  IDocumentAnalyzer,
+  ICitationTracker,
+  ISourceEvaluator,
+  ISummarizer,
+  IKnowledgeGraphManager,
+} from './interfaces/capabilities';
+import { ILogger } from './interfaces/core';
+import { TOKENS } from './di/tokens';
 
+@injectable()
 export class ResearchAgent {
-  private documentAnalyzer: DocumentAnalyzer;
-  private citationTracker: CitationTracker;
-  private sourceEvaluator: SourceEvaluator;
-  private summarizer: Summarizer;
-  private knowledgeGraph: KnowledgeGraphManager;
-
-  constructor() {
-    this.documentAnalyzer = new DocumentAnalyzer();
-    this.citationTracker = new CitationTracker();
-    this.sourceEvaluator = new SourceEvaluator();
-    this.summarizer = new Summarizer();
-    this.knowledgeGraph = new KnowledgeGraphManager();
-  }
+  constructor(
+    @inject(TOKENS.IDocumentAnalyzer) private documentAnalyzer: IDocumentAnalyzer,
+    @inject(TOKENS.ICitationTracker) private citationTracker: ICitationTracker,
+    @inject(TOKENS.ISourceEvaluator) private sourceEvaluator: ISourceEvaluator,
+    @inject(TOKENS.ISummarizer) private summarizer: ISummarizer,
+    @inject(TOKENS.IKnowledgeGraphManager) private knowledgeGraph: IKnowledgeGraphManager,
+    @inject(TOKENS.ILogger) private logger: ILogger
+  ) {}
 
   async processRequest(request: AgentRequest): Promise<AgentResponse> {
-    logger.info(`Processing action: ${request.action}`);
+    this.logger.info(`Processing action: ${request.action}`);
 
     try {
       switch (request.action) {
@@ -61,7 +61,7 @@ export class ResearchAgent {
           };
       }
     } catch (error) {
-      logger.error(`Error processing request: ${error}`);
+      this.logger.error(`Error processing request: ${error}`);
       return {
         status: 'error',
         data: { error: String(error) },

@@ -2,13 +2,16 @@
  * Milestone planning capability
  */
 
+import { injectable, inject } from 'tsyringe';
 import { Milestone, Task } from '../types';
-import { logger } from '../utils/logger';
+import { ILogger } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class MilestonePlanner {
   private milestones: Milestone[];
 
-  constructor() {
+  constructor(@inject(TOKENS.ILogger) private logger: ILogger) {
     this.milestones = [];
   }
 
@@ -28,7 +31,7 @@ export class MilestonePlanner {
     };
 
     this.milestones.push(milestone);
-    logger.info(`Created milestone: ${name}`);
+    this.logger.info(`Created milestone: ${name}`);
     return milestone;
   }
 
@@ -44,7 +47,7 @@ export class MilestonePlanner {
     const milestone = this.getMilestone(id);
     if (milestone) {
       Object.assign(milestone, updates);
-      logger.info(`Updated milestone: ${id}`);
+      this.logger.info(`Updated milestone: ${id}`);
       return milestone;
     }
     return undefined;
@@ -54,7 +57,7 @@ export class MilestonePlanner {
     const milestone = this.getMilestone(id);
     if (milestone) {
       milestone.completed = true;
-      logger.info(`Completed milestone: ${milestone.name}`);
+      this.logger.info(`Completed milestone: ${milestone.name}`);
       return true;
     }
     return false;
@@ -98,7 +101,7 @@ export class MilestonePlanner {
       }
     }
 
-    logger.info(`Suggested ${suggestions.length} milestones`);
+    this.logger.info(`Suggested ${suggestions.length} milestones`);
     return suggestions;
   }
 }

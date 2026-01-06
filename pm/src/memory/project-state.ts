@@ -2,16 +2,23 @@
  * Project state persistence
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import { injectable, inject } from 'tsyringe';
 import { ProjectState, Task, Milestone } from '../types';
-import { logger } from '../utils/logger';
+import { IFileReader, IFileWriter, ILogger, IPathResolver } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class ProjectStateManager {
   private stateFile: string;
 
-  constructor(projectPath: string) {
-    this.stateFile = path.join(projectPath, '.pm-agent-state.json');
+  constructor(
+    @inject(TOKENS.IFileReader) private fileReader: IFileReader,
+    @inject(TOKENS.IFileWriter) private fileWriter: IFileWriter,
+    @inject(TOKENS.IPathResolver) private pathResolver: IPathResolver,
+    @inject(TOKENS.ILogger) private logger: ILogger,
+    projectPath: string
+  ) {
+    this.stateFile = this.pathResolver.join(projectPath, '.pm-agent-state.json');
   }
 
   async save(state: ProjectState): Promise<void> {
@@ -25,18 +32,18 @@ export class ProjectStateManager {
       lastUpdated: state.lastUpdated.toISOString(),
     };
 
-    fs.writeFileSync(this.stateFile, JSON.stringify(serialized, null, 2), 'utf-8');
-    logger.info(`Saved project state to ${this.stateFile}`);
+    this.fileWriter.writeFileSync(this.stateFile, JSON.stringify(serialized, null, 2), 'utf-8');
+    this.logger.info(`Saved project state to ${this.stateFile}`);
   }
 
   async load(): Promise<ProjectState | null> {
-    if (!fs.existsSync(this.stateFile)) {
-      logger.info('No saved state found');
+    if (!this.fileReader.existsSync(this.stateFile)) {
+      this.logger.info('No saved state found');
       return null;
     }
 
     try {
-      const content = fs.readFileSync(this.stateFile, 'utf-8');
+      const content = this.fileReader.readFileSync(this.stateFile, 'utf-8');
       const data = JSON.parse(content);
 
       const state: ProjectState = {
@@ -58,18 +65,18 @@ export class ProjectStateManager {
         lastUpdated: new Date(data.lastUpdated),
       };
 
-      logger.info(`Loaded project state from ${this.stateFile}`);
+      this.logger.info(`Loaded project state from ${this.stateFile}`);
       return state;
     } catch (error) {
-      logger.error(`Error loading state: ${error}`);
+      this.logger.error(`Error loading state: ${error}`);
       return null;
     }
   }
 
   async clear(): Promise<void> {
-    if (fs.existsSync(this.stateFile)) {
-      fs.unlinkSync(this.stateFile);
-      logger.info('Cleared project state');
+    if (this.fileReader.existsSync(this.stateFile)) {
+      this.fileWriter.unlinkSync(this.stateFile);
+      this.logger.info('Cleared project state');
     }
   }
 }

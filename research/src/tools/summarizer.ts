@@ -2,6 +2,9 @@
  * Text summarization utility
  */
 
+import { injectable } from 'tsyringe';
+
+@injectable()
 export class Summarizer {
   summarize(text: string, maxLength: number = 200): string {
     if (!text || text.length === 0) {

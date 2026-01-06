@@ -2,12 +2,11 @@
  * Index Agent - Main agent implementation
  */
 
-import { CodeIndexer } from './capabilities/code-indexer';
-import { SymbolMapper } from './capabilities/symbol-mapper';
-import { SearchBuilder } from './tools/search-builder';
-import { IndexStorage } from './memory/index-storage';
+import { injectable, inject } from 'tsyringe';
+import { ICodeIndexer, ISymbolMapper, ISearchBuilder, IIndexStorage } from './interfaces/capabilities';
+import { ILogger } from './interfaces/core';
+import { TOKENS } from './di/tokens';
 import { CodeIndex, SearchQuery } from './types';
-import { logger } from './utils/logger';
 
 export interface AgentRequest {
   action: string;
@@ -20,23 +19,21 @@ export interface AgentResponse {
   error?: string;
 }
 
+@injectable()
 export class IndexAgent {
-  private indexer: CodeIndexer;
-  private mapper: SymbolMapper;
-  private searchBuilder: SearchBuilder;
-  private storage: IndexStorage;
   private currentIndex: CodeIndex | null = null;
 
-  constructor(projectPath: string = process.cwd()) {
-    this.indexer = new CodeIndexer();
-    this.mapper = new SymbolMapper();
-    this.searchBuilder = new SearchBuilder();
-    this.storage = new IndexStorage(projectPath);
-  }
+  constructor(
+    @inject(TOKENS.ICodeIndexer) private indexer: ICodeIndexer,
+    @inject(TOKENS.ISymbolMapper) private mapper: ISymbolMapper,
+    @inject(TOKENS.ISearchBuilder) private searchBuilder: ISearchBuilder,
+    @inject(TOKENS.IIndexStorage) private storage: IIndexStorage,
+    @inject(TOKENS.ILogger) private logger: ILogger
+  ) {}
 
   async processRequest(request: AgentRequest): Promise<AgentResponse> {
     try {
-      logger.info(`Processing request: ${request.action}`);
+      this.logger.info(`Processing request: ${request.action}`);
 
       switch (request.action) {
         case 'ping':
@@ -70,7 +67,7 @@ export class IndexAgent {
           };
       }
     } catch (error) {
-      logger.error(`Error processing request: ${error}`);
+      this.logger.error(`Error processing request: ${error}`);
       return {
         status: 'error',
         error: error instanceof Error ? error.message : String(error),
@@ -99,7 +96,7 @@ export class IndexAgent {
 
   private async handleIndexRepository(params?: Record<string, any>): Promise<AgentResponse> {
     const rootPath = params?.rootPath || process.cwd();
-    logger.info(`Indexing repository: ${rootPath}`);
+    this.logger.info(`Indexing repository: ${rootPath}`);
 
     const index = await this.indexer.indexRepository(rootPath);
     this.currentIndex = index;

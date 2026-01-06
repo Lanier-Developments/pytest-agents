@@ -2,10 +2,12 @@
  * Task parser - extracts TODOs, FIXMEs, etc. from code
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import { injectable, inject } from 'tsyringe';
 import { Task } from '../types';
+import { IFileReader, IPathResolver } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class TaskParser {
   private readonly patterns = {
     todo: /\/\/\s*TODO:?\s*(.+)/gi,
@@ -14,9 +16,14 @@ export class TaskParser {
     note: /\/\/\s*NOTE:?\s*(.+)/gi,
   };
 
+  constructor(
+    @inject(TOKENS.IFileReader) private fileReader: IFileReader,
+    @inject(TOKENS.IPathResolver) private pathResolver: IPathResolver
+  ) {}
+
   parseFile(filePath: string): Task[] {
     const tasks: Task[] = [];
-    const content = fs.readFileSync(filePath, 'utf-8');
+    const content = this.fileReader.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
@@ -45,11 +52,11 @@ export class TaskParser {
     const tasks: Task[] = [];
 
     const walk = (dir: string): void => {
-      const files = fs.readdirSync(dir);
+      const files = this.fileReader.readdirSync(dir);
 
       for (const file of files) {
-        const filePath = path.join(dir, file);
-        const stat = fs.statSync(filePath);
+        const filePath = this.pathResolver.join(dir, file);
+        const stat = this.fileReader.statSync(filePath);
 
         if (stat.isDirectory()) {
           if (!file.startsWith('.') && file !== 'node_modules' && file !== 'dist') {

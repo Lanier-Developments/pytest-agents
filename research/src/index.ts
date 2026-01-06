@@ -6,13 +6,20 @@
  * This agent can be invoked from command line or via stdio
  */
 
+import 'reflect-metadata';
 import * as readline from 'readline';
+import { container } from 'tsyringe';
+import { setupContainer } from './di/container';
 import { ResearchAgent } from './agent';
 import { AgentRequest } from './types';
 import { logger } from './utils/logger';
 
 async function main(): Promise<void> {
-  const agent = new ResearchAgent();
+  // Setup DI container
+  setupContainer();
+
+  // Resolve agent from container
+  const agent = container.resolve(ResearchAgent);
 
   // Read request from stdin
   const rl = readline.createInterface({

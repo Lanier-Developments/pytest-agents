@@ -2,6 +2,9 @@
  * Integration tests for Index Agent
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { IndexAgent } from '../src/agent';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -81,7 +84,9 @@ export { AuthService } from './auth';
   });
 
   beforeEach(() => {
-    agent = new IndexAgent(testProjectPath);
+    resetContainer();
+    setupContainer();
+    agent = container.resolve(IndexAgent);
   });
 
   describe('Full workflow', () => {
@@ -129,7 +134,7 @@ export { AuthService } from './auth';
       expect(saveResponse.status).toBe('success');
 
       // Step 6: Load index in new agent instance
-      const newAgent = new IndexAgent(testProjectPath);
+      const newAgent = container.resolve(IndexAgent);
       const loadResponse = await newAgent.processRequest({ action: 'load_index' });
 
       expect(loadResponse.status).toBe('success');
@@ -216,7 +221,7 @@ export { AuthService } from './auth';
       const newTestPath = path.join(__dirname, 'no-index-project');
       fs.mkdirSync(newTestPath, { recursive: true });
 
-      const newAgent = new IndexAgent(newTestPath);
+      const newAgent = container.resolve(IndexAgent);
       const loadResponse = await newAgent.processRequest({ action: 'load_index' });
 
       expect(loadResponse.status).toBe('error');

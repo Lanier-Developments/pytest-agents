@@ -2,28 +2,24 @@
  * PM Agent - Core agent implementation
  */
 
+import { injectable, inject } from 'tsyringe';
 import { AgentRequest, AgentResponse, ProjectState } from './types';
-import { TaskTracker } from './capabilities/task-tracking';
-import { MilestonePlanner } from './capabilities/milestone-planning';
-import { DependencyAnalyzer } from './capabilities/dependency-analysis';
-import { ProjectStateManager } from './memory/project-state';
-import { logger } from './utils/logger';
+import { ITaskTracker, IMilestonePlanner, IDependencyAnalyzer, IProjectStateManager } from './interfaces/capabilities';
+import { ILogger } from './interfaces/core';
+import { TOKENS } from './di/tokens';
 
+@injectable()
 export class PMAgent {
-  private taskTracker: TaskTracker;
-  private milestonePlanner: MilestonePlanner;
-  private dependencyAnalyzer: DependencyAnalyzer;
-  private stateManager: ProjectStateManager | null;
-
-  constructor(projectPath?: string) {
-    this.taskTracker = new TaskTracker();
-    this.milestonePlanner = new MilestonePlanner();
-    this.dependencyAnalyzer = new DependencyAnalyzer();
-    this.stateManager = projectPath ? new ProjectStateManager(projectPath) : null;
-  }
+  constructor(
+    @inject(TOKENS.ITaskTracker) private taskTracker: ITaskTracker,
+    @inject(TOKENS.IMilestonePlanner) private milestonePlanner: IMilestonePlanner,
+    @inject(TOKENS.IDependencyAnalyzer) private dependencyAnalyzer: IDependencyAnalyzer,
+    @inject(TOKENS.IProjectStateManager) private stateManager: IProjectStateManager,
+    @inject(TOKENS.ILogger) private logger: ILogger
+  ) {}
 
   async processRequest(request: AgentRequest): Promise<AgentResponse> {
-    logger.info(`Processing action: ${request.action}`);
+    this.logger.info(`Processing action: ${request.action}`);
 
     try {
       switch (request.action) {
@@ -55,7 +51,7 @@ export class PMAgent {
           };
       }
     } catch (error) {
-      logger.error(`Error processing request: ${error}`);
+      this.logger.error(`Error processing request: ${error}`);
       return {
         status: 'error',
         data: { error: String(error) },
@@ -145,12 +141,6 @@ export class PMAgent {
   }
 
   private async handleSaveState(): Promise<AgentResponse> {
-    if (!this.stateManager) {
-      return {
-        status: 'error',
-        data: { error: 'No state manager configured' },
-      };
-    }
 
     const tasks = this.taskTracker.getAllTasks();
     const graph = this.dependencyAnalyzer.buildDependencyGraph(tasks);
@@ -171,13 +161,6 @@ export class PMAgent {
   }
 
   private async handleLoadState(): Promise<AgentResponse> {
-    if (!this.stateManager) {
-      return {
-        status: 'error',
-        data: { error: 'No state manager configured' },
-      };
-    }
-
     const state = await this.stateManager.load();
 
     if (!state) {

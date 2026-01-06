@@ -2,13 +2,18 @@
  * Simple AST parsing for code analysis
  */
 
-import * as fs from 'fs';
+import { injectable, inject } from 'tsyringe';
 import { Symbol } from '../types';
+import { IFileReader } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class ASTParser {
+  constructor(@inject(TOKENS.IFileReader) private fileReader: IFileReader) {}
+
   parseFile(filePath: string): Symbol[] {
     const symbols: Symbol[] = [];
-    const content = fs.readFileSync(filePath, 'utf-8');
+    const content = this.fileReader.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n');
 
     // Simple pattern-based parsing (works for JS/TS/Python)

@@ -2,8 +2,10 @@
  * Search query building and execution
  */
 
+import { injectable } from 'tsyringe';
 import { Symbol, SearchQuery, SearchResult } from '../types';
 
+@injectable()
 export class SearchBuilder {
   search(symbols: Symbol[], query: SearchQuery): SearchResult[] {
     const results: SearchResult[] = [];

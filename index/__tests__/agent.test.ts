@@ -2,6 +2,9 @@
  * Index Agent tests
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { IndexAgent } from '../src/agent';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,8 +14,10 @@ describe('IndexAgent', () => {
   let testDir: string;
 
   beforeEach(() => {
+    resetContainer();
+    setupContainer();
     testDir = path.join(__dirname, 'test-project');
-    agent = new IndexAgent(testDir);
+    agent = container.resolve(IndexAgent);
 
     // Create test directory structure
     if (!fs.existsSync(testDir)) {
@@ -213,7 +218,7 @@ const PI = 3.14159;
       expect(saveResponse.status).toBe('success');
 
       // Create new agent instance
-      const newAgent = new IndexAgent(testDir);
+      const newAgent = container.resolve(IndexAgent);
 
       // Load
       const loadResponse = await newAgent.processRequest({ action: 'load_index' });

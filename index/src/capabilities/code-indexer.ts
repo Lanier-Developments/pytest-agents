@@ -2,21 +2,23 @@
  * Code indexing capability
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import { injectable, inject } from 'tsyringe';
 import { FileMetadata, CodeIndex } from '../types';
 import { ASTParser } from '../tools/ast-parser';
-import { logger } from '../utils/logger';
+import { IFileReader, ILogger, IPathResolver } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class CodeIndexer {
-  private parser: ASTParser;
-
-  constructor() {
-    this.parser = new ASTParser();
-  }
+  constructor(
+    @inject(TOKENS.IASTParser) private parser: ASTParser,
+    @inject(TOKENS.IFileReader) private fileReader: IFileReader,
+    @inject(TOKENS.IPathResolver) private pathResolver: IPathResolver,
+    @inject(TOKENS.ILogger) private logger: ILogger
+  ) {}
 
   async indexRepository(rootPath: string): Promise<CodeIndex> {
-    logger.info(`Indexing repository: ${rootPath}`);
+    this.logger.info(`Indexing repository: ${rootPath}`);
 
     const index: CodeIndex = {
       symbols: new Map(),
@@ -29,13 +31,13 @@ export class CodeIndexer {
     };
 
     const files = this.walkDirectory(rootPath);
-    logger.info(`Found ${files.length} files to index`);
+    this.logger.info(`Found ${files.length} files to index`);
 
     for (const filePath of files) {
       try {
         const symbols = this.parser.parseFile(filePath);
-        const content = fs.readFileSync(filePath, 'utf-8');
-        const stats = fs.statSync(filePath);
+        const content = this.fileReader.readFileSync(filePath, 'utf-8');
+        const stats = this.fileReader.statSync(filePath);
 
         // Add symbols to index
         for (const symbol of symbols) {
@@ -65,11 +67,11 @@ export class CodeIndexer {
           });
         }
       } catch (error) {
-        logger.warn(`Failed to index ${filePath}: ${error}`);
+        this.logger.warn(`Failed to index ${filePath}: ${error}`);
       }
     }
 
-    logger.info(
+    this.logger.info(
       `Indexed ${index.symbols.size} symbols across ${index.files.size} files`
     );
     return index;
@@ -79,11 +81,11 @@ export class CodeIndexer {
     const files: string[] = [];
 
     const walk = (currentPath: string): void => {
-      const entries = fs.readdirSync(currentPath);
+      const entries = this.fileReader.readdirSync(currentPath);
 
       for (const entry of entries) {
-        const fullPath = path.join(currentPath, entry);
-        const stat = fs.statSync(fullPath);
+        const fullPath = this.pathResolver.join(currentPath, entry);
+        const stat = this.fileReader.statSync(fullPath);
 
         if (stat.isDirectory()) {
           // Skip common ignore directories
@@ -106,7 +108,7 @@ export class CodeIndexer {
   }
 
   updateFile(index: CodeIndex, filePath: string): void {
-    logger.info(`Updating index for file: ${filePath}`);
+    this.logger.info(`Updating index for file: ${filePath}`);
 
     // Remove old symbols
     const oldMetadata = index.files.get(filePath);
@@ -119,8 +121,8 @@ export class CodeIndexer {
     // Re-index file
     try {
       const symbols = this.parser.parseFile(filePath);
-      const content = fs.readFileSync(filePath, 'utf-8');
-      const stats = fs.statSync(filePath);
+      const content = this.fileReader.readFileSync(filePath, 'utf-8');
+      const stats = this.fileReader.statSync(filePath);
 
       for (const symbol of symbols) {
         index.symbols.set(symbol.id, symbol);
@@ -139,9 +141,9 @@ export class CodeIndexer {
       index.files.set(filePath, metadata);
       index.lastUpdated = new Date();
 
-      logger.info(`Updated ${symbols.length} symbols for ${filePath}`);
+      this.logger.info(`Updated ${symbols.length} symbols for ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to update ${filePath}: ${error}`);
+      this.logger.error(`Failed to update ${filePath}: ${error}`);
     }
   }
 }

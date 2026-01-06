@@ -2,19 +2,22 @@
  * Symbol mapping capability
  */
 
+import { injectable, inject } from 'tsyringe';
 import { Symbol, Reference } from '../types';
-import { logger } from '../utils/logger';
+import { ILogger } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class SymbolMapper {
   private symbols: Map<string, Symbol>;
 
-  constructor() {
+  constructor(@inject(TOKENS.ILogger) private logger: ILogger) {
     this.symbols = new Map();
   }
 
   addSymbol(symbol: Symbol): void {
     this.symbols.set(symbol.id, symbol);
-    logger.debug(`Added symbol: ${symbol.name}`);
+    this.logger.debug(`Added symbol: ${symbol.name}`);
   }
 
   getSymbol(id: string): Symbol | undefined {
@@ -36,12 +39,12 @@ export class SymbolMapper {
   addReference(symbolId: string, reference: Reference): boolean {
     const symbol = this.symbols.get(symbolId);
     if (!symbol) {
-      logger.warn(`Symbol not found: ${symbolId}`);
+      this.logger.warn(`Symbol not found: ${symbolId}`);
       return false;
     }
 
     symbol.references.push(reference);
-    logger.debug(`Added reference to symbol: ${symbol.name}`);
+    this.logger.debug(`Added reference to symbol: ${symbol.name}`);
     return true;
   }
 
@@ -56,7 +59,7 @@ export class SymbolMapper {
 
   clear(): void {
     this.symbols.clear();
-    logger.info('Cleared symbol map');
+    this.logger.info('Cleared symbol map');
   }
 
   getStats(): {

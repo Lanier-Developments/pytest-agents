@@ -3,7 +3,7 @@
 import json
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Protocol
 
 from superclaude.config import SuperClaudeConfig
 from superclaude.utils.logging import setup_logger
@@ -12,20 +12,34 @@ from superclaude.utils.validation import validate_agent_response, validate_json
 logger = setup_logger(__name__)
 
 
+class IProcessRunner(Protocol):
+    """Protocol for process execution."""
+    def run(self, cmd: list[str], input: str = "", timeout: int = 30) -> Dict[str, Any]:
+        ...
+
+
 class AgentClient:
     """Client for communicating with a single agent."""
 
-    def __init__(self, name: str, agent_path: Path, timeout: int = 30) -> None:
+    def __init__(
+        self,
+        name: str,
+        agent_path: Path,
+        process_runner: Optional[IProcessRunner] = None,
+        timeout: int = 30
+    ) -> None:
         """Initialize agent client.
 
         Args:
             name: Agent name (pm, research, index)
             agent_path: Path to agent's index.js file
+            process_runner: Optional process runner (defaults to subprocess)
             timeout: Command timeout in seconds
         """
         self.name = name
         self.agent_path = agent_path
         self.timeout = timeout
+        self._process_runner = process_runner
 
     def invoke(
         self, action: str, params: Optional[Dict[str, Any]] = None
@@ -57,14 +71,30 @@ class AgentClient:
         logger.debug(f"Invoking {self.name} agent: {action}")
 
         try:
-            result = subprocess.run(
-                ["node", str(self.agent_path)],
-                input=request_json,
-                capture_output=True,
-                text=True,
-                timeout=self.timeout,
-                check=False,
-            )
+            # Use injected process runner or fallback to subprocess
+            # for backwards compatibility
+            if self._process_runner:
+                result_dict = self._process_runner.run(
+                    ["node", str(self.agent_path)],
+                    input=request_json,
+                    timeout=self.timeout
+                )
+                # Create a result object compatible with subprocess.CompletedProcess
+                class Result:
+                    def __init__(self, d):
+                        self.returncode = d["returncode"]
+                        self.stdout = d["stdout"]
+                        self.stderr = d["stderr"]
+                result = Result(result_dict)
+            else:
+                result = subprocess.run(
+                    ["node", str(self.agent_path)],
+                    input=request_json,
+                    capture_output=True,
+                    text=True,
+                    timeout=self.timeout,
+                    check=False,
+                )
 
             if result.returncode != 0:
                 error_msg = result.stderr or result.stdout or "Unknown error"
@@ -116,34 +146,64 @@ class AgentClient:
 class AgentBridge:
     """Bridge between Python pytest and TypeScript agents."""
 
-    def __init__(self, config: Optional[SuperClaudeConfig] = None) -> None:
+    def __init__(
+        self,
+        config: Optional[SuperClaudeConfig] = None,
+        client_factory: Optional[Any] = None,
+        process_runner: Optional[IProcessRunner] = None
+    ) -> None:
         """Initialize agent bridge.
 
         Args:
             config: Optional configuration, defaults to environment config
+            client_factory: Optional factory for creating AgentClient instances
+            process_runner: Optional process runner for direct client creation
         """
         self.config = config or SuperClaudeConfig.from_env()
         self.agents: Dict[str, AgentClient] = {}
+        self._client_factory = client_factory
+        self._process_runner = process_runner
 
         # Initialize enabled agents
         if self.config.agent_pm_enabled and self.config.agent_pm_path:
-            self.agents["pm"] = AgentClient(
+            self.agents["pm"] = self._create_client(
                 "pm", self.config.agent_pm_path, self.config.agent_timeout
             )
 
         if self.config.agent_research_enabled and self.config.agent_research_path:
-            self.agents["research"] = AgentClient(
+            self.agents["research"] = self._create_client(
                 "research",
                 self.config.agent_research_path,
                 self.config.agent_timeout,
             )
 
         if self.config.agent_index_enabled and self.config.agent_index_path:
-            self.agents["index"] = AgentClient(
+            self.agents["index"] = self._create_client(
                 "index", self.config.agent_index_path, self.config.agent_timeout
             )
 
         logger.info(f"Initialized bridge with agents: {list(self.agents.keys())}")
+
+    def _create_client(self, name: str, path: Path, timeout: int) -> AgentClient:
+        """Create an AgentClient using factory or direct instantiation.
+
+        Args:
+            name: Agent name
+            path: Agent path
+            timeout: Timeout in seconds
+
+        Returns:
+            AgentClient: Created client instance
+        """
+        if self._client_factory:
+            return self._client_factory(name=name, agent_path=path, timeout=timeout)
+        else:
+            return AgentClient(
+                name=name,
+                agent_path=path,
+                process_runner=self._process_runner,
+                timeout=timeout
+            )
 
     def invoke_agent(
         self, agent_name: str, action: str, params: Optional[Dict[str, Any]] = None

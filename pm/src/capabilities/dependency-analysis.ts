@@ -2,10 +2,14 @@
  * Dependency analysis capability
  */
 
+import { injectable, inject } from 'tsyringe';
 import { Task, DependencyGraph } from '../types';
-import { logger } from '../utils/logger';
+import { ILogger } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class DependencyAnalyzer {
+  constructor(@inject(TOKENS.ILogger) private logger: ILogger) {}
   buildDependencyGraph(tasks: Task[]): DependencyGraph {
     const graph: DependencyGraph = {
       nodes: new Map(),
@@ -30,7 +34,7 @@ export class DependencyAnalyzer {
       }
     }
 
-    logger.info(`Built dependency graph: ${graph.nodes.size} nodes, ${graph.edges.length} edges`);
+    this.logger.info(`Built dependency graph: ${graph.nodes.size} nodes, ${graph.edges.length} edges`);
     return graph;
   }
 
@@ -97,7 +101,7 @@ export class DependencyAnalyzer {
     }
 
     if (cycles.length > 0) {
-      logger.warn(`Detected ${cycles.length} dependency cycles`);
+      this.logger.warn(`Detected ${cycles.length} dependency cycles`);
     }
 
     return cycles;
@@ -145,7 +149,7 @@ export class DependencyAnalyzer {
 
     // Check if all nodes were processed (no cycles)
     if (order.length !== graph.nodes.size) {
-      logger.error('Cannot create topological order: graph contains cycles');
+      this.logger.error('Cannot create topological order: graph contains cycles');
       return null;
     }
 

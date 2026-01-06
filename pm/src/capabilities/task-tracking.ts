@@ -2,21 +2,25 @@
  * Task tracking capability
  */
 
+import { injectable, inject } from 'tsyringe';
 import { Task } from '../types';
-import { TaskParser } from '../tools/task-parser';
-import { logger } from '../utils/logger';
+import { ITaskParser } from '../interfaces/capabilities';
+import { ILogger } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class TaskTracker {
   private tasks: Map<string, Task>;
-  private parser: TaskParser;
 
-  constructor() {
+  constructor(
+    @inject(TOKENS.ITaskParser) private parser: ITaskParser,
+    @inject(TOKENS.ILogger) private logger: ILogger
+  ) {
     this.tasks = new Map();
-    this.parser = new TaskParser();
   }
 
   async trackTasks(projectPath: string): Promise<Task[]> {
-    logger.info(`Tracking tasks in ${projectPath}`);
+    this.logger.info(`Tracking tasks in ${projectPath}`);
 
     const foundTasks = this.parser.parseDirectory(projectPath);
 
@@ -24,7 +28,7 @@ export class TaskTracker {
       this.tasks.set(task.id, task);
     }
 
-    logger.info(`Found ${foundTasks.length} tasks`);
+    this.logger.info(`Found ${foundTasks.length} tasks`);
     return foundTasks;
   }
 

@@ -2,8 +2,10 @@
  * Source credibility evaluation
  */
 
+import { injectable } from 'tsyringe';
 import { Source } from '../types';
 
+@injectable()
 export class SourceEvaluator {
   evaluateCredibility(source: Source): number {
     let score = 5; // Base score

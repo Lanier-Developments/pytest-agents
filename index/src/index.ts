@@ -4,12 +4,19 @@
  * Index Agent - CLI Entry Point
  */
 
+import 'reflect-metadata';
 import * as readline from 'readline';
+import { container } from 'tsyringe';
+import { setupContainer } from './di/container';
 import { IndexAgent, AgentRequest } from './agent';
 import { logger } from './utils/logger';
 
 async function main() {
-  const agent = new IndexAgent();
+  // Setup DI container
+  setupContainer();
+
+  // Resolve agent from container
+  const agent = container.resolve(IndexAgent);
 
   const rl = readline.createInterface({
     input: process.stdin,

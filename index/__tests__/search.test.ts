@@ -2,6 +2,9 @@
  * Search functionality tests
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { SearchBuilder } from '../src/tools/search-builder';
 import { Symbol } from '../src/types';
 
@@ -10,7 +13,9 @@ describe('SearchBuilder', () => {
   let symbols: Symbol[];
 
   beforeEach(() => {
-    searchBuilder = new SearchBuilder();
+    resetContainer();
+    setupContainer();
+    searchBuilder = container.resolve(SearchBuilder);
 
     symbols = [
       {

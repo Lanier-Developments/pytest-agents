@@ -2,16 +2,17 @@
  * Document analysis capability
  */
 
+import { injectable, inject } from 'tsyringe';
 import { Source } from '../types';
-import { logger } from '../utils/logger';
+import { ILogger } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class DocumentAnalyzer {
-  constructor() {
-    // Initialize analyzer
-  }
+  constructor(@inject(TOKENS.ILogger) private logger: ILogger) {}
 
   analyzeDocument(content: string, metadata?: Partial<Source>): Source {
-    logger.info('Analyzing document');
+    this.logger.info('Analyzing document');
 
     const source: Source = {
       id: `doc-${Date.now()}`,
@@ -24,7 +25,7 @@ export class DocumentAnalyzer {
       ...metadata,
     };
 
-    logger.info(`Analyzed document: ${source.title}`);
+    this.logger.info(`Analyzed document: ${source.title}`);
     return source;
   }
 
@@ -57,7 +58,7 @@ export class DocumentAnalyzer {
       sections.set(currentSection, currentContent.join('\n'));
     }
 
-    logger.info(`Extracted ${sections.size} sections`);
+    this.logger.info(`Extracted ${sections.size} sections`);
     return sections;
   }
 

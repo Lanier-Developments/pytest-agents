@@ -2,6 +2,9 @@
  * Tests for PM Agent core functionality
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { PMAgent } from '../src/agent';
 import { AgentRequest } from '../src/types';
 
@@ -9,7 +12,9 @@ describe('PMAgent', () => {
   let agent: PMAgent;
 
   beforeEach(() => {
-    agent = new PMAgent();
+    resetContainer();
+    setupContainer();
+    agent = container.resolve(PMAgent);
   });
 
   describe('ping', () => {

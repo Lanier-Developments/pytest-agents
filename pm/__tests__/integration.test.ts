@@ -2,14 +2,22 @@
  * Integration tests for PM Agent
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { PMAgent } from '../src/agent';
 import { TaskTracker } from '../src/capabilities/task-tracking';
 import { Task } from '../src/types';
 
 describe('PM Agent Integration Tests', () => {
+  beforeEach(() => {
+    resetContainer();
+    setupContainer();
+  });
+
   describe('Full workflow', () => {
     it('should handle complete task tracking workflow', async () => {
-      const agent = new PMAgent();
+      const agent = container.resolve(PMAgent);
 
       // Create milestone
       const milestoneResponse = await agent.processRequest({
@@ -33,7 +41,7 @@ describe('PM Agent Integration Tests', () => {
     });
 
     it('should handle dependency analysis workflow', async () => {
-      const agent = new PMAgent();
+      const agent = container.resolve(PMAgent);
 
       // Analyze dependencies (empty graph)
       const analysisResponse = await agent.processRequest({
@@ -49,7 +57,7 @@ describe('PM Agent Integration Tests', () => {
 
   describe('Task tracking with real data', () => {
     it('should track tasks and create milestones', () => {
-      const tracker = new TaskTracker();
+      const tracker = container.resolve(TaskTracker);
 
       // Add some tasks
       const tasks: Task[] = [

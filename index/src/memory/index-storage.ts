@@ -2,16 +2,23 @@
  * Index storage and persistence
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import { injectable, inject } from 'tsyringe';
 import { CodeIndex, Symbol, FileMetadata } from '../types';
-import { logger } from '../utils/logger';
+import { IFileReader, IFileWriter, ILogger, IPathResolver } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class IndexStorage {
   private storageFile: string;
 
-  constructor(projectPath: string) {
-    this.storageFile = path.join(projectPath, '.index-agent-state.json');
+  constructor(
+    @inject(TOKENS.IFileReader) private fileReader: IFileReader,
+    @inject(TOKENS.IFileWriter) private fileWriter: IFileWriter,
+    @inject(TOKENS.IPathResolver) private pathResolver: IPathResolver,
+    @inject(TOKENS.ILogger) private logger: ILogger,
+    projectPath: string
+  ) {
+    this.storageFile = this.pathResolver.join(projectPath, '.index-agent-state.json');
   }
 
   async save(index: CodeIndex): Promise<void> {
@@ -31,18 +38,18 @@ export class IndexStorage {
       lastUpdated: index.lastUpdated.toISOString(),
     };
 
-    fs.writeFileSync(this.storageFile, JSON.stringify(serialized, null, 2), 'utf-8');
-    logger.info(`Saved index to ${this.storageFile}`);
+    this.fileWriter.writeFileSync(this.storageFile, JSON.stringify(serialized, null, 2), 'utf-8');
+    this.logger.info(`Saved index to ${this.storageFile}`);
   }
 
   async load(): Promise<CodeIndex | null> {
-    if (!fs.existsSync(this.storageFile)) {
-      logger.info('No saved index found');
+    if (!this.fileReader.existsSync(this.storageFile)) {
+      this.logger.info('No saved index found');
       return null;
     }
 
     try {
-      const content = fs.readFileSync(this.storageFile, 'utf-8');
+      const content = this.fileReader.readFileSync(this.storageFile, 'utf-8');
       const data = JSON.parse(content);
 
       const index: CodeIndex = {
@@ -65,22 +72,22 @@ export class IndexStorage {
         lastUpdated: new Date(data.lastUpdated),
       };
 
-      logger.info(`Loaded index from ${this.storageFile}`);
+      this.logger.info(`Loaded index from ${this.storageFile}`);
       return index;
     } catch (error) {
-      logger.error(`Error loading index: ${error}`);
+      this.logger.error(`Error loading index: ${error}`);
       return null;
     }
   }
 
   async clear(): Promise<void> {
-    if (fs.existsSync(this.storageFile)) {
-      fs.unlinkSync(this.storageFile);
-      logger.info('Cleared index storage');
+    if (this.fileReader.existsSync(this.storageFile)) {
+      this.fileWriter.unlinkSync(this.storageFile);
+      this.logger.info('Cleared index storage');
     }
   }
 
   exists(): boolean {
-    return fs.existsSync(this.storageFile);
+    return this.fileReader.existsSync(this.storageFile);
   }
 }

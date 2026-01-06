@@ -2,13 +2,18 @@
  * Tests for summarization functionality
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { Summarizer } from '../src/tools/summarizer';
 
 describe('Summarizer', () => {
   let summarizer: Summarizer;
 
   beforeEach(() => {
-    summarizer = new Summarizer();
+    resetContainer();
+    setupContainer();
+    summarizer = container.resolve(Summarizer);
   });
 
   describe('summarize', () => {

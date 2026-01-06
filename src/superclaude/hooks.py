@@ -6,10 +6,14 @@ import pytest
 
 from superclaude.agent_bridge import AgentBridge
 from superclaude.config import SuperClaudeConfig
+from superclaude.di.container import ApplicationContainer
 from superclaude.markers import MarkerRegistry
 from superclaude.utils.logging import setup_logger
 
 logger = setup_logger(__name__)
+
+# Create global container instance
+container = ApplicationContainer()
 
 
 def pytest_configure(config: Any) -> None:
@@ -28,14 +32,29 @@ def pytest_configure(config: Any) -> None:
     plugin_config = SuperClaudeConfig.from_pytest_config(config)
     config._superclaude_config = plugin_config
 
-    # Initialize agent bridge
+    # Wire container to modules for dependency injection
+    container.wire(modules=[
+        "superclaude.hooks",
+        "superclaude.fixtures",
+        "superclaude.cli"
+    ])
+
+    # Initialize agent bridge using DI
     try:
-        agent_bridge = AgentBridge(plugin_config)
+        # Resolve agent bridge from container
+        agent_bridge = container.agent_bridge()
         config._superclaude_bridge = agent_bridge
         logger.info(f"Agents available: {agent_bridge.get_available_agents()}")
     except Exception as e:
         logger.warning(f"Failed to initialize agent bridge: {e}")
-        config._superclaude_bridge = None
+        # Fallback to direct instantiation for backwards compatibility
+        try:
+            agent_bridge = AgentBridge(plugin_config)
+            config._superclaude_bridge = agent_bridge
+            logger.info("Using fallback AgentBridge (no DI)")
+        except Exception as fallback_error:
+            logger.error(f"Fallback also failed: {fallback_error}")
+            config._superclaude_bridge = None
 
 
 def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -> None:

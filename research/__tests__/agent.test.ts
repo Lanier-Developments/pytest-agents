@@ -2,6 +2,9 @@
  * Tests for Research Agent core functionality
  */
 
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { setupContainer, resetContainer } from '../src/di/container';
 import { ResearchAgent } from '../src/agent';
 import { AgentRequest } from '../src/types';
 
@@ -9,7 +12,9 @@ describe('ResearchAgent', () => {
   let agent: ResearchAgent;
 
   beforeEach(() => {
-    agent = new ResearchAgent();
+    resetContainer();
+    setupContainer();
+    agent = container.resolve(ResearchAgent);
   });
 
   describe('ping', () => {

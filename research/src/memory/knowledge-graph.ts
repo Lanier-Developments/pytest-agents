@@ -2,13 +2,16 @@
  * Knowledge graph for storing research findings
  */
 
+import { injectable, inject } from 'tsyringe';
 import { KnowledgeGraph, KnowledgeNode, KnowledgeEdge } from '../types';
-import { logger } from '../utils/logger';
+import { ILogger } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class KnowledgeGraphManager {
   private graph: KnowledgeGraph;
 
-  constructor() {
+  constructor(@inject(TOKENS.ILogger) private logger: ILogger) {
     this.graph = {
       nodes: new Map(),
       edges: [],
@@ -26,7 +29,7 @@ export class KnowledgeGraphManager {
     };
 
     this.graph.nodes.set(node.id, node);
-    logger.info(`Added node: ${concept}`);
+    this.logger.info(`Added node: ${concept}`);
     return node;
   }
 
@@ -37,7 +40,7 @@ export class KnowledgeGraphManager {
     strength: number = 0.5
   ): KnowledgeEdge | null {
     if (!this.graph.nodes.has(fromId) || !this.graph.nodes.has(toId)) {
-      logger.error('Cannot add edge: nodes not found');
+      this.logger.error('Cannot add edge: nodes not found');
       return null;
     }
 
@@ -62,7 +65,7 @@ export class KnowledgeGraphManager {
       }
     }
 
-    logger.info(`Added edge: ${relationship} (${fromId} -> ${toId})`);
+    this.logger.info(`Added edge: ${relationship} (${fromId} -> ${toId})`);
     return edge;
   }
 
@@ -125,7 +128,7 @@ export class KnowledgeGraphManager {
       }
     }
 
-    logger.info(`Found ${conflicts.length} conflicts`);
+    this.logger.info(`Found ${conflicts.length} conflicts`);
     return conflicts;
   }
 
@@ -136,6 +139,6 @@ export class KnowledgeGraphManager {
   clear(): void {
     this.graph.nodes.clear();
     this.graph.edges = [];
-    logger.info('Cleared knowledge graph');
+    this.logger.info('Cleared knowledge graph');
   }
 }

@@ -2,27 +2,30 @@
  * Citation tracking capability
  */
 
+import { injectable, inject } from 'tsyringe';
 import { Citation, Source } from '../types';
-import { logger } from '../utils/logger';
+import { ILogger } from '../interfaces/core';
+import { TOKENS } from '../di/tokens';
 
+@injectable()
 export class CitationTracker {
   private citations: Map<string, Citation>;
   private sources: Map<string, Source>;
 
-  constructor() {
+  constructor(@inject(TOKENS.ILogger) private logger: ILogger) {
     this.citations = new Map();
     this.sources = new Map();
   }
 
   addSource(source: Source): void {
     this.sources.set(source.id, source);
-    logger.info(`Added source: ${source.title}`);
+    this.logger.info(`Added source: ${source.title}`);
   }
 
   createCitation(sourceId: string, text: string, context: string): Citation | null {
     const source = this.sources.get(sourceId);
     if (!source) {
-      logger.error(`Source not found: ${sourceId}`);
+      this.logger.error(`Source not found: ${sourceId}`);
       return null;
     }
 
@@ -34,7 +37,7 @@ export class CitationTracker {
     };
 
     this.citations.set(citation.id, citation);
-    logger.info(`Created citation: ${citation.id}`);
+    this.logger.info(`Created citation: ${citation.id}`);
     return citation;
   }
 

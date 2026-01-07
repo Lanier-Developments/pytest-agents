@@ -4,11 +4,10 @@ This guide walks you through activating SuperClaude's enterprise-grade security 
 
 ## Overview
 
-SuperClaude includes three layers of automated security scanning:
+SuperClaude includes two layers of automated security scanning:
 
-1. **CodeQL** - Static code analysis for Python and TypeScript
-2. **Snyk** - Dependency and container vulnerability scanning
-3. **Dependabot** - Automated dependency updates (already active)
+1. **Snyk** - Dependency and container vulnerability scanning
+2. **Dependabot** - Automated dependency updates (already active)
 
 ## Prerequisites
 
@@ -17,52 +16,17 @@ SuperClaude includes three layers of automated security scanning:
 
 ## Setup Steps
 
-### 1. Enable GitHub Code Scanning (CodeQL)
-
-CodeQL provides automated security analysis for your code.
-
-**Steps:**
-
-1. Navigate to your repository on GitHub
-2. Click **Settings** → **Code security and analysis**
-3. Scroll to **Code scanning**
-4. Click **Set up** next to "Code scanning"
-5. Select **Advanced** setup
-6. GitHub will detect the existing `.github/workflows/codeql.yml` file
-7. Click **Enable CodeQL**
-
-**Verification:**
-
-```bash
-# Check that CodeQL workflow runs successfully
-gh run list --workflow=codeql.yml --limit 1
-```
-
-You should see a successful run. Security findings will appear in:
-- **Security** tab → **Code scanning**
-
-**What You Get:**
-
-- Automated scanning on every push and PR
-- Weekly scheduled security scans
-- Detection of:
-  - SQL injection vulnerabilities
-  - XSS vulnerabilities
-  - Path traversal issues
-  - Command injection
-  - And 100+ other security patterns
-
-### 2. Set Up Snyk Scanning
+### 1. Set Up Snyk Scanning
 
 Snyk provides comprehensive vulnerability scanning for dependencies and containers.
 
-#### 2.1. Create Snyk Account
+#### 1.1. Create Snyk Account
 
 1. Go to [snyk.io](https://snyk.io)
 2. Sign up with your GitHub account (recommended)
 3. Snyk will ask to connect to your repositories - authorize it
 
-#### 2.2. Get Snyk API Token
+#### 1.2. Get Snyk API Token
 
 1. Once logged in to Snyk, click your profile (top right)
 2. Navigate to **Account Settings**
@@ -70,7 +34,7 @@ Snyk provides comprehensive vulnerability scanning for dependencies and containe
 4. Click **Show** and copy the token
 5. Keep this token secure - you'll need it in the next step
 
-#### 2.3. Add Snyk Token to GitHub Secrets
+#### 1.3. Add Snyk Token to GitHub Secrets
 
 1. In your GitHub repository, go to **Settings** → **Secrets and variables** → **Actions**
 2. Click **New repository secret**
@@ -99,7 +63,7 @@ You should see a successful run.
 - Daily automated scans
 - SARIF results integrated with GitHub Security tab
 
-### 3. Verify Dependabot (Already Active)
+### 2. Verify Dependabot (Already Active)
 
 Dependabot is already configured and should be creating PRs for dependency updates.
 
@@ -132,7 +96,6 @@ Repository → Security Tab
 
 You'll see:
 - **Overview**: Security alerts summary
-- **Code scanning**: CodeQL findings
 - **Dependabot**: Dependency vulnerabilities
 - **Secret scanning**: Exposed secrets (if enabled)
 
@@ -152,7 +115,6 @@ You'll see:
 
 | Scanner    | Trigger                          | Frequency |
 |------------|----------------------------------|-----------|
-| CodeQL     | Push, PR, Schedule               | Weekly    |
 | Snyk       | Push, PR, Schedule               | Daily     |
 | Dependabot | Automatic                        | Weekly    |
 | CI Tests   | Push, PR                         | Every push|
@@ -243,15 +205,6 @@ cd pm && snyk test
 
 ## Troubleshooting
 
-### CodeQL Workflow Fails
-
-**Error:** "Code scanning is not enabled"
-
-**Solution:**
-1. Enable Code scanning in repository settings
-2. Wait a few minutes for GitHub to process
-3. Re-run the workflow: `gh run rerun <run-id>`
-
 ### Snyk Workflow Fails
 
 **Error:** "snyk.sarif: No such file or directory"
@@ -288,7 +241,7 @@ Track your security posture over time:
 - **Mean Time to Remediate (MTTR)**: Average time to fix vulnerabilities
 - **Vulnerability Backlog**: Number of open security issues
 - **Dependency Freshness**: Percentage of up-to-date dependencies
-- **Code Coverage**: Percentage of code tested (current: 57%)
+- **Code Coverage**: Percentage of code tested (current: 60%)
 
 ### GitHub Insights
 
@@ -305,8 +258,8 @@ View:
 
 SuperClaude's security setup helps with:
 
-- **OWASP Top 10**: CodeQL detects most OWASP vulnerabilities
-- **CWE Coverage**: Common Weakness Enumeration patterns
+- **OWASP Top 10**: Dependency scanning helps prevent vulnerable dependencies
+- **CWE Coverage**: Common Weakness Enumeration patterns via Snyk
 - **NIST Guidelines**: Follows secure coding practices
 - **SOC 2**: Audit trail via GitHub Security logs
 
@@ -333,11 +286,11 @@ For security-related questions:
 
 ## References
 
-- [GitHub Code Scanning Docs](https://docs.github.com/en/code-security/code-scanning)
 - [Snyk Documentation](https://docs.snyk.io)
 - [Dependabot Docs](https://docs.github.com/en/code-security/dependabot)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [GitHub Security Best Practices](https://docs.github.com/en/code-security)
 
 ---
 
-**Last Updated**: 2026-01-05
+**Last Updated**: 2026-01-07

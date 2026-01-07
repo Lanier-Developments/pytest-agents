@@ -1,5 +1,6 @@
 """Custom pytest fixtures for SuperClaude."""
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict
 
@@ -110,17 +111,57 @@ class AgentCoordinator:
         return results
 
     def run_parallel(
-        self, tasks: list[tuple[str, str, Dict[str, Any]]]
+        self, tasks: list[tuple[str, str, Dict[str, Any]]], max_workers: int | None = None
     ) -> list[Dict[str, Any]]:
-        """Run agent tasks in parallel.
+        """Run agent tasks in parallel using threads.
 
-        Note: Currently runs sequentially. Parallel execution coming soon.
+        Uses ThreadPoolExecutor to execute multiple agent invocations concurrently.
+        Each agent runs in a separate subprocess, so thread-based parallelism is safe.
 
         Args:
             tasks: List of (agent_name, action, params) tuples
+            max_workers: Maximum number of parallel workers. Defaults to min(len(tasks), 5)
 
         Returns:
-            list[Dict[str, Any]]: List of agent responses
+            list[Dict[str, Any]]: List of agent responses in the same order as input tasks
+
+        Example:
+            results = coordinator.run_parallel([
+                ('pm', 'ping', {}),
+                ('research', 'ping', {}),
+                ('index', 'ping', {})
+            ])
+
+        Note:
+            Results are returned in the same order as the input tasks, even though
+            execution happens concurrently.
         """
-        # TODO: Implement true parallel execution
-        return self.run_sequential(tasks)
+        if not tasks:
+            return []
+
+        # Default to min of tasks count or 5 workers
+        if max_workers is None:
+            max_workers = min(len(tasks), 5)
+
+        # Create a mapping to preserve order
+        results = [None] * len(tasks)
+
+        def execute_task(index: int, agent_name: str, action: str, params: Dict[str, Any]) -> tuple[int, Dict[str, Any]]:
+            """Execute a single agent task and return with its index."""
+            result = self.bridge.invoke_agent(agent_name, action, params)
+            return (index, result)
+
+        # Execute tasks in parallel
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit all tasks
+            futures = {
+                executor.submit(execute_task, i, agent_name, action, params): i
+                for i, (agent_name, action, params) in enumerate(tasks)
+            }
+
+            # Collect results as they complete
+            for future in as_completed(futures):
+                index, result = future.result()
+                results[index] = result
+
+        return results

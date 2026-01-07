@@ -150,7 +150,7 @@ If mean performance degrades by >10% on any test, investigate the changes.
 ### Version 0.6.1 (January 2026)
 - Initial baseline after Prometheus metrics implementation
 - Full dependency injection across Python and TypeScript
-- 163 tests, 56% coverage
+- 223 tests (135 Python + 88 TypeScript), 60% Python coverage
 - All operations <100μs except bridge initialization
 
 ## Notes

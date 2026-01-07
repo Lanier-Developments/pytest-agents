@@ -6,8 +6,8 @@
 [![PyPI](https://img.shields.io/pypi/v/superclaude)](https://pypi.org/project/superclaude/)
 [![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Test Coverage](https://img.shields.io/badge/coverage-56%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
-[![Tests](https://img.shields.io/badge/tests-163%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Test Coverage](https://img.shields.io/badge/coverage-60%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Tests](https://img.shields.io/badge/tests-223%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
 [![Metrics](https://img.shields.io/badge/metrics-prometheus-blue.svg)](docs/METRICS.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](docs/DOCKER.md)
@@ -104,6 +104,22 @@ def test_with_pm_agent(superclaude_agent):
     assert result['status'] == 'success'
 ```
 
+### Parallel Agent Execution
+
+Run multiple agents concurrently for faster test execution:
+
+```python
+def test_multi_agent_parallel(agent_coordinator):
+    """Run multiple agents in parallel."""
+    results = agent_coordinator.run_parallel([
+        ('pm', 'track_tasks', {'path': './src'}),
+        ('research', 'analyze_document', {'path': 'README.md'}),
+        ('index', 'index_repository', {'path': './src'})
+    ])
+
+    assert all(r['status'] == 'success' for r in results)
+```
+
 ### Invoking Agents
 
 ```python
@@ -187,7 +203,7 @@ SuperClaude implements enterprise-grade security practices:
 
 - Multi-stage Docker builds with minimal attack surface
 - Dependency pinning for reproducible builds
-- Comprehensive test coverage (56%, 163 tests)
+- Comprehensive test coverage (60%, 223 tests)
 - Automated security updates grouped by severity
 
 ### Setup and Configuration

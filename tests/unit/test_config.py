@@ -158,3 +158,80 @@ class TestSuperClaudeConfig:
         assert isinstance(config_dict["project_root"], str)
         assert isinstance(config_dict["log_file"], str)
         assert config_dict["log_file"] == str(log_file)
+
+    def test_metrics_configuration_defaults(self) -> None:
+        """Test metrics configuration default values."""
+        config = SuperClaudeConfig()
+        assert config.metrics_enabled is False
+        assert config.metrics_port == 9090
+        assert config.metrics_host == "0.0.0.0"
+
+    def test_metrics_configuration_custom(self) -> None:
+        """Test metrics configuration with custom values."""
+        config = SuperClaudeConfig(
+            metrics_enabled=True, metrics_port=8080, metrics_host="localhost"
+        )
+        assert config.metrics_enabled is True
+        assert config.metrics_port == 8080
+        assert config.metrics_host == "localhost"
+
+    def test_from_env_metrics_configuration(self, monkeypatch) -> None:
+        """Test creating config with metrics from environment."""
+        monkeypatch.setenv("SUPERCLAUDE_METRICS_ENABLED", "true")
+        monkeypatch.setenv("SUPERCLAUDE_METRICS_PORT", "8080")
+        monkeypatch.setenv("SUPERCLAUDE_METRICS_HOST", "127.0.0.1")
+
+        config = SuperClaudeConfig.from_env()
+        assert config.metrics_enabled is True
+        assert config.metrics_port == 8080
+        assert config.metrics_host == "127.0.0.1"
+
+    def test_from_env_boolean_parsing_variations(self, monkeypatch) -> None:
+        """Test various boolean string values in environment."""
+        # Test TRUE value
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "TRUE")
+        config = SuperClaudeConfig.from_env()
+        assert config.agent_pm_enabled is True
+
+        # Test False value
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "False")
+        config = SuperClaudeConfig.from_env()
+        assert config.agent_pm_enabled is False
+
+        # Test non-true value defaults to false
+        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "anything")
+        config = SuperClaudeConfig.from_env()
+        assert config.agent_pm_enabled is False
+
+    def test_to_dict_with_none_paths(self) -> None:
+        """Test to_dict handles None values for optional paths."""
+        config = SuperClaudeConfig()
+        config.agent_pm_path = None
+        config.log_file = None
+        config_dict = config.to_dict()
+
+        assert config_dict["agent_pm_path"] is None
+        assert config_dict["log_file"] is None
+
+    def test_from_pytest_config_with_ini_values(self, mock_pytest_config) -> None:
+        """Test from_pytest_config with various ini values."""
+        mock_pytest_config.inicfg = {
+            "superclaude_agent_pm_enabled": False,
+            "superclaude_agent_research_enabled": True,
+            "superclaude_agent_index_enabled": False,
+            "superclaude_agent_timeout": 45,
+            "superclaude_agent_retry_count": 5,
+            "superclaude_log_level": "DEBUG",
+            "superclaude_enable_agent_caching": False,
+            "superclaude_enable_parallel_agents": True,
+        }
+
+        config = SuperClaudeConfig.from_pytest_config(mock_pytest_config)
+        assert config.agent_pm_enabled is False
+        assert config.agent_research_enabled is True
+        assert config.agent_index_enabled is False
+        assert config.agent_timeout == 45
+        assert config.agent_retry_count == 5
+        assert config.log_level == "DEBUG"
+        assert config.enable_agent_caching is False
+        assert config.enable_parallel_agents is True

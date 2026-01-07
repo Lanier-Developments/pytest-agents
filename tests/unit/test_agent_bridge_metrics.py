@@ -1,8 +1,5 @@
 """Tests for AgentBridge metrics collection."""
 
-import pytest
-from unittest.mock import MagicMock
-
 from superclaude.agent_bridge import AgentBridge
 from superclaude.config import SuperClaudeConfig
 from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
@@ -32,7 +29,8 @@ class TestAgentBridgeMetrics:
         )
 
         metrics = PrometheusMetrics()
-        bridge = AgentBridge(config=config, metrics=metrics)
+        # Initialize bridge to populate metrics
+        _ = AgentBridge(config=config, metrics=metrics)
 
         output = metrics.get_metrics()
 

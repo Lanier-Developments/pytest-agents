@@ -15,8 +15,10 @@ logger = setup_logger(__name__)
 
 class IProcessRunner(Protocol):
     """Protocol for process execution."""
-    def run(self, cmd: list[str], input: str = "", timeout: int = 30) -> Dict[str, Any]:
-        ...
+
+    def run(
+        self, cmd: list[str], input: str = "", timeout: int = 30
+    ) -> Dict[str, Any]: ...
 
 
 class AgentClient:
@@ -27,7 +29,7 @@ class AgentClient:
         name: str,
         agent_path: Path,
         process_runner: Optional[IProcessRunner] = None,
-        timeout: int = 30
+        timeout: int = 30,
     ) -> None:
         """Initialize agent client.
 
@@ -78,14 +80,16 @@ class AgentClient:
                 result_dict = self._process_runner.run(
                     ["node", str(self.agent_path)],
                     input=request_json,
-                    timeout=self.timeout
+                    timeout=self.timeout,
                 )
+
                 # Create a result object compatible with subprocess.CompletedProcess
                 class Result:
                     def __init__(self, d):
                         self.returncode = d["returncode"]
                         self.stdout = d["stdout"]
                         self.stderr = d["stderr"]
+
                 result = Result(result_dict)
             else:
                 result = subprocess.run(
@@ -152,7 +156,7 @@ class AgentBridge:
         config: Optional[SuperClaudeConfig] = None,
         client_factory: Optional[Any] = None,
         process_runner: Optional[IProcessRunner] = None,
-        metrics: Optional[Any] = None
+        metrics: Optional[Any] = None,
     ) -> None:
         """Initialize agent bridge.
 
@@ -189,8 +193,7 @@ class AgentBridge:
         # Track initialized agents count
         if self._metrics:
             self._metrics.set_gauge(
-                "superclaude_bridge_initialized_agents_total",
-                len(self.agents)
+                "superclaude_bridge_initialized_agents_total", len(self.agents)
             )
 
         logger.info(f"Initialized bridge with agents: {list(self.agents.keys())}")
@@ -213,7 +216,7 @@ class AgentBridge:
                 name=name,
                 agent_path=path,
                 process_runner=self._process_runner,
-                timeout=timeout
+                timeout=timeout,
             )
 
     def invoke_agent(
@@ -242,7 +245,7 @@ class AgentBridge:
         if self._metrics:
             self._metrics.increment_counter(
                 "superclaude_agent_invocations_total",
-                {"agent": agent_name, "action": action}
+                {"agent": agent_name, "action": action},
             )
 
         # Track invocation duration
@@ -256,18 +259,18 @@ class AgentBridge:
                 self._metrics.observe_histogram(
                     "superclaude_agent_invocation_duration_seconds",
                     duration,
-                    {"agent": agent_name, "action": action}
+                    {"agent": agent_name, "action": action},
                 )
 
                 if response.get("status") == "success":
                     self._metrics.increment_counter(
                         "superclaude_agent_invocations_success_total",
-                        {"agent": agent_name, "action": action}
+                        {"agent": agent_name, "action": action},
                     )
                 else:
                     self._metrics.increment_counter(
                         "superclaude_agent_invocations_error_total",
-                        {"agent": agent_name, "action": action}
+                        {"agent": agent_name, "action": action},
                     )
 
             return response
@@ -278,11 +281,11 @@ class AgentBridge:
                 self._metrics.observe_histogram(
                     "superclaude_agent_invocation_duration_seconds",
                     duration,
-                    {"agent": agent_name, "action": action}
+                    {"agent": agent_name, "action": action},
                 )
                 self._metrics.increment_counter(
                     "superclaude_agent_invocations_error_total",
-                    {"agent": agent_name, "action": action}
+                    {"agent": agent_name, "action": action},
                 )
             raise
 

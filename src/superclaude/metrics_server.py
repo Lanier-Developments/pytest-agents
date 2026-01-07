@@ -52,10 +52,16 @@ class MetricsServer:
         try:
             # Start the Prometheus HTTP server
             # This runs in a daemon thread automatically
-            start_http_server(self.port, addr=self.host, registry=self.metrics.registry if self.metrics else REGISTRY)
+            start_http_server(
+                self.port,
+                addr=self.host,
+                registry=self.metrics.registry if self.metrics else REGISTRY,
+            )
             self._running = True
 
-            logger.info(f"Metrics server started successfully at http://{self.host}:{self.port}/metrics")
+            logger.info(
+                f"Metrics server started successfully at http://{self.host}:{self.port}/metrics"
+            )
         except OSError as e:
             logger.error(f"Failed to start metrics server: {e}")
             raise
@@ -135,7 +141,9 @@ def start_metrics_server(
     Returns:
         MetricsServer instance
     """
-    server = MetricsServer(port=port, host=host, metrics=metrics, agent_bridge=agent_bridge)
+    server = MetricsServer(
+        port=port, host=host, metrics=metrics, agent_bridge=agent_bridge
+    )
     server.start()
 
     if block:

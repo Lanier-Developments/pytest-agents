@@ -1,7 +1,7 @@
 """Unit tests for pytest hooks."""
 
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock
 
 import pytest
 
@@ -33,9 +33,7 @@ class TestPytestHooks:
         assert hasattr(mock_pytest_config, "_superclaude_bridge")
         assert hasattr(mock_pytest_config, "_superclaude_config")
 
-    def test_pytest_configure_handles_bridge_failure(
-        self, mock_pytest_config
-    ) -> None:
+    def test_pytest_configure_handles_bridge_failure(self, mock_pytest_config) -> None:
         """Test pytest_configure gracefully handles bridge init failure."""
         # Configure to fail
         mock_pytest_config.rootpath = "/nonexistent/path"

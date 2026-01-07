@@ -10,9 +10,7 @@ if TYPE_CHECKING:
 class IProcessRunner(Protocol):
     """Process execution abstraction."""
 
-    def run(
-        self, cmd: List[str], input: str = "", timeout: int = 30
-    ) -> Dict[str, Any]:
+    def run(self, cmd: List[str], input: str = "", timeout: int = 30) -> Dict[str, Any]:
         """Execute a process and return results.
 
         Args:

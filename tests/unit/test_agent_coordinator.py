@@ -1,7 +1,6 @@
 """Tests for AgentCoordinator parallel execution."""
 
 import time
-from pathlib import Path
 
 import pytest
 

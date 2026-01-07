@@ -21,21 +21,16 @@ class ApplicationContainer(containers.DeclarativeContainer):
     metrics = providers.Singleton(PrometheusMetrics)
 
     # Core providers
-    superclaude_config = providers.Singleton(
-        SuperClaudeConfig.from_env
-    )
+    superclaude_config = providers.Singleton(SuperClaudeConfig.from_env)
 
     # Agent client factory - creates clients with injected process_runner
-    agent_client_factory = providers.Factory(
-        AgentClient,
-        process_runner=process_runner
-    )
+    agent_client_factory = providers.Factory(AgentClient, process_runner=process_runner)
 
-    # Agent bridge (singleton) - gets config, client factory, process runner, and metrics
+    # Agent bridge (singleton)
     agent_bridge = providers.Singleton(
         AgentBridge,
         config=superclaude_config,
         client_factory=agent_client_factory.provider,
         process_runner=process_runner,
-        metrics=metrics
+        metrics=metrics,
     )

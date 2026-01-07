@@ -1,10 +1,5 @@
 """Tests for Prometheus metrics HTTP server."""
 
-import time
-from pathlib import Path
-
-import pytest
-
 from superclaude.agent_bridge import AgentBridge
 from superclaude.config import SuperClaudeConfig
 from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
@@ -85,7 +80,8 @@ class TestMetricsServer:
             const req = require("fs").readFileSync(0, "utf-8");
             const request = JSON.parse(req);
             if (request.action === "get_metrics") {
-                const metrics = "# HELP pm_test_total Test metric\\n# TYPE pm_test_total counter\\npm_test_total 42.0\\n";
+                const metrics = "# HELP pm_test_total Test metric\\n" +
+                    "# TYPE pm_test_total counter\\npm_test_total 42.0\\n";
                 console.log(JSON.stringify({
                     status: "success",
                     data: { metrics: metrics, format: "prometheus" }

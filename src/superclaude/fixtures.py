@@ -111,7 +111,9 @@ class AgentCoordinator:
         return results
 
     def run_parallel(
-        self, tasks: list[tuple[str, str, Dict[str, Any]]], max_workers: int | None = None
+        self,
+        tasks: list[tuple[str, str, Dict[str, Any]]],
+        max_workers: int | None = None,
     ) -> list[Dict[str, Any]]:
         """Run agent tasks in parallel using threads.
 
@@ -120,10 +122,12 @@ class AgentCoordinator:
 
         Args:
             tasks: List of (agent_name, action, params) tuples
-            max_workers: Maximum number of parallel workers. Defaults to min(len(tasks), 5)
+            max_workers: Maximum number of parallel workers.
+                Defaults to min(len(tasks), 5)
 
         Returns:
-            list[Dict[str, Any]]: List of agent responses in the same order as input tasks
+            list[Dict[str, Any]]: List of agent responses in the same order
+                as input tasks
 
         Example:
             results = coordinator.run_parallel([
@@ -146,7 +150,9 @@ class AgentCoordinator:
         # Create a mapping to preserve order
         results = [None] * len(tasks)
 
-        def execute_task(index: int, agent_name: str, action: str, params: Dict[str, Any]) -> tuple[int, Dict[str, Any]]:
+        def execute_task(
+            index: int, agent_name: str, action: str, params: Dict[str, Any]
+        ) -> tuple[int, Dict[str, Any]]:
             """Execute a single agent task and return with its index."""
             result = self.bridge.invoke_agent(agent_name, action, params)
             return (index, result)

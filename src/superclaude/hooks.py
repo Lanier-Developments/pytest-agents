@@ -33,11 +33,9 @@ def pytest_configure(config: Any) -> None:
     config._superclaude_config = plugin_config
 
     # Wire container to modules for dependency injection
-    container.wire(modules=[
-        "superclaude.hooks",
-        "superclaude.fixtures",
-        "superclaude.cli"
-    ])
+    container.wire(
+        modules=["superclaude.hooks", "superclaude.fixtures", "superclaude.cli"]
+    )
 
     # Initialize agent bridge using DI
     try:

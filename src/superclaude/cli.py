@@ -140,7 +140,7 @@ def cmd_metrics(args: argparse.Namespace) -> int:
     port = args.port if args.port else config.metrics_port
     host = args.host if args.host else config.metrics_host
 
-    print(f"Starting SuperClaude metrics server")
+    print("Starting SuperClaude metrics server")
     print(f"Listening on http://{host}:{port}/metrics")
     print("Press Ctrl+C to stop")
 
@@ -212,9 +212,7 @@ def main() -> int:
     metrics_parser.add_argument(
         "--port", type=int, help="Port to listen on (default: 9090)"
     )
-    metrics_parser.add_argument(
-        "--host", help="Host to bind to (default: 0.0.0.0)"
-    )
+    metrics_parser.add_argument("--host", help="Host to bind to (default: 0.0.0.0)")
 
     args = parser.parse_args()
 

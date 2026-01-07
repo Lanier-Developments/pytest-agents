@@ -1,7 +1,5 @@
 """Tests for Prometheus metrics collection."""
 
-import pytest
-
 from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
 
 
@@ -18,7 +16,7 @@ class TestPrometheusMetrics:
         output = metrics.get_metrics()
 
         assert "test_counter_total" in output
-        assert 'test_counter_total 2.0' in output
+        assert "test_counter_total 2.0" in output
 
     def test_counter_with_labels(self):
         """Test counter with labels."""
@@ -103,7 +101,9 @@ class TestPrometheusMetrics:
         assert "superclaude_agent_invocations_total" in metrics._metric_configs
         assert "superclaude_agent_invocations_success_total" in metrics._metric_configs
         assert "superclaude_agent_invocations_error_total" in metrics._metric_configs
-        assert "superclaude_agent_invocation_duration_seconds" in metrics._metric_configs
+        assert (
+            "superclaude_agent_invocation_duration_seconds" in metrics._metric_configs
+        )
         assert "superclaude_bridge_initialized_agents_total" in metrics._metric_configs
 
         # Verify label configurations
@@ -111,7 +111,9 @@ class TestPrometheusMetrics:
             "agent",
             "action",
         ]
-        assert metrics._metric_configs["superclaude_bridge_initialized_agents_total"] == []
+        assert (
+            metrics._metric_configs["superclaude_bridge_initialized_agents_total"] == []
+        )
 
     def test_multiple_metrics(self):
         """Test tracking multiple different metrics."""
@@ -123,7 +125,9 @@ class TestPrometheusMetrics:
 
         metrics.increment_counter("requests_total", {"method": "GET"})
         metrics.set_gauge("active_connections", 5)
-        metrics.observe_histogram("request_duration_seconds", 0.25, {"endpoint": "/api"})
+        metrics.observe_histogram(
+            "request_duration_seconds", 0.25, {"endpoint": "/api"}
+        )
 
         output = metrics.get_metrics()
 

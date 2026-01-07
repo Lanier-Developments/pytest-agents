@@ -1,6 +1,7 @@
 # SuperClaude
 
 [![CI](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml)
 [![Release](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/kmcallorum/pytest-agents)](https://github.com/kmcallorum/pytest-agents/releases)
 [![PyPI](https://img.shields.io/pypi/v/superclaude)](https://pypi.org/project/superclaude/)
@@ -194,7 +195,8 @@ SuperClaude implements enterprise-grade security practices:
 
 ### Automated Security Scanning
 
-- **Snyk Security**: Continuous vulnerability scanning for dependencies and code
+- **CodeQL**: Static analysis detecting 400+ security vulnerabilities in Python and TypeScript
+- **Snyk Security**: Continuous vulnerability scanning for dependencies and containers
 - **Dependency Scanning**: Automated vulnerability detection via Dependabot
 - **Container Scanning**: Docker image vulnerability assessment
 - **Code Quality**: Ruff linting with security-focused rules

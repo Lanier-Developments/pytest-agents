@@ -4,10 +4,11 @@ This guide walks you through activating SuperClaude's enterprise-grade security 
 
 ## Overview
 
-SuperClaude includes two layers of automated security scanning:
+SuperClaude includes three layers of automated security scanning:
 
-1. **Snyk** - Dependency and container vulnerability scanning
-2. **Dependabot** - Automated dependency updates (already active)
+1. **CodeQL** - Static code analysis for Python and TypeScript
+2. **Snyk** - Dependency and container vulnerability scanning
+3. **Dependabot** - Automated dependency updates (already active)
 
 ## Prerequisites
 
@@ -16,17 +17,63 @@ SuperClaude includes two layers of automated security scanning:
 
 ## Setup Steps
 
-### 1. Set Up Snyk Scanning
+### 1. Enable GitHub Code Scanning (CodeQL)
+
+CodeQL provides automated security analysis for your Python and TypeScript code.
+
+**Steps:**
+
+1. Navigate to your repository on GitHub
+2. Click **Settings** → **Code security and analysis**
+3. Scroll to **Code scanning**
+4. Click **Set up** next to "Code scanning"
+5. Select **Default** setup (GitHub will use the existing `.github/workflows/codeql.yml`)
+6. Click **Enable CodeQL**
+
+**Verification:**
+
+```bash
+# Check that CodeQL workflow exists
+ls .github/workflows/codeql.yml
+
+# Trigger workflow manually (optional)
+gh workflow run codeql.yml
+
+# Check workflow runs
+gh run list --workflow=codeql.yml --limit 1
+```
+
+You should see successful runs. Security findings will appear in:
+- **Security** tab → **Code scanning**
+
+**What You Get:**
+
+- Automated scanning on every push and PR
+- Weekly scheduled security scans (Mondays at 6:00 AM UTC)
+- Detection of 400+ security vulnerabilities including:
+  - SQL injection vulnerabilities
+  - XSS (Cross-site scripting)
+  - Path traversal issues
+  - Command injection
+  - Hardcoded credentials
+  - Insecure crypto usage
+  - And many more OWASP Top 10 patterns
+
+**Languages Scanned:**
+- Python (pytest plugin, CLI, metrics)
+- TypeScript/JavaScript (PM, Research, Index agents)
+
+### 2. Set Up Snyk Scanning
 
 Snyk provides comprehensive vulnerability scanning for dependencies and containers.
 
-#### 1.1. Create Snyk Account
+#### 2.1. Create Snyk Account
 
 1. Go to [snyk.io](https://snyk.io)
 2. Sign up with your GitHub account (recommended)
 3. Snyk will ask to connect to your repositories - authorize it
 
-#### 1.2. Get Snyk API Token
+#### 2.2. Get Snyk API Token
 
 1. Once logged in to Snyk, click your profile (top right)
 2. Navigate to **Account Settings**
@@ -34,7 +81,7 @@ Snyk provides comprehensive vulnerability scanning for dependencies and containe
 4. Click **Show** and copy the token
 5. Keep this token secure - you'll need it in the next step
 
-#### 1.3. Add Snyk Token to GitHub Secrets
+#### 2.3. Add Snyk Token to GitHub Secrets
 
 1. In your GitHub repository, go to **Settings** → **Secrets and variables** → **Actions**
 2. Click **New repository secret**
@@ -63,7 +110,7 @@ You should see a successful run.
 - Daily automated scans
 - SARIF results integrated with GitHub Security tab
 
-### 2. Verify Dependabot (Already Active)
+### 3. Verify Dependabot (Already Active)
 
 Dependabot is already configured and should be creating PRs for dependency updates.
 
@@ -96,6 +143,7 @@ Repository → Security Tab
 
 You'll see:
 - **Overview**: Security alerts summary
+- **Code scanning**: CodeQL findings
 - **Dependabot**: Dependency vulnerabilities
 - **Secret scanning**: Exposed secrets (if enabled)
 
@@ -115,6 +163,7 @@ You'll see:
 
 | Scanner    | Trigger                          | Frequency |
 |------------|----------------------------------|-----------|
+| CodeQL     | Push, PR, Schedule               | Weekly    |
 | Snyk       | Push, PR, Schedule               | Daily     |
 | Dependabot | Automatic                        | Weekly    |
 | CI Tests   | Push, PR                         | Every push|
@@ -205,6 +254,23 @@ cd pm && snyk test
 
 ## Troubleshooting
 
+### CodeQL Workflow Fails
+
+**Error:** "Code scanning is not enabled"
+
+**Solution:**
+1. Go to repository **Settings** → **Code security and analysis**
+2. Enable "Code scanning" under the Code scanning section
+3. Wait a few minutes for GitHub to process
+4. Re-run the workflow: `gh run rerun <run-id>`
+
+**Error:** "No suitable CodeQL databases found"
+
+**Solution:**
+1. Check that languages are correctly specified in `.github/workflows/codeql.yml`
+2. Verify Python and TypeScript/JavaScript code exists in the repository
+3. Re-run the workflow
+
 ### Snyk Workflow Fails
 
 **Error:** "snyk.sarif: No such file or directory"
@@ -258,8 +324,8 @@ View:
 
 SuperClaude's security setup helps with:
 
-- **OWASP Top 10**: Dependency scanning helps prevent vulnerable dependencies
-- **CWE Coverage**: Common Weakness Enumeration patterns via Snyk
+- **OWASP Top 10**: CodeQL detects most OWASP vulnerabilities, Snyk prevents vulnerable dependencies
+- **CWE Coverage**: Common Weakness Enumeration patterns via CodeQL and Snyk
 - **NIST Guidelines**: Follows secure coding practices
 - **SOC 2**: Audit trail via GitHub Security logs
 
@@ -286,6 +352,8 @@ For security-related questions:
 
 ## References
 
+- [GitHub Code Scanning Docs](https://docs.github.com/en/code-security/code-scanning)
+- [CodeQL Documentation](https://codeql.github.com/docs/)
 - [Snyk Documentation](https://docs.snyk.io)
 - [Dependabot Docs](https://docs.github.com/en/code-security/dependabot)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)

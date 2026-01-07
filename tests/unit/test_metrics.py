@@ -100,18 +100,14 @@ class TestPrometheusMetrics:
         # These should be pre-configured
         assert "pytest_agents_agent_invocations_total" in metrics._metric_configs
         assert (
-            "pytest_agents_agent_invocations_success_total"
-            in metrics._metric_configs
+            "pytest_agents_agent_invocations_success_total" in metrics._metric_configs
         )
-        assert (
-            "pytest_agents_agent_invocations_error_total" in metrics._metric_configs
-        )
+        assert "pytest_agents_agent_invocations_error_total" in metrics._metric_configs
         assert (
             "pytest_agents_agent_invocation_duration_seconds" in metrics._metric_configs
         )
         assert (
-            "pytest_agents_bridge_initialized_agents_total"
-            in metrics._metric_configs
+            "pytest_agents_bridge_initialized_agents_total" in metrics._metric_configs
         )
 
         # Verify label configurations

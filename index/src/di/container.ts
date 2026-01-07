@@ -4,6 +4,8 @@
 
 import 'reflect-metadata';
 import { container } from 'tsyringe';
+import * as fs from 'fs';
+import * as path from 'path';
 import { TOKENS } from './tokens';
 
 // Infrastructure implementations
@@ -23,6 +25,9 @@ import { IndexStorage } from '../memory/index-storage';
 // Re-export TOKENS for convenience
 export { TOKENS };
 
+// Module-level cache for IndexStorage singleton
+let storageInstanceCache: IndexStorage | null = null;
+
 /**
  * Setup and configure the DI container
  */
@@ -39,19 +44,23 @@ export function setupContainer(): void {
 
   // Register capability implementations
   container.register(TOKENS.ICodeIndexer, { useClass: CodeIndexer });
-  container.register(TOKENS.ISymbolMapper, { useClass: SymbolMapper });
+  container.registerSingleton(TOKENS.ISymbolMapper, SymbolMapper);
   container.register(TOKENS.ISearchBuilder, { useClass: SearchBuilder });
 
-  // Use factory for IndexStorage to inject projectPath
+  // Use a factory for IndexStorage that creates it lazily but caches it
+  // This ensures the singleton is created after all dependencies are ready
   container.register(TOKENS.IIndexStorage, {
     useFactory: (c) => {
-      return new IndexStorage(
-        c.resolve(TOKENS.IFileReader),
-        c.resolve(TOKENS.IFileWriter),
-        c.resolve(TOKENS.IPathResolver),
-        c.resolve(TOKENS.ILogger),
-        process.cwd()
-      );
+      if (!storageInstanceCache) {
+        storageInstanceCache = new IndexStorage(
+          c.resolve(TOKENS.IFileReader),
+          c.resolve(TOKENS.IFileWriter),
+          c.resolve(TOKENS.IPathResolver),
+          c.resolve(TOKENS.ILogger),
+          process.cwd()
+        );
+      }
+      return storageInstanceCache;
     },
   });
 }
@@ -62,9 +71,10 @@ export function setupContainer(): void {
 export function resetContainer(): void {
   container.clearInstances();
 
+  // Clear storage cache
+  storageInstanceCache = null;
+
   // Clean up test index file if it exists
-  const fs = require('fs');
-  const path = require('path');
   const indexFile = path.join(process.cwd(), '.index-agent-state.json');
   if (fs.existsSync(indexFile)) {
     fs.unlinkSync(indexFile);

@@ -1,8 +1,8 @@
 """Unit tests for the main plugin."""
 
 import pytest
-from pytest_agents import __version__
 
+from pytest_agents import __version__
 from pytest_agents.plugin import PytestAgentsPlugin
 
 

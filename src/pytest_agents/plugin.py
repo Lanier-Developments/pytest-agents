@@ -30,7 +30,7 @@ class PytestAgentsPlugin:
 
 # Export pytest hooks
 __all__ = [
-    "SuperClaudePlugin",
+    "PytestAgentsPlugin",
     "pytest_configure",
     "pytest_collection_modifyitems",
     "pytest_runtest_setup",

@@ -4,8 +4,8 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-from pytest_agents import hooks
 
+from pytest_agents import hooks
 from pytest_agents.agent_bridge import AgentBridge
 from pytest_agents.config import SuperClaudeConfig
 

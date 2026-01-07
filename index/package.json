@@ -1,7 +1,7 @@
 {
-  "name": "@superclaude/index-agent",
+  "name": "@pytest-agents/index-agent",
   "version": "0.1.0",
-  "description": "Code Indexing AI Agent for SuperClaude",
+  "description": "Code Indexing AI Agent for pytest-agents",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -18,7 +18,7 @@
     "agent",
     "code-indexing",
     "search",
-    "superclaude"
+    "pytest-agents"
   ],
   "author": "Kevin McAllorum",
   "license": "MIT",

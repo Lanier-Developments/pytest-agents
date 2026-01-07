@@ -1,7 +1,7 @@
 {
-  "name": "@superclaude/pm-agent",
+  "name": "@pytest-agents/pm-agent",
   "version": "0.1.0",
-  "description": "Project Management AI Agent for SuperClaude",
+  "description": "Project Management AI Agent for pytest-agents",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -17,7 +17,7 @@
     "ai",
     "agent",
     "project-management",
-    "superclaude"
+    "pytest-agents"
   ],
   "author": "Kevin McAllorum",
   "license": "MIT",

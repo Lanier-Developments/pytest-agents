@@ -1,7 +1,7 @@
 {
-  "name": "@superclaude/research-agent",
+  "name": "@pytest-agents/research-agent",
   "version": "0.1.0",
-  "description": "Research AI Agent for SuperClaude",
+  "description": "Research AI Agent for pytest-agents",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -17,7 +17,7 @@
     "ai",
     "agent",
     "research",
-    "superclaude"
+    "pytest-agents"
   ],
   "author": "Kevin McAllorum",
   "license": "MIT",

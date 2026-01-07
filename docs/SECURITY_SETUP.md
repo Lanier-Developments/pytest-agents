@@ -1,10 +1,10 @@
 # Security Setup Guide
 
-This guide walks you through activating SuperClaude's enterprise-grade security features.
+This guide walks you through activating pytest-agents's enterprise-grade security features.
 
 ## Overview
 
-SuperClaude includes three layers of automated security scanning:
+pytest-agents includes three layers of automated security scanning:
 
 1. **CodeQL** - Static code analysis for Python and TypeScript
 2. **Snyk** - Dependency and container vulnerability scanning
@@ -322,7 +322,7 @@ View:
 
 ## Security Compliance
 
-SuperClaude's security setup helps with:
+pytest-agents's security setup helps with:
 
 - **OWASP Top 10**: CodeQL detects most OWASP vulnerabilities, Snyk prevents vulnerable dependencies
 - **CWE Coverage**: Common Weakness Enumeration patterns via CodeQL and Snyk

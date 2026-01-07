@@ -4,9 +4,9 @@ import time
 
 import pytest
 
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
-from superclaude.fixtures import AgentCoordinator
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.fixtures import AgentCoordinator
 
 
 @pytest.fixture

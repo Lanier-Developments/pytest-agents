@@ -1,9 +1,9 @@
-"""Main pytest plugin entry point for SuperClaude."""
+"""Main pytest plugin entry point for pytest-agents."""
 
 from typing import Any
 
-from superclaude import __version__
-from superclaude.hooks import (
+from pytest_agents import __version__
+from pytest_agents.hooks import (
     pytest_collection_modifyitems,
     pytest_configure,
     pytest_runtest_makereport,
@@ -12,8 +12,8 @@ from superclaude.hooks import (
 )
 
 
-class SuperClaudePlugin:
-    """Main pytest plugin class for SuperClaude framework."""
+class PytestAgentsPlugin:
+    """Main pytest plugin class for pytest-agents framework."""
 
     def __init__(self) -> None:
         """Initialize the plugin."""
@@ -25,7 +25,7 @@ class SuperClaudePlugin:
         Returns:
             str: Plugin representation
         """
-        return f"SuperClaudePlugin(version={self.version})"
+        return f"PytestAgentsPlugin(version={self.version})"
 
 
 # Export pytest hooks

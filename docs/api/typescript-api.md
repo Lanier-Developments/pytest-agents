@@ -1,6 +1,6 @@
 # TypeScript API Reference
 
-Complete reference for SuperClaude's TypeScript agent APIs.
+Complete reference for pytest-agents's TypeScript agent APIs.
 
 ## Table of Contents
 

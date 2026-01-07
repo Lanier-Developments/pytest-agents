@@ -1,18 +1,18 @@
 # Architecture Overview
 
-This document provides a high-level overview of the SuperClaude architecture, including its components, data flow, and design decisions.
+This document provides a high-level overview of the pytest-agents architecture, including its components, data flow, and design decisions.
 
 ## System Architecture
 
-SuperClaude is a hybrid Python-TypeScript system that extends pytest with AI agent capabilities.
+pytest-agents is a hybrid Python-TypeScript system that extends pytest with AI agent capabilities.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      SuperClaude System                      │
+│                      pytest-agents System                      │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────┐         ┌─────────────────────────────┐   │
-│  │   Pytest     │◄────────┤   SuperClaude Plugin        │   │
+│  │   Pytest     │◄────────┤   pytest-agents Plugin        │   │
 │  │   Runtime    │         │   (hooks.py, plugin.py)     │   │
 │  └──────────────┘         └─────────────┬───────────────┘   │
 │                                          │                    │
@@ -36,11 +36,11 @@ SuperClaude is a hybrid Python-TypeScript system that extends pytest with AI age
 
 ### 1. Pytest Plugin (`plugin.py`, `hooks.py`)
 
-**Purpose**: Integrate SuperClaude into pytest's lifecycle
+**Purpose**: Integrate pytest-agents into pytest's lifecycle
 
 **Key Responsibilities**:
 - Register custom pytest markers (unit, integration, agent_pm, agent_research, agent_index)
-- Initialize SuperClaude configuration from pytest config
+- Initialize pytest-agents configuration from pytest config
 - Provide pytest fixtures for agent access
 - Hook into pytest test collection and execution
 
@@ -55,7 +55,7 @@ SuperClaude is a hybrid Python-TypeScript system that extends pytest with AI age
 **Purpose**: Centralized configuration for the entire system
 
 **Features**:
-- Environment variable support (SUPERCLAUDE_*)
+- Environment variable support (PYTEST_AGENTS_*)
 - Pytest configuration integration
 - Dataclass-based configuration with validation
 - Agent path auto-discovery
@@ -68,7 +68,7 @@ SuperClaude is a hybrid Python-TypeScript system that extends pytest with AI age
 
 **Example**:
 ```python
-config = SuperClaudeConfig(
+config = pytest-agentsConfig(
     agent_pm_enabled=True,
     agent_timeout=30,
     log_level="INFO"
@@ -123,7 +123,7 @@ TypeScript Agents (Node.js)
 
 ### 4. CLI Interface (`cli.py`)
 
-**Purpose**: Command-line interface for SuperClaude
+**Purpose**: Command-line interface for pytest-agents
 
 **Commands**:
 - `superclaude version` - Show version
@@ -184,7 +184,7 @@ agent/
 ```
 1. pytest starts
    │
-2. SuperClaude plugin initializes
+2. pytest-agents plugin initializes
    ├─► Load configuration
    ├─► Initialize AgentBridge
    └─► Register fixtures
@@ -287,7 +287,7 @@ AgentClient.invoke()
 
 ### Plugin Architecture
 
-SuperClaude uses pytest's plugin system:
+pytest-agents uses pytest's plugin system:
 
 ```python
 # Entry point in pyproject.toml

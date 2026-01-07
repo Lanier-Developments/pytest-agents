@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from superclaude.agent_bridge import AgentBridge, AgentClient
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.agent_bridge import AgentBridge, AgentClient
+from pytest_agents.config import SuperClaudeConfig
 
 
 @pytest.fixture

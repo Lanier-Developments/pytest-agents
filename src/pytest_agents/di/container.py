@@ -2,11 +2,11 @@
 
 from dependency_injector import containers, providers
 
-from superclaude.agent_bridge import AgentBridge, AgentClient
-from superclaude.config import SuperClaudeConfig
-from superclaude.infrastructure.env_config_factory import EnvConfigFactory
-from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
-from superclaude.infrastructure.subprocess_runner import SubprocessRunner
+from pytest_agents.agent_bridge import AgentBridge, AgentClient
+from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.infrastructure.env_config_factory import EnvConfigFactory
+from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
+from pytest_agents.infrastructure.subprocess_runner import SubprocessRunner
 
 
 class ApplicationContainer(containers.DeclarativeContainer):

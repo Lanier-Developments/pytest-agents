@@ -6,8 +6,8 @@ from typing import Any, Dict
 
 import pytest
 
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import SuperClaudeConfig
 
 
 @pytest.fixture(scope="session")

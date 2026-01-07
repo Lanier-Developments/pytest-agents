@@ -1,6 +1,6 @@
 """Tests for Prometheus metrics collection."""
 
-from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
+from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
 
 
 class TestPrometheusMetrics:
@@ -94,25 +94,34 @@ class TestPrometheusMetrics:
         assert 'operation="write"' in output
 
     def test_preconfigured_metrics(self):
-        """Test that SuperClaude metrics are pre-configured."""
+        """Test that pytest-agents metrics are pre-configured."""
         metrics = PrometheusMetrics()
 
         # These should be pre-configured
-        assert "superclaude_agent_invocations_total" in metrics._metric_configs
-        assert "superclaude_agent_invocations_success_total" in metrics._metric_configs
-        assert "superclaude_agent_invocations_error_total" in metrics._metric_configs
+        assert "pytest_agents_agent_invocations_total" in metrics._metric_configs
         assert (
-            "superclaude_agent_invocation_duration_seconds" in metrics._metric_configs
+            "pytest_agents_agent_invocations_success_total"
+            in metrics._metric_configs
         )
-        assert "superclaude_bridge_initialized_agents_total" in metrics._metric_configs
+        assert (
+            "pytest_agents_agent_invocations_error_total" in metrics._metric_configs
+        )
+        assert (
+            "pytest_agents_agent_invocation_duration_seconds" in metrics._metric_configs
+        )
+        assert (
+            "pytest_agents_bridge_initialized_agents_total"
+            in metrics._metric_configs
+        )
 
         # Verify label configurations
-        assert metrics._metric_configs["superclaude_agent_invocations_total"] == [
+        assert metrics._metric_configs["pytest_agents_agent_invocations_total"] == [
             "agent",
             "action",
         ]
         assert (
-            metrics._metric_configs["superclaude_bridge_initialized_agents_total"] == []
+            metrics._metric_configs["pytest_agents_bridge_initialized_agents_total"]
+            == []
         )
 
     def test_multiple_metrics(self):

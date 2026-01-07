@@ -1,10 +1,10 @@
 # Release Process
 
-This document describes the automated release process for SuperClaude.
+This document describes the automated release process for pytest-agents.
 
 ## Overview
 
-SuperClaude uses **automated semantic versioning** based on conventional commits. The release process:
+pytest-agents uses **automated semantic versioning** based on conventional commits. The release process:
 
 1. Analyzes commit messages since the last release
 2. Determines the appropriate version bump (major, minor, or patch)
@@ -164,7 +164,7 @@ docker pull ghcr.io/kmcallorum/pytest-agents:0.2.0
 
 ### PyPI Publishing
 
-SuperClaude uses **Trusted Publishing** (recommended by PyPI) instead of API tokens.
+pytest-agents uses **Trusted Publishing** (recommended by PyPI) instead of API tokens.
 
 **Quick Setup:**
 

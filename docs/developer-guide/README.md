@@ -1,6 +1,6 @@
 # Developer Guide
 
-Welcome to the SuperClaude developer guide. This guide will help you understand how to develop, test, and contribute to the SuperClaude project.
+Welcome to the pytest-agents developer guide. This guide will help you understand how to develop, test, and contribute to the pytest-agents project.
 
 ## Table of Contents
 
@@ -47,7 +47,7 @@ make verify
 
 ### Python Development
 
-SuperClaude uses modern Python tooling:
+pytest-agents uses modern Python tooling:
 
 - **uv**: Fast Python package installer and resolver
 - **pytest**: Testing framework with custom plugin support
@@ -161,17 +161,17 @@ cd index && npm test
 
 #### Python Tests
 
-SuperClaude uses pytest with custom markers. Place tests in `tests/unit/` or `tests/integration/`.
+pytest-agents uses pytest with custom markers. Place tests in `tests/unit/` or `tests/integration/`.
 
 Example unit test:
 ```python
 import pytest
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.config import pytest-agentsConfig
 
 @pytest.mark.unit
-class TestSuperClaudeConfig:
+class Testpytest-agentsConfig:
     def test_default_initialization(self) -> None:
-        config = SuperClaudeConfig()
+        config = pytest-agentsConfig()
         assert config.agent_timeout == 30
 ```
 
@@ -181,8 +181,8 @@ import pytest
 
 @pytest.mark.integration
 @pytest.mark.agent_pm
-def test_pm_agent_integration(superclaude_agent):
-    result = superclaude_agent.invoke('pm', 'ping')
+def test_pm_agent_integration(pytest_agents_agent):
+    result = pytest_agents_agent.invoke('pm', 'ping')
     assert result['status'] == 'success'
 ```
 

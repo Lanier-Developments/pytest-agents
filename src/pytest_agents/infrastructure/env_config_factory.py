@@ -1,6 +1,6 @@
 """Environment-based configuration factory."""
 
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.config import SuperClaudeConfig
 
 
 class EnvConfigFactory:

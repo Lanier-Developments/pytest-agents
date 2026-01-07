@@ -1,6 +1,6 @@
-# SuperClaude Prometheus Metrics
+# pytest-agents Prometheus Metrics
 
-SuperClaude includes comprehensive Prometheus metrics collection across all components, enabling monitoring and observability for your test automation pipeline.
+pytest-agents includes comprehensive Prometheus metrics collection across all components, enabling monitoring and observability for your test automation pipeline.
 
 ## Architecture
 
@@ -29,21 +29,21 @@ SuperClaude includes comprehensive Prometheus metrics collection across all comp
 
 ```bash
 # Start metrics server on default port (9090)
-superclaude metrics
+pytest-agents metrics
 
 # Start on custom port
-superclaude metrics --port 8080
+pytest-agents metrics --port 8080
 
 # Start on specific host
-superclaude metrics --host localhost --port 9091
+pytest-agents metrics --host localhost --port 9091
 ```
 
 ### Configure via Environment Variables
 
 ```bash
-export SUPERCLAUDE_METRICS_ENABLED=true
-export SUPERCLAUDE_METRICS_PORT=9090
-export SUPERCLAUDE_METRICS_HOST=0.0.0.0
+export PYTEST_AGENTS_METRICS_ENABLED=true
+export PYTEST_AGENTS_METRICS_PORT=9090
+export PYTEST_AGENTS_METRICS_HOST=0.0.0.0
 ```
 
 ### Scrape with Prometheus
@@ -52,7 +52,7 @@ Add to your `prometheus.yml`:
 
 ```yaml
 scrape_configs:
-  - job_name: 'superclaude'
+  - job_name: 'pytest-agents'
     static_configs:
       - targets: ['localhost:9090']
     scrape_interval: 15s
@@ -66,23 +66,23 @@ scrape_configs:
 
 | Metric | Type | Labels | Description |
 |--------|------|--------|-------------|
-| `superclaude_bridge_initialized_agents_total` | Gauge | - | Number of initialized agents |
-| `superclaude_agent_invocations_total` | Counter | `agent`, `action` | Total agent invocations |
-| `superclaude_agent_invocations_success_total` | Counter | `agent`, `action` | Successful invocations |
-| `superclaude_agent_invocations_error_total` | Counter | `agent`, `action` | Failed invocations |
-| `superclaude_agent_invocation_duration_seconds` | Histogram | `agent`, `action` | Invocation duration |
+| `pytest_agents_bridge_initialized_agents_total` | Gauge | - | Number of initialized agents |
+| `pytest_agents_agent_invocations_total` | Counter | `agent`, `action` | Total agent invocations |
+| `pytest_agents_agent_invocations_success_total` | Counter | `agent`, `action` | Successful invocations |
+| `pytest_agents_agent_invocations_error_total` | Counter | `agent`, `action` | Failed invocations |
+| `pytest_agents_agent_invocation_duration_seconds` | Histogram | `agent`, `action` | Invocation duration |
 
 **Example queries:**
 
 ```promql
 # Agent invocation rate
-rate(superclaude_agent_invocations_total[5m])
+rate(pytest_agents_agent_invocations_total[5m])
 
 # Error rate by agent
-rate(superclaude_agent_invocations_error_total[5m]) / rate(superclaude_agent_invocations_total[5m])
+rate(pytest_agents_agent_invocations_error_total[5m]) / rate(pytest_agents_agent_invocations_total[5m])
 
 # P95 invocation latency
-histogram_quantile(0.95, rate(superclaude_agent_invocation_duration_seconds_bucket[5m]))
+histogram_quantile(0.95, rate(pytest_agents_agent_invocation_duration_seconds_bucket[5m]))
 ```
 
 ### PM Agent Metrics
@@ -164,8 +164,8 @@ rate(index_agent_searches_performed_total[5m])
 ### Python
 
 ```python
-from superclaude.di.container import ApplicationContainer
-from superclaude.metrics_server import start_metrics_server
+from pytest_agents.di.container import ApplicationContainer
+from pytest_agents.metrics_server import start_metrics_server
 
 # Setup DI container
 container = ApplicationContainer()
@@ -216,18 +216,18 @@ Example Grafana dashboard queries:
 
 ### Agent Health Panel
 ```promql
-sum(rate(superclaude_agent_invocations_success_total[5m])) by (agent)
+sum(rate(pytest_agents_agent_invocations_success_total[5m])) by (agent)
 ```
 
 ### Error Rate Panel
 ```promql
-sum(rate(superclaude_agent_invocations_error_total[5m])) by (agent) /
-sum(rate(superclaude_agent_invocations_total[5m])) by (agent)
+sum(rate(pytest_agents_agent_invocations_error_total[5m])) by (agent) /
+sum(rate(pytest_agents_agent_invocations_total[5m])) by (agent)
 ```
 
 ### Latency Heatmap
 ```promql
-sum(rate(superclaude_agent_invocation_duration_seconds_bucket[5m])) by (le, agent)
+sum(rate(pytest_agents_agent_invocation_duration_seconds_bucket[5m])) by (le, agent)
 ```
 
 ## Testing Metrics
@@ -249,14 +249,14 @@ Example docker-compose.yml:
 ```yaml
 version: '3.8'
 services:
-  superclaude:
+  pytest-agents:
     build: .
-    command: superclaude metrics
+    command: pytest-agents metrics
     ports:
       - "9090:9090"
     environment:
-      - SUPERCLAUDE_METRICS_ENABLED=true
-      - SUPERCLAUDE_METRICS_PORT=9090
+      - PYTEST_AGENTS_METRICS_ENABLED=true
+      - PYTEST_AGENTS_METRICS_PORT=9090
 
   prometheus:
     image: prom/prometheus:latest
@@ -265,7 +265,7 @@ services:
     ports:
       - "9091:9090"
     depends_on:
-      - superclaude
+      - pytest-agents
 
   grafana:
     image: grafana/grafana:latest
@@ -283,7 +283,7 @@ services:
 lsof -i :9090
 
 # Use a different port
-superclaude metrics --port 9091
+pytest-agents metrics --port 9091
 ```
 
 ### Metrics Not Updating

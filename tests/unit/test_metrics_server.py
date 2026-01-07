@@ -1,9 +1,9 @@
 """Tests for Prometheus metrics HTTP server."""
 
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
-from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
-from superclaude.metrics_server import MetricsServer, start_metrics_server
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
+from pytest_agents.metrics_server import MetricsServer, start_metrics_server
 
 
 class TestMetricsServer:

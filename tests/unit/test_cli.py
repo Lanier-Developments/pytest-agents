@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-from superclaude.cli import cmd_agent, cmd_doctor, cmd_verify, cmd_version, main
+from pytest_agents.cli import cmd_agent, cmd_doctor, cmd_verify, cmd_version, main
 
 
 @pytest.mark.unit
@@ -23,8 +23,8 @@ class TestCLICommands:
         captured = capsys.readouterr()
         assert "SuperClaude v" in captured.out
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_verify_success(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -49,8 +49,8 @@ class TestCLICommands:
         assert "Available agents: pm, research" in captured.out
         assert "All checks passed!" in captured.out
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_verify_no_agents(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -73,8 +73,8 @@ class TestCLICommands:
         captured = capsys.readouterr()
         assert "No agents available" in captured.out
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_verify_agent_failure(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -101,8 +101,8 @@ class TestCLICommands:
         captured = capsys.readouterr()
         assert "Some checks failed" in captured.out
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_verify_exception(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -123,8 +123,8 @@ class TestCLICommands:
         captured = capsys.readouterr()
         assert "Error:" in captured.out
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_agent_success(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -149,8 +149,8 @@ class TestCLICommands:
         assert "Agent: pm" in captured.out
         assert "Status: success" in captured.out
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_agent_with_json_output(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -175,8 +175,8 @@ class TestCLICommands:
         result = json.loads(captured.out)
         assert result["status"] == "success"
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_agent_with_params(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -202,8 +202,8 @@ class TestCLICommands:
         assert exit_code == 0
         mock_bridge.invoke_agent.assert_called_with("pm", "test", {"key": "value"})
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_agent_error(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -225,8 +225,8 @@ class TestCLICommands:
 
         assert exit_code == 1
 
-    @patch("superclaude.cli.AgentBridge")
-    @patch("superclaude.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.AgentBridge")
+    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
     def test_cmd_agent_with_invalid_json_params(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -247,7 +247,7 @@ class TestCLICommands:
         captured = capsys.readouterr()
         assert "Error:" in captured.err
 
-    @patch("superclaude.cli.cmd_verify")
+    @patch("pytest_agents.cli.cmd_verify")
     def test_cmd_doctor(self, mock_verify: Mock) -> None:
         """Test doctor command is alias for verify."""
         mock_verify.return_value = 0
@@ -263,8 +263,8 @@ class TestCLICommands:
 class TestCLIMain:
     """Test cases for CLI main entry point."""
 
-    @patch("sys.argv", ["superclaude", "version"])
-    @patch("superclaude.cli.cmd_version")
+    @patch("sys.argv", ["pytest_agents", "version"])
+    @patch("pytest_agents.cli.cmd_version")
     def test_main_version_command(self, mock_cmd: Mock) -> None:
         """Test main with version command."""
         mock_cmd.return_value = 0
@@ -274,8 +274,8 @@ class TestCLIMain:
         assert exit_code == 0
         mock_cmd.assert_called_once()
 
-    @patch("sys.argv", ["superclaude", "verify"])
-    @patch("superclaude.cli.cmd_verify")
+    @patch("sys.argv", ["pytest_agents", "verify"])
+    @patch("pytest_agents.cli.cmd_verify")
     def test_main_verify_command(self, mock_cmd: Mock) -> None:
         """Test main with verify command."""
         mock_cmd.return_value = 0
@@ -285,8 +285,8 @@ class TestCLIMain:
         assert exit_code == 0
         mock_cmd.assert_called_once()
 
-    @patch("sys.argv", ["superclaude", "doctor"])
-    @patch("superclaude.cli.cmd_doctor")
+    @patch("sys.argv", ["pytest_agents", "doctor"])
+    @patch("pytest_agents.cli.cmd_doctor")
     def test_main_doctor_command(self, mock_cmd: Mock) -> None:
         """Test main with doctor command."""
         mock_cmd.return_value = 0
@@ -296,8 +296,8 @@ class TestCLIMain:
         assert exit_code == 0
         mock_cmd.assert_called_once()
 
-    @patch("sys.argv", ["superclaude", "agent", "pm", "test"])
-    @patch("superclaude.cli.cmd_agent")
+    @patch("sys.argv", ["pytest_agents", "agent", "pm", "test"])
+    @patch("pytest_agents.cli.cmd_agent")
     def test_main_agent_command(self, mock_cmd: Mock) -> None:
         """Test main with agent command."""
         mock_cmd.return_value = 0
@@ -307,7 +307,7 @@ class TestCLIMain:
         assert exit_code == 0
         mock_cmd.assert_called_once()
 
-    @patch("sys.argv", ["superclaude"])
+    @patch("sys.argv", ["pytest_agents"])
     def test_main_no_command(self, capsys) -> None:
         """Test main with no command shows help."""
         exit_code = main()

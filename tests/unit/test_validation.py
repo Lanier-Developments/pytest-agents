@@ -2,7 +2,7 @@
 
 import pytest
 
-from superclaude.utils.validation import validate_agent_response, validate_json
+from pytest_agents.utils.validation import validate_agent_response, validate_json
 
 
 @pytest.mark.unit

@@ -1,6 +1,6 @@
 # Docker Deployment Guide
 
-This guide explains how to build and run SuperClaude using Docker containers.
+This guide explains how to build and run pytest-agents using Docker containers.
 
 ## Prerequisites
 
@@ -29,7 +29,7 @@ docker-compose --profile dev run superclaude-dev
 
 ### Main Service (superclaude)
 
-The default service that runs the SuperClaude verification command.
+The default service that runs the pytest-agents verification command.
 
 ```bash
 docker-compose up superclaude
@@ -95,26 +95,26 @@ docker run --rm -it superclaude:latest /bin/bash
 
 ## Environment Variables
 
-Configure SuperClaude using environment variables:
+Configure pytest-agents using environment variables:
 
 ```bash
 docker run --rm \
-  -e SUPERCLAUDE_AGENT_PM_ENABLED=true \
-  -e SUPERCLAUDE_AGENT_TIMEOUT=60 \
-  -e SUPERCLAUDE_LOG_LEVEL=DEBUG \
+  -e PYTEST_AGENTS_AGENT_PM_ENABLED=true \
+  -e PYTEST_AGENTS_AGENT_TIMEOUT=60 \
+  -e PYTEST_AGENTS_LOG_LEVEL=DEBUG \
   superclaude:latest superclaude verify
 ```
 
 Available variables:
-- `SUPERCLAUDE_PROJECT_ROOT` - Project root directory (default: /app)
-- `SUPERCLAUDE_AGENT_PM_ENABLED` - Enable PM agent (default: true)
-- `SUPERCLAUDE_AGENT_RESEARCH_ENABLED` - Enable Research agent (default: true)
-- `SUPERCLAUDE_AGENT_INDEX_ENABLED` - Enable Index agent (default: true)
-- `SUPERCLAUDE_AGENT_TIMEOUT` - Agent timeout in seconds (default: 30)
-- `SUPERCLAUDE_AGENT_RETRY_COUNT` - Agent retry count (default: 3)
-- `SUPERCLAUDE_LOG_LEVEL` - Logging level (default: INFO)
-- `SUPERCLAUDE_ENABLE_AGENT_CACHING` - Enable caching (default: true)
-- `SUPERCLAUDE_ENABLE_PARALLEL_AGENTS` - Enable parallel execution (default: false)
+- `PYTEST_AGENTS_PROJECT_ROOT` - Project root directory (default: /app)
+- `PYTEST_AGENTS_AGENT_PM_ENABLED` - Enable PM agent (default: true)
+- `PYTEST_AGENTS_AGENT_RESEARCH_ENABLED` - Enable Research agent (default: true)
+- `PYTEST_AGENTS_AGENT_INDEX_ENABLED` - Enable Index agent (default: true)
+- `PYTEST_AGENTS_AGENT_TIMEOUT` - Agent timeout in seconds (default: 30)
+- `PYTEST_AGENTS_AGENT_RETRY_COUNT` - Agent retry count (default: 3)
+- `PYTEST_AGENTS_LOG_LEVEL` - Logging level (default: INFO)
+- `PYTEST_AGENTS_ENABLE_AGENT_CACHING` - Enable caching (default: true)
+- `PYTEST_AGENTS_ENABLE_PARALLEL_AGENTS` - Enable parallel execution (default: false)
 
 ## Volume Mounts
 
@@ -232,7 +232,7 @@ services:
     image: superclaude:latest
     restart: always
     environment:
-      - SUPERCLAUDE_LOG_LEVEL=WARNING
+      - PYTEST_AGENTS_LOG_LEVEL=WARNING
     deploy:
       resources:
         limits:

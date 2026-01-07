@@ -4,11 +4,11 @@ from typing import Any, List, Optional
 
 import pytest
 
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
-from superclaude.di.container import ApplicationContainer
-from superclaude.markers import MarkerRegistry
-from superclaude.utils.logging import setup_logger
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.di.container import ApplicationContainer
+from pytest_agents.markers import MarkerRegistry
+from pytest_agents.utils.logging import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -22,7 +22,7 @@ def pytest_configure(config: Any) -> None:
     Args:
         config: Pytest config object
     """
-    logger.info("Initializing SuperClaude plugin")
+    logger.info("Initializing pytest-agents plugin")
 
     # Register custom markers
     marker_registry = MarkerRegistry()
@@ -30,29 +30,29 @@ def pytest_configure(config: Any) -> None:
 
     # Store config in plugin object
     plugin_config = SuperClaudeConfig.from_pytest_config(config)
-    config._superclaude_config = plugin_config
+    config._pytest_agents_config = plugin_config
 
     # Wire container to modules for dependency injection
     container.wire(
-        modules=["superclaude.hooks", "superclaude.fixtures", "superclaude.cli"]
+        modules=["pytest_agents.hooks", "pytest_agents.fixtures", "pytest_agents.cli"]
     )
 
     # Initialize agent bridge using DI
     try:
         # Resolve agent bridge from container
         agent_bridge = container.agent_bridge()
-        config._superclaude_bridge = agent_bridge
+        config._pytest_agents_bridge = agent_bridge
         logger.info(f"Agents available: {agent_bridge.get_available_agents()}")
     except Exception as e:
         logger.warning(f"Failed to initialize agent bridge: {e}")
         # Fallback to direct instantiation for backwards compatibility
         try:
             agent_bridge = AgentBridge(plugin_config)
-            config._superclaude_bridge = agent_bridge
+            config._pytest_agents_bridge = agent_bridge
             logger.info("Using fallback AgentBridge (no DI)")
         except Exception as fallback_error:
             logger.error(f"Fallback also failed: {fallback_error}")
-            config._superclaude_bridge = None
+            config._pytest_agents_bridge = None
 
 
 def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -> None:
@@ -101,7 +101,7 @@ def pytest_runtest_setup(item: Any) -> None:
     for marker_name, agent_name in agent_markers.items():
         if item.get_closest_marker(marker_name):
             bridge: Optional[AgentBridge] = getattr(
-                item.config, "_superclaude_bridge", None
+                item.config, "_pytest_agents_bridge", None
             )
             if bridge is None:
                 pytest.skip("Agent bridge not available")
@@ -131,6 +131,8 @@ def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
     logger.info(f"Test session finished with status: {exitstatus}")
 
     # Cleanup
-    bridge: Optional[AgentBridge] = getattr(session.config, "_superclaude_bridge", None)
+    bridge: Optional[AgentBridge] = getattr(
+        session.config, "_pytest_agents_bridge", None
+    )
     if bridge:
         logger.debug("Cleaning up agent bridge")

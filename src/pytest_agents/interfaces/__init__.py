@@ -1,6 +1,6 @@
 """Protocol interfaces for dependency injection."""
 
-from superclaude.interfaces.core import (
+from pytest_agents.interfaces.core import (
     IAgentClient,
     IConfigFactory,
     IFileSystem,

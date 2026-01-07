@@ -1,6 +1,6 @@
 # Python API Reference
 
-Complete reference for SuperClaude's Python API.
+Complete reference for pytest-agents's Python API.
 
 ## Table of Contents
 
@@ -12,9 +12,9 @@ Complete reference for SuperClaude's Python API.
 
 ## Configuration
 
-### `SuperClaudeConfig`
+### `pytest-agentsConfig`
 
-Dataclass for SuperClaude configuration management.
+Dataclass for pytest-agents configuration management.
 
 **Location**: `src/superclaude/config.py`
 
@@ -22,7 +22,7 @@ Dataclass for SuperClaude configuration management.
 
 ```python
 @dataclass
-class SuperClaudeConfig:
+class pytest-agentsConfig:
     # Agent configuration
     agent_pm_enabled: bool = True
     agent_research_enabled: bool = True
@@ -65,12 +65,12 @@ Create configuration from pytest config object.
 **Parameters**:
 - `config`: Pytest config object
 
-**Returns**: `SuperClaudeConfig` instance
+**Returns**: `pytest-agentsConfig` instance
 
 **Example**:
 ```python
 def pytest_configure(config):
-    sc_config = SuperClaudeConfig.from_pytest_config(config)
+    sc_config = pytest-agentsConfig.from_pytest_config(config)
 ```
 
 ##### `from_env()`
@@ -78,23 +78,23 @@ def pytest_configure(config):
 Create configuration from environment variables.
 
 **Environment Variables**:
-- `SUPERCLAUDE_AGENT_PM_ENABLED`: Enable PM agent (default: "true")
-- `SUPERCLAUDE_AGENT_RESEARCH_ENABLED`: Enable Research agent (default: "true")
-- `SUPERCLAUDE_AGENT_INDEX_ENABLED`: Enable Index agent (default: "true")
-- `SUPERCLAUDE_PROJECT_ROOT`: Project root directory (default: cwd)
-- `SUPERCLAUDE_AGENT_TIMEOUT`: Agent timeout in seconds (default: "30")
-- `SUPERCLAUDE_AGENT_RETRY_COUNT`: Agent retry count (default: "3")
-- `SUPERCLAUDE_LOG_LEVEL`: Logging level (default: "INFO")
-- `SUPERCLAUDE_ENABLE_AGENT_CACHING`: Enable caching (default: "true")
-- `SUPERCLAUDE_ENABLE_PARALLEL_AGENTS`: Enable parallel execution (default: "false")
+- `PYTEST_AGENTS_AGENT_PM_ENABLED`: Enable PM agent (default: "true")
+- `PYTEST_AGENTS_AGENT_RESEARCH_ENABLED`: Enable Research agent (default: "true")
+- `PYTEST_AGENTS_AGENT_INDEX_ENABLED`: Enable Index agent (default: "true")
+- `PYTEST_AGENTS_PROJECT_ROOT`: Project root directory (default: cwd)
+- `PYTEST_AGENTS_AGENT_TIMEOUT`: Agent timeout in seconds (default: "30")
+- `PYTEST_AGENTS_AGENT_RETRY_COUNT`: Agent retry count (default: "3")
+- `PYTEST_AGENTS_LOG_LEVEL`: Logging level (default: "INFO")
+- `PYTEST_AGENTS_ENABLE_AGENT_CACHING`: Enable caching (default: "true")
+- `PYTEST_AGENTS_ENABLE_PARALLEL_AGENTS`: Enable parallel execution (default: "false")
 
-**Returns**: `SuperClaudeConfig` instance
+**Returns**: `pytest-agentsConfig` instance
 
 **Example**:
 ```python
 import os
-os.environ['SUPERCLAUDE_AGENT_TIMEOUT'] = '60'
-config = SuperClaudeConfig.from_env()
+os.environ['PYTEST_AGENTS_AGENT_TIMEOUT'] = '60'
+config = pytest-agentsConfig.from_env()
 assert config.agent_timeout == 60
 ```
 
@@ -106,7 +106,7 @@ Convert configuration to dictionary.
 
 **Example**:
 ```python
-config = SuperClaudeConfig()
+config = pytest-agentsConfig()
 config_dict = config.to_dict()
 print(config_dict['agent_timeout'])  # 30
 ```
@@ -135,7 +135,7 @@ def __init__(self, name: str, agent_path: Path, timeout: int = 30) -> None:
 **Example**:
 ```python
 from pathlib import Path
-from superclaude.agent_bridge import AgentClient
+from pytest_agents.agent_bridge import AgentClient
 
 client = AgentClient(
     name="pm",
@@ -182,7 +182,7 @@ Bridge for managing multiple TypeScript agents.
 #### Constructor
 
 ```python
-def __init__(self, config: Optional[SuperClaudeConfig] = None) -> None:
+def __init__(self, config: Optional[pytest-agentsConfig] = None) -> None:
     """Initialize agent bridge.
 
     Args:
@@ -192,11 +192,11 @@ def __init__(self, config: Optional[SuperClaudeConfig] = None) -> None:
 
 **Example**:
 ```python
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import pytest-agentsConfig
 
 # With custom config
-config = SuperClaudeConfig(agent_timeout=60)
+config = pytest-agentsConfig(agent_timeout=60)
 bridge = AgentBridge(config)
 
 # With default config
@@ -293,7 +293,7 @@ Verify installation and agent availability.
 
 **Output**:
 ```
-SuperClaude v0.1.0
+pytest-agents v0.1.0
 ========================================
 
 Project root: /app
@@ -351,12 +351,12 @@ superclaude agent pm analyze --params '{"path": "./src"}'
 
 #### `pytest_configure(config)`
 
-Initialize SuperClaude plugin during pytest configuration.
+Initialize pytest-agents plugin during pytest configuration.
 
 **Called**: Automatically by pytest during startup
 
 **Actions**:
-- Creates SuperClaudeConfig from pytest config
+- Creates pytest-agentsConfig from pytest config
 - Initializes AgentBridge
 - Stores in pytest config for access by tests
 
@@ -374,21 +374,21 @@ Modify test collection based on markers.
 
 **Location**: `src/superclaude/fixtures.py`
 
-#### `superclaude_config`
+#### `pytest_agents_config`
 
-Pytest fixture providing SuperClaude configuration.
+Pytest fixture providing pytest-agents configuration.
 
 **Scope**: Session
 
-**Returns**: `SuperClaudeConfig` instance
+**Returns**: `pytest-agentsConfig` instance
 
 **Example**:
 ```python
-def test_config(superclaude_config):
-    assert superclaude_config.agent_timeout == 30
+def test_config(pytest_agents_config):
+    assert pytest_agents_config.agent_timeout == 30
 ```
 
-#### `superclaude_agent`
+#### `pytest_agents_agent`
 
 Pytest fixture providing AgentBridge.
 
@@ -398,8 +398,8 @@ Pytest fixture providing AgentBridge.
 
 **Example**:
 ```python
-def test_agent(superclaude_agent):
-    result = superclaude_agent.invoke('pm', 'ping')
+def test_agent(pytest_agents_agent):
+    result = pytest_agents_agent.invoke('pm', 'ping')
     assert result['status'] == 'success'
 ```
 
@@ -425,8 +425,8 @@ def test_basic():
 
 @pytest.mark.integration
 @pytest.mark.agent_pm
-def test_pm_integration(superclaude_agent):
-    result = superclaude_agent.invoke('pm', 'ping')
+def test_pm_integration(pytest_agents_agent):
+    result = pytest_agents_agent.invoke('pm', 'ping')
     assert result['status'] == 'success'
 ```
 
@@ -449,7 +449,7 @@ Set up a logger with consistent formatting.
 
 **Example**:
 ```python
-from superclaude.utils.logging import setup_logger
+from pytest_agents.utils.logging import setup_logger
 
 logger = setup_logger(__name__, level="DEBUG")
 logger.info("Application started")
@@ -471,7 +471,7 @@ Validate and parse JSON text.
 
 **Example**:
 ```python
-from superclaude.utils.validation import validate_json
+from pytest_agents.utils.validation import validate_json
 
 result = validate_json('{"status": "success"}')
 if result:
@@ -497,7 +497,7 @@ Validate agent response structure.
 
 **Example**:
 ```python
-from superclaude.utils.validation import validate_agent_response
+from pytest_agents.utils.validation import validate_agent_response
 
 response = {"status": "success", "data": {"result": "ok"}}
 if validate_agent_response(response):
@@ -507,15 +507,15 @@ if validate_agent_response(response):
 ## Complete Usage Example
 
 ```python
-"""Complete example of using SuperClaude Python API."""
+"""Complete example of using pytest-agents Python API."""
 
 import pytest
 from pathlib import Path
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import pytest-agentsConfig
 
-# Configure SuperClaude
-config = SuperClaudeConfig(
+# Configure pytest-agents
+config = pytest-agentsConfig(
     project_root=Path.cwd(),
     agent_timeout=60,
     log_level="DEBUG"
@@ -545,22 +545,22 @@ if bridge.is_agent_available("pm"):
 # Use in pytest
 @pytest.mark.integration
 @pytest.mark.agent_pm
-def test_pm_agent(superclaude_agent):
+def test_pm_agent(pytest_agents_agent):
     """Test PM agent integration."""
-    result = superclaude_agent.invoke('pm', 'ping')
+    result = pytest_agents_agent.invoke('pm', 'ping')
     assert result['status'] == 'success'
     assert result['agent'] == 'pm'
 
 @pytest.mark.unit
-def test_config(superclaude_config):
+def test_config(pytest_agents_config):
     """Test configuration."""
-    assert superclaude_config.agent_timeout > 0
-    assert superclaude_config.project_root.exists()
+    assert pytest_agents_config.agent_timeout > 0
+    assert pytest_agents_config.project_root.exists()
 ```
 
 ## Type Hints
 
-SuperClaude uses type hints throughout. Key types:
+pytest-agents uses type hints throughout. Key types:
 
 ```python
 from typing import Any, Dict, Optional

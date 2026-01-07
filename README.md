@@ -1,4 +1,4 @@
-# SuperClaude
+# pytest-agents
 
 [![CI](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml)
@@ -100,8 +100,8 @@ def test_basic_functionality():
 
 @pytest.mark.integration
 @pytest.mark.agent_pm
-def test_with_pm_agent(superclaude_agent):
-    result = superclaude_agent.invoke('pm', 'analyze_project')
+def test_with_pm_agent(pytest_agents_agent):
+    result = pytest_agents_agent.invoke('pm', 'analyze_project')
     assert result['status'] == 'success'
 ```
 
@@ -125,7 +125,7 @@ def test_multi_agent_parallel(agent_coordinator):
 
 ```python
 # Via Python API
-from superclaude.agent_bridge import AgentBridge
+from pytest_agents.agent_bridge import AgentBridge
 
 bridge = AgentBridge()
 result = bridge.invoke_agent('pm', 'track_tasks', {'path': './src'})
@@ -146,8 +146,8 @@ superclaude metrics
 superclaude metrics --port 8080
 
 # Configure via environment
-export SUPERCLAUDE_METRICS_ENABLED=true
-export SUPERCLAUDE_METRICS_PORT=9090
+export PYTEST_AGENTS_METRICS_ENABLED=true
+export PYTEST_AGENTS_METRICS_PORT=9090
 ```
 
 View metrics at `http://localhost:9090/metrics`. See [Metrics Documentation](docs/METRICS.md) for Prometheus and Grafana integration.
@@ -172,7 +172,7 @@ make doctor
 
 ## Docker Support
 
-SuperClaude is fully containerized for easy deployment and development.
+pytest-agents is fully containerized for easy deployment and development.
 
 ### Quick Start with Docker
 
@@ -191,7 +191,7 @@ See [Docker Documentation](docs/DOCKER.md) for complete deployment guide.
 
 ## Security
 
-SuperClaude implements enterprise-grade security practices:
+pytest-agents implements enterprise-grade security practices:
 
 ### Automated Security Scanning
 

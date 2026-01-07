@@ -1,8 +1,8 @@
 """Tests for AgentBridge metrics collection."""
 
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
-from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
 
 
 class TestAgentBridgeMetrics:
@@ -34,8 +34,8 @@ class TestAgentBridgeMetrics:
 
         output = metrics.get_metrics()
 
-        assert "superclaude_bridge_initialized_agents_total" in output
-        assert "superclaude_bridge_initialized_agents_total 2.0" in output
+        assert "pytest_agents_bridge_initialized_agents_total" in output
+        assert "pytest_agents_bridge_initialized_agents_total 2.0" in output
 
     def test_bridge_tracks_agent_invocations(self, tmp_path):
         """Test that bridge tracks agent invocations."""
@@ -66,15 +66,15 @@ class TestAgentBridgeMetrics:
         output = metrics.get_metrics()
 
         # Check invocation metrics
-        assert "superclaude_agent_invocations_total" in output
+        assert "pytest_agents_agent_invocations_total" in output
         assert 'agent="pm"' in output
         assert 'action="ping"' in output
 
         # Check success metrics
-        assert "superclaude_agent_invocations_success_total" in output
+        assert "pytest_agents_agent_invocations_success_total" in output
 
         # Check duration metrics
-        assert "superclaude_agent_invocation_duration_seconds" in output
+        assert "pytest_agents_agent_invocation_duration_seconds" in output
 
     def test_bridge_tracks_error_invocations(self, tmp_path):
         """Test that bridge tracks failed agent invocations."""
@@ -105,7 +105,7 @@ class TestAgentBridgeMetrics:
         output = metrics.get_metrics()
 
         # Check error metrics
-        assert "superclaude_agent_invocations_error_total" in output
+        assert "pytest_agents_agent_invocations_error_total" in output
         assert 'agent="pm"' in output
         assert 'action="test_action"' in output
 

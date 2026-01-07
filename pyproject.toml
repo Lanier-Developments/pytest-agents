@@ -1,14 +1,14 @@
 [project]
-name = "superclaude"
+name = "pytest-agents"
 version = "0.8.1"
-description = "Pytest plugin framework with AI agent capabilities"
+description = "Pytest plugin framework with AI agent capabilities for multi-agent testing"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
     {name = "Kevin McAllorum", email = "kmcallorum@example.com"}
 ]
-keywords = ["pytest", "testing", "ai", "agents", "claude"]
+keywords = ["pytest", "testing", "ai", "agents", "multi-agent", "typescript"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: Pytest",
@@ -35,10 +35,10 @@ dev = [
 ]
 
 [project.entry-points.pytest11]
-superclaude = "superclaude.plugin"
+pytest_agents = "pytest_agents.plugin"
 
 [project.scripts]
-superclaude = "superclaude.cli:main"
+pytest-agents = "pytest_agents.cli:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -52,7 +52,7 @@ python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
     "--verbose",
-    "--cov=src/superclaude",
+    "--cov=src/pytest_agents",
     "--cov-report=term-missing",
     "--cov-report=html",
 ]
@@ -68,7 +68,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["src/superclaude"]
+source = ["src/pytest_agents"]
 omit = ["*/tests/*", "*/__pycache__/*"]
 
 [tool.coverage.report]

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.config import SuperClaudeConfig
 
 
 @pytest.mark.unit
@@ -97,7 +97,7 @@ class TestSuperClaudeConfig:
 
     def test_log_file_configuration(self, temp_project_dir: Path) -> None:
         """Test log file path configuration."""
-        log_file = temp_project_dir / "superclaude.log"
+        log_file = temp_project_dir / "pytest_agents.log"
         config = SuperClaudeConfig(log_file=log_file)
         assert config.log_file == log_file
 
@@ -216,14 +216,14 @@ class TestSuperClaudeConfig:
     def test_from_pytest_config_with_ini_values(self, mock_pytest_config) -> None:
         """Test from_pytest_config with various ini values."""
         mock_pytest_config.inicfg = {
-            "superclaude_agent_pm_enabled": False,
-            "superclaude_agent_research_enabled": True,
-            "superclaude_agent_index_enabled": False,
-            "superclaude_agent_timeout": 45,
-            "superclaude_agent_retry_count": 5,
-            "superclaude_log_level": "DEBUG",
-            "superclaude_enable_agent_caching": False,
-            "superclaude_enable_parallel_agents": True,
+            "pytest_agents_agent_pm_enabled": False,
+            "pytest_agents_agent_research_enabled": True,
+            "pytest_agents_agent_index_enabled": False,
+            "pytest_agents_agent_timeout": 45,
+            "pytest_agents_agent_retry_count": 5,
+            "pytest_agents_log_level": "DEBUG",
+            "pytest_agents_enable_agent_caching": False,
+            "pytest_agents_enable_parallel_agents": True,
         }
 
         config = SuperClaudeConfig.from_pytest_config(mock_pytest_config)

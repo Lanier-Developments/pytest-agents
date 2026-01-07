@@ -6,9 +6,9 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional, Protocol
 
-from superclaude.config import SuperClaudeConfig
-from superclaude.utils.logging import setup_logger
-from superclaude.utils.validation import validate_agent_response, validate_json
+from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.utils.logging import setup_logger
+from pytest_agents.utils.validation import validate_agent_response, validate_json
 
 logger = setup_logger(__name__)
 
@@ -193,7 +193,7 @@ class AgentBridge:
         # Track initialized agents count
         if self._metrics:
             self._metrics.set_gauge(
-                "superclaude_bridge_initialized_agents_total", len(self.agents)
+                "pytest_agents_bridge_initialized_agents_total", len(self.agents)
             )
 
         logger.info(f"Initialized bridge with agents: {list(self.agents.keys())}")
@@ -244,7 +244,7 @@ class AgentBridge:
         # Track total invocations
         if self._metrics:
             self._metrics.increment_counter(
-                "superclaude_agent_invocations_total",
+                "pytest_agents_agent_invocations_total",
                 {"agent": agent_name, "action": action},
             )
 
@@ -257,19 +257,19 @@ class AgentBridge:
             if self._metrics:
                 duration = time.time() - start_time
                 self._metrics.observe_histogram(
-                    "superclaude_agent_invocation_duration_seconds",
+                    "pytest_agents_agent_invocation_duration_seconds",
                     duration,
                     {"agent": agent_name, "action": action},
                 )
 
                 if response.get("status") == "success":
                     self._metrics.increment_counter(
-                        "superclaude_agent_invocations_success_total",
+                        "pytest_agents_agent_invocations_success_total",
                         {"agent": agent_name, "action": action},
                     )
                 else:
                     self._metrics.increment_counter(
-                        "superclaude_agent_invocations_error_total",
+                        "pytest_agents_agent_invocations_error_total",
                         {"agent": agent_name, "action": action},
                     )
 
@@ -279,12 +279,12 @@ class AgentBridge:
             if self._metrics:
                 duration = time.time() - start_time
                 self._metrics.observe_histogram(
-                    "superclaude_agent_invocation_duration_seconds",
+                    "pytest_agents_agent_invocation_duration_seconds",
                     duration,
                     {"agent": agent_name, "action": action},
                 )
                 self._metrics.increment_counter(
-                    "superclaude_agent_invocations_error_total",
+                    "pytest_agents_agent_invocations_error_total",
                     {"agent": agent_name, "action": action},
                 )
             raise

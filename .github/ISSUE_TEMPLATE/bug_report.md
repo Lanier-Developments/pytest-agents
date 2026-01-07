@@ -31,7 +31,7 @@ Steps to reproduce the behavior:
 - OS: <!-- e.g., Ubuntu 22.04, macOS 14.0, Windows 11 -->
 - Python Version: <!-- e.g., 3.11.5 -->
 - Node.js Version: <!-- e.g., 20.10.0 -->
-- SuperClaude Version: <!-- e.g., 0.1.0 -->
+- pytest-agents Version: <!-- e.g., 0.1.0 -->
 - Installation Method: <!-- e.g., pip, Docker -->
 
 ## Additional Context

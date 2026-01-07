@@ -1,6 +1,6 @@
 # PyPI Publishing Setup Guide
 
-This guide walks you through setting up automated PyPI publishing for SuperClaude using GitHub's trusted publishing feature.
+This guide walks you through setting up automated PyPI publishing for pytest-agents using GitHub's trusted publishing feature.
 
 ## Why Trusted Publishing?
 
@@ -313,7 +313,7 @@ If trusted publishing doesn't work for your setup:
 
 1. Go to https://pypi.org/manage/account/token/
 2. Click **Add API token**
-3. Name: "GitHub Actions - SuperClaude"
+3. Name: "GitHub Actions - pytest-agents"
 4. Scope: "Entire account" or specific project
 5. Copy the token (starts with `pypi-`)
 

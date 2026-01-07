@@ -1,6 +1,6 @@
-# SuperClaude Performance Benchmarks
+# pytest-agents Performance Benchmarks
 
-This document tracks performance benchmarks for SuperClaude core operations.
+This document tracks performance benchmarks for pytest-agents core operations.
 
 ## Benchmark Environment
 
@@ -82,7 +82,7 @@ Creating individual agent client instances.
 - Std Dev: 15.4 μs
 - Operations/sec: 144,511
 
-Creating SuperClaudeConfig with default values.
+Creating pytest-agentsConfig with default values.
 
 **test_config_from_env_performance**
 - Min: 22.8 μs

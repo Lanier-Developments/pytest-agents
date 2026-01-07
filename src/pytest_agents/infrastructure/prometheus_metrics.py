@@ -24,18 +24,18 @@ class PrometheusMetrics:
 
         # Pre-configure metrics with their expected labels
         self._configure_metric(
-            "superclaude_agent_invocations_total", ["agent", "action"]
+            "pytest_agents_agent_invocations_total", ["agent", "action"]
         )
         self._configure_metric(
-            "superclaude_agent_invocations_success_total", ["agent", "action"]
+            "pytest_agents_agent_invocations_success_total", ["agent", "action"]
         )
         self._configure_metric(
-            "superclaude_agent_invocations_error_total", ["agent", "action"]
+            "pytest_agents_agent_invocations_error_total", ["agent", "action"]
         )
         self._configure_metric(
-            "superclaude_agent_invocation_duration_seconds", ["agent", "action"]
+            "pytest_agents_agent_invocation_duration_seconds", ["agent", "action"]
         )
-        self._configure_metric("superclaude_bridge_initialized_agents_total", [])
+        self._configure_metric("pytest_agents_bridge_initialized_agents_total", [])
 
     def _configure_metric(self, name: str, label_names: list[str]) -> None:
         """Pre-configure a metric with its label names.

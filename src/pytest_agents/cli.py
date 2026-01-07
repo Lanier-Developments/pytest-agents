@@ -1,15 +1,15 @@
-"""CLI commands for SuperClaude."""
+"""CLI commands for pytest-agents."""
 
 import argparse
 import json
 import sys
 
-from superclaude import __version__
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
-from superclaude.di.container import ApplicationContainer
-from superclaude.metrics_server import start_metrics_server
-from superclaude.utils.logging import setup_logger
+from pytest_agents import __version__
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.di.container import ApplicationContainer
+from pytest_agents.metrics_server import start_metrics_server
+from pytest_agents.utils.logging import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -147,7 +147,7 @@ def cmd_metrics(args: argparse.Namespace) -> int:
     try:
         # Setup DI container
         container = ApplicationContainer()
-        container.wire(modules=["superclaude.cli"])
+        container.wire(modules=["pytest_agents.cli"])
 
         # Get instances from container
         metrics = container.metrics()

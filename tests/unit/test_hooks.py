@@ -4,10 +4,10 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+from pytest_agents import hooks
 
-from superclaude import hooks
-from superclaude.agent_bridge import AgentBridge
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.config import SuperClaudeConfig
 
 
 @pytest.mark.unit
@@ -24,14 +24,14 @@ class TestPytestHooks:
         pm_agent.write_text("console.log('{}');")
 
         mock_pytest_config.rootpath = tmp_path
-        mock_pytest_config._superclaude_bridge = None
+        mock_pytest_config._pytest_agents_bridge = None
 
         # Call the hook
         hooks.pytest_configure(mock_pytest_config)
 
         # Verify bridge was created
-        assert hasattr(mock_pytest_config, "_superclaude_bridge")
-        assert hasattr(mock_pytest_config, "_superclaude_config")
+        assert hasattr(mock_pytest_config, "_pytest_agents_bridge")
+        assert hasattr(mock_pytest_config, "_pytest_agents_config")
 
     def test_pytest_configure_handles_bridge_failure(self, mock_pytest_config) -> None:
         """Test pytest_configure gracefully handles bridge init failure."""
@@ -42,7 +42,7 @@ class TestPytestHooks:
         hooks.pytest_configure(mock_pytest_config)
 
         # Bridge might be None if initialization failed
-        bridge = getattr(mock_pytest_config, "_superclaude_bridge", None)
+        bridge = getattr(mock_pytest_config, "_pytest_agents_bridge", None)
         assert bridge is None or isinstance(bridge, AgentBridge)
 
     def test_pytest_collection_modifyitems_logs_collection(
@@ -90,7 +90,7 @@ class TestPytestHooks:
         item.get_closest_marker = Mock(return_value=Mock())  # Has agent marker
 
         # Remove bridge
-        mock_pytest_config._superclaude_bridge = None
+        mock_pytest_config._pytest_agents_bridge = None
 
         with pytest.raises(pytest.skip.Exception):
             hooks.pytest_runtest_setup(item)
@@ -107,7 +107,7 @@ class TestPytestHooks:
             agent_index_enabled=False,
         )
         bridge = AgentBridge(config)
-        mock_pytest_config._superclaude_bridge = bridge
+        mock_pytest_config._pytest_agents_bridge = bridge
 
         item = Mock()
         item.config = mock_pytest_config
@@ -131,7 +131,7 @@ class TestPytestHooks:
             project_root=tmp_path, agent_pm_enabled=True, agent_pm_path=pm_agent
         )
         bridge = AgentBridge(config)
-        mock_pytest_config._superclaude_bridge = bridge
+        mock_pytest_config._pytest_agents_bridge = bridge
 
         item = Mock()
         item.config = mock_pytest_config
@@ -180,7 +180,7 @@ class TestPytestHooks:
         """Test sessionfinish hook logs exit status."""
         session = Mock()
         session.config = mock_pytest_config
-        mock_pytest_config._superclaude_bridge = None
+        mock_pytest_config._pytest_agents_bridge = None
 
         # Should not raise
         hooks.pytest_sessionfinish(session, 0)
@@ -196,7 +196,7 @@ class TestPytestHooks:
 
         config = SuperClaudeConfig(project_root=tmp_path)
         bridge = AgentBridge(config)
-        mock_pytest_config._superclaude_bridge = bridge
+        mock_pytest_config._pytest_agents_bridge = bridge
 
         session = Mock()
         session.config = mock_pytest_config

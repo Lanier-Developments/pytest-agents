@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for SuperClaude
+# Multi-stage Dockerfile for pytest-agents
 # Stage 1: Build TypeScript agents
 FROM node:20-alpine AS ts-builder
 
@@ -63,7 +63,7 @@ COPY Makefile README.md ./
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV SUPERCLAUDE_PROJECT_ROOT=/app
+ENV PYTEST_AGENTS_PROJECT_ROOT=/app
 
 # Default command runs verification
 CMD ["superclaude", "verify"]

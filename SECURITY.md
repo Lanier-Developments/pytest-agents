@@ -55,7 +55,7 @@ When reporting a vulnerability, please include:
 
 ## Security Features
 
-SuperClaude implements the following security measures:
+pytest-agents implements the following security measures:
 
 ### Code Security
 
@@ -77,7 +77,7 @@ SuperClaude implements the following security measures:
 
 ## Security Best Practices
 
-When using SuperClaude, we recommend:
+When using pytest-agents, we recommend:
 
 ### API Keys and Secrets
 
@@ -138,7 +138,7 @@ Subscribe to [GitHub Security Advisories](https://github.com/kmcallorum/pytest-a
 
 ## Compliance
 
-SuperClaude development follows:
+pytest-agents development follows:
 
 - OWASP Top 10 security practices
 - GitHub Security Best Practices

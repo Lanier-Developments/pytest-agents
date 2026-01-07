@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from superclaude.config import SuperClaudeConfig
+from pytest_agents.config import SuperClaudeConfig
 
 
 @pytest.fixture

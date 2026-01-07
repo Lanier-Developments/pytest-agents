@@ -6,9 +6,9 @@ from typing import Optional
 
 from prometheus_client import REGISTRY, generate_latest, start_http_server
 
-from superclaude.agent_bridge import AgentBridge
-from superclaude.infrastructure.prometheus_metrics import PrometheusMetrics
-from superclaude.utils.logging import setup_logger
+from pytest_agents.agent_bridge import AgentBridge
+from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
+from pytest_agents.utils.logging import setup_logger
 
 logger = setup_logger(__name__)
 

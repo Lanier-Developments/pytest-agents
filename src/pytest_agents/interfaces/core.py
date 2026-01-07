@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Protocol
 
 if TYPE_CHECKING:
-    from superclaude.config import SuperClaudeConfig
+    from pytest_agents.config import SuperClaudeConfig
 
 
 class IProcessRunner(Protocol):

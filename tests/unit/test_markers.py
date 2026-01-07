@@ -2,7 +2,7 @@
 
 import pytest
 
-from superclaude.markers import MARKERS, MarkerRegistry
+from pytest_agents.markers import MARKERS, MarkerRegistry
 
 
 @pytest.mark.unit

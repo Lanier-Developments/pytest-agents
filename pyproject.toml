@@ -1,6 +1,6 @@
 [project]
 name = "superclaude"
-version = "0.7.0"
+version = "0.8.0"
 description = "Pytest plugin framework with AI agent capabilities"
 readme = "README.md"
 requires-python = ">=3.11"

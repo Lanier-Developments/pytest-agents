@@ -1,6 +1,6 @@
 """SuperClaude - Pytest plugin framework with AI agent capabilities."""
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 from superclaude.plugin import SuperClaudePlugin
 

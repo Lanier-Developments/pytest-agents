@@ -195,7 +195,9 @@ class TestAgentBridge:
 
     def test_is_agent_available(self, temp_project_dir: Path) -> None:
         """Test checking if agent is available."""
-        config = PytestAgentsConfig(project_root=temp_project_dir, agent_pm_enabled=True)
+        config = PytestAgentsConfig(
+            project_root=temp_project_dir, agent_pm_enabled=True
+        )
 
         bridge = AgentBridge(config)
 
@@ -210,7 +212,9 @@ class TestAgentBridge:
         pm_path.parent.mkdir(parents=True, exist_ok=True)
         pm_path.touch()
 
-        config = PytestAgentsConfig(project_root=temp_project_dir, agent_pm_enabled=True)
+        config = PytestAgentsConfig(
+            project_root=temp_project_dir, agent_pm_enabled=True
+        )
         bridge = AgentBridge(config)
 
         # Mock successful response
@@ -227,7 +231,9 @@ class TestAgentBridge:
 
     def test_invoke_agent_not_available(self, temp_project_dir: Path) -> None:
         """Test invoking unavailable agent raises error."""
-        config = PytestAgentsConfig(project_root=temp_project_dir, agent_pm_enabled=True)
+        config = PytestAgentsConfig(
+            project_root=temp_project_dir, agent_pm_enabled=True
+        )
         bridge = AgentBridge(config)
 
         with pytest.raises(ValueError, match="Agent 'nonexistent' not available"):

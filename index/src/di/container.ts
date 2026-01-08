@@ -47,22 +47,18 @@ export function setupContainer(): void {
   container.registerSingleton(TOKENS.ISymbolMapper, SymbolMapper);
   container.register(TOKENS.ISearchBuilder, { useClass: SearchBuilder });
 
-  // Use a factory for IndexStorage that creates it lazily but caches it
-  // This ensures the singleton is created after all dependencies are ready
-  container.register(TOKENS.IIndexStorage, {
-    useFactory: (c) => {
-      if (!storageInstanceCache) {
-        storageInstanceCache = new IndexStorage(
-          c.resolve(TOKENS.IFileReader),
-          c.resolve(TOKENS.IFileWriter),
-          c.resolve(TOKENS.IPathResolver),
-          c.resolve(TOKENS.ILogger),
-          process.cwd()
-        );
-      }
-      return storageInstanceCache;
-    },
-  });
+  // Create IndexStorage singleton instance and register it
+  // This ensures all agents share the same storage instance
+  if (!storageInstanceCache) {
+    storageInstanceCache = new IndexStorage(
+      container.resolve(TOKENS.IFileReader),
+      container.resolve(TOKENS.IFileWriter),
+      container.resolve(TOKENS.IPathResolver),
+      container.resolve(TOKENS.ILogger),
+      process.cwd()
+    );
+  }
+  container.registerInstance(TOKENS.IIndexStorage, storageInstanceCache);
 }
 
 /**

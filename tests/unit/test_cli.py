@@ -24,7 +24,7 @@ class TestCLICommands:
         assert "SuperClaude v" in captured.out
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_verify_success(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -50,7 +50,7 @@ class TestCLICommands:
         assert "All checks passed!" in captured.out
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_verify_no_agents(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -74,7 +74,7 @@ class TestCLICommands:
         assert "No agents available" in captured.out
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_verify_agent_failure(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -102,7 +102,7 @@ class TestCLICommands:
         assert "Some checks failed" in captured.out
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_verify_exception(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -124,7 +124,7 @@ class TestCLICommands:
         assert "Error:" in captured.out
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_agent_success(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -150,7 +150,7 @@ class TestCLICommands:
         assert "Status: success" in captured.out
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_agent_with_json_output(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -176,7 +176,7 @@ class TestCLICommands:
         assert result["status"] == "success"
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_agent_with_params(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -203,7 +203,7 @@ class TestCLICommands:
         mock_bridge.invoke_agent.assert_called_with("pm", "test", {"key": "value"})
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_agent_error(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:
@@ -226,7 +226,7 @@ class TestCLICommands:
         assert exit_code == 1
 
     @patch("pytest_agents.cli.AgentBridge")
-    @patch("pytest_agents.cli.SuperClaudeConfig.from_env")
+    @patch("pytest_agents.cli.PytestAgentsConfig.from_env")
     def test_cmd_agent_with_invalid_json_params(
         self, mock_config: Mock, mock_bridge_class: Mock, capsys
     ) -> None:

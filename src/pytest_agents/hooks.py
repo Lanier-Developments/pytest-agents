@@ -5,7 +5,7 @@ from typing import Any, List, Optional
 import pytest
 
 from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 from pytest_agents.di.container import ApplicationContainer
 from pytest_agents.markers import MarkerRegistry
 from pytest_agents.utils.logging import setup_logger
@@ -29,7 +29,7 @@ def pytest_configure(config: Any) -> None:
     marker_registry.register_markers(config)
 
     # Store config in plugin object
-    plugin_config = SuperClaudeConfig.from_pytest_config(config)
+    plugin_config = PytestAgentsConfig.from_pytest_config(config)
     config._pytest_agents_config = plugin_config
 
     # Wire container to modules for dependency injection

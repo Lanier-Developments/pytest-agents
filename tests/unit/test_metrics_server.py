@@ -1,7 +1,7 @@
 """Tests for Prometheus metrics HTTP server."""
 
 from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
 from pytest_agents.metrics_server import MetricsServer, start_metrics_server
 
@@ -92,7 +92,7 @@ class TestMetricsServer:
             """
         )
 
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,

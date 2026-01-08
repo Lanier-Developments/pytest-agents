@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, Mock, patch
 import pytest
 
 from pytest_agents.agent_bridge import AgentBridge, AgentClient
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 
 
 @pytest.mark.unit
@@ -156,7 +156,7 @@ class TestAgentBridge:
 
     def test_initialization_with_config(self, temp_project_dir: Path) -> None:
         """Test bridge initialization with custom config."""
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             project_root=temp_project_dir,
             agent_pm_enabled=True,
             agent_research_enabled=False,
@@ -175,11 +175,11 @@ class TestAgentBridge:
         bridge = AgentBridge()
 
         assert bridge.config is not None
-        assert isinstance(bridge.config, SuperClaudeConfig)
+        assert isinstance(bridge.config, PytestAgentsConfig)
 
     def test_get_available_agents(self, temp_project_dir: Path) -> None:
         """Test getting available agents."""
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             project_root=temp_project_dir,
             agent_pm_enabled=True,
             agent_research_enabled=True,
@@ -195,7 +195,7 @@ class TestAgentBridge:
 
     def test_is_agent_available(self, temp_project_dir: Path) -> None:
         """Test checking if agent is available."""
-        config = SuperClaudeConfig(project_root=temp_project_dir, agent_pm_enabled=True)
+        config = PytestAgentsConfig(project_root=temp_project_dir, agent_pm_enabled=True)
 
         bridge = AgentBridge(config)
 
@@ -210,7 +210,7 @@ class TestAgentBridge:
         pm_path.parent.mkdir(parents=True, exist_ok=True)
         pm_path.touch()
 
-        config = SuperClaudeConfig(project_root=temp_project_dir, agent_pm_enabled=True)
+        config = PytestAgentsConfig(project_root=temp_project_dir, agent_pm_enabled=True)
         bridge = AgentBridge(config)
 
         # Mock successful response
@@ -227,7 +227,7 @@ class TestAgentBridge:
 
     def test_invoke_agent_not_available(self, temp_project_dir: Path) -> None:
         """Test invoking unavailable agent raises error."""
-        config = SuperClaudeConfig(project_root=temp_project_dir, agent_pm_enabled=True)
+        config = PytestAgentsConfig(project_root=temp_project_dir, agent_pm_enabled=True)
         bridge = AgentBridge(config)
 
         with pytest.raises(ValueError, match="Agent 'nonexistent' not available"):
@@ -235,7 +235,7 @@ class TestAgentBridge:
 
     def test_initialization_with_disabled_agents(self, temp_project_dir: Path) -> None:
         """Test initialization with all agents disabled."""
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             project_root=temp_project_dir,
             agent_pm_enabled=False,
             agent_research_enabled=False,

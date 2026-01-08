@@ -5,17 +5,17 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 
 
 @pytest.fixture
-def mock_config() -> SuperClaudeConfig:
+def mock_config() -> PytestAgentsConfig:
     """Fixture providing a mock configuration.
 
     Returns:
-        SuperClaudeConfig: Test configuration
+        PytestAgentsConfig: Test configuration
     """
-    return SuperClaudeConfig(
+    return PytestAgentsConfig(
         agent_pm_enabled=True,
         agent_research_enabled=True,
         agent_index_enabled=True,

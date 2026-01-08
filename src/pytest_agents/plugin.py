@@ -41,20 +41,20 @@ __all__ = [
 
 # For pytest plugin discovery
 def pytest_addoption(parser: Any) -> None:
-    """Add command line options for SuperClaude.
+    """Add command line options for pytest-agents.
 
     Args:
         parser: Pytest parser object
     """
-    group = parser.getgroup("superclaude")
+    group = parser.getgroup("pytest-agents")
     group.addoption(
-        "--superclaude-no-agents",
+        "--pytest-agents-no-agents",
         action="store_true",
         default=False,
         help="Disable all agent functionality",
     )
     group.addoption(
-        "--superclaude-agent-timeout",
+        "--pytest-agents-agent-timeout",
         action="store",
         default=30,
         type=int,

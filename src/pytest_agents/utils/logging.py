@@ -1,4 +1,4 @@
-"""Logging utilities for SuperClaude."""
+"""Logging utilities for pytest-agents."""
 
 import logging
 import sys
@@ -7,7 +7,7 @@ from typing import Optional
 
 
 def setup_logger(
-    name: str = "superclaude",
+    name: str = "pytest_agents",
     level: str = "INFO",
     log_file: Optional[Path] = None,
 ) -> logging.Logger:

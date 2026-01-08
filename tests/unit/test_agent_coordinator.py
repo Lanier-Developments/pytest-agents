@@ -5,7 +5,7 @@ import time
 import pytest
 
 from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 from pytest_agents.fixtures import AgentCoordinator
 
 
@@ -54,7 +54,7 @@ def coordinator(tmp_path):
         """
     )
 
-    config = SuperClaudeConfig(
+    config = PytestAgentsConfig(
         agent_pm_enabled=True,
         agent_pm_path=pm_agent,
         agent_research_enabled=True,

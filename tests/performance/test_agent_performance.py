@@ -5,13 +5,13 @@ from pathlib import Path
 import pytest
 
 from pytest_agents.agent_bridge import AgentBridge, AgentClient
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 
 
 @pytest.fixture
 def agent_bridge(tmp_path: Path) -> AgentBridge:
     """Create agent bridge for performance testing."""
-    config = SuperClaudeConfig(
+    config = PytestAgentsConfig(
         project_root=tmp_path,
         agent_timeout=120,
         agent_pm_enabled=True,
@@ -29,7 +29,7 @@ class TestAgentBridgePerformance:
         """Benchmark AgentBridge initialization time."""
 
         def create_bridge():
-            config = SuperClaudeConfig(project_root=tmp_path)
+            config = PytestAgentsConfig(project_root=tmp_path)
             return AgentBridge(config)
 
         result = benchmark(create_bridge)
@@ -69,7 +69,7 @@ class TestConfigPerformance:
         monkeypatch.setenv("SUPERCLAUDE_PROJECT_ROOT", "/tmp/test")
 
         def load_config():
-            return SuperClaudeConfig.from_env()
+            return PytestAgentsConfig.from_env()
 
         result = benchmark(load_config)
         assert result is not None
@@ -79,7 +79,7 @@ class TestConfigPerformance:
         """Benchmark direct configuration initialization."""
 
         def create_config():
-            return SuperClaudeConfig(
+            return PytestAgentsConfig(
                 project_root=tmp_path,
                 agent_timeout=60,
                 agent_pm_enabled=True,

@@ -6,7 +6,7 @@ import sys
 
 from pytest_agents import __version__
 from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 from pytest_agents.di.container import ApplicationContainer
 from pytest_agents.metrics_server import start_metrics_server
 from pytest_agents.utils.logging import setup_logger
@@ -39,7 +39,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
     print(f"SuperClaude v{__version__}")
     print("=" * 40)
 
-    config = SuperClaudeConfig.from_env()
+    config = PytestAgentsConfig.from_env()
     print(f"\nProject root: {config.project_root}")
     print(f"Agent timeout: {config.agent_timeout}s")
 
@@ -91,7 +91,7 @@ def cmd_agent(args: argparse.Namespace) -> int:
     Returns:
         int: Exit code
     """
-    config = SuperClaudeConfig.from_env()
+    config = PytestAgentsConfig.from_env()
     bridge = AgentBridge(config)
 
     try:
@@ -134,7 +134,7 @@ def cmd_metrics(args: argparse.Namespace) -> int:
     Returns:
         int: Exit code
     """
-    config = SuperClaudeConfig.from_env()
+    config = PytestAgentsConfig.from_env()
 
     # Override with CLI arguments
     port = args.port if args.port else config.metrics_port

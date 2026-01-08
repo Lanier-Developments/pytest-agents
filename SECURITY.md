@@ -93,7 +93,7 @@ When using pytest-agents, we recommend:
 docker run --security-opt=no-new-privileges:true \
            --cap-drop=ALL \
            --read-only \
-           superclaude:latest
+           pytest_agents:latest
 ```
 
 ### Python Environment

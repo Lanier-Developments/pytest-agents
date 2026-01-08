@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Protocol
 
 if TYPE_CHECKING:
-    from pytest_agents.config import SuperClaudeConfig
+    from pytest_agents.config import PytestAgentsConfig
 
 
 class IProcessRunner(Protocol):
@@ -80,11 +80,11 @@ class IAgentClient(Protocol):
 class IConfigFactory(Protocol):
     """Configuration creation abstraction."""
 
-    def create(self) -> "SuperClaudeConfig":
+    def create(self) -> "PytestAgentsConfig":
         """Create configuration instance.
 
         Returns:
-            SuperClaudeConfig instance
+            PytestAgentsConfig instance
         """
         ...
 

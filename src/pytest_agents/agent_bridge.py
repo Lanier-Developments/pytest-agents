@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional, Protocol
 
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 from pytest_agents.utils.logging import setup_logger
 from pytest_agents.utils.validation import validate_agent_response, validate_json
 
@@ -153,7 +153,7 @@ class AgentBridge:
 
     def __init__(
         self,
-        config: Optional[SuperClaudeConfig] = None,
+        config: Optional[PytestAgentsConfig] = None,
         client_factory: Optional[Any] = None,
         process_runner: Optional[IProcessRunner] = None,
         metrics: Optional[Any] = None,
@@ -166,7 +166,7 @@ class AgentBridge:
             process_runner: Optional process runner for direct client creation
             metrics: Optional metrics collector
         """
-        self.config = config or SuperClaudeConfig.from_env()
+        self.config = config or PytestAgentsConfig.from_env()
         self.agents: Dict[str, AgentClient] = {}
         self._client_factory = client_factory
         self._process_runner = process_runner

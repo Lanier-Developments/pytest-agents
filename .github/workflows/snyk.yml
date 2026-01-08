@@ -100,7 +100,7 @@ jobs:
       with:
         context: .
         load: true
-        tags: superclaude:test
+        tags: pytest-agents:test
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -110,7 +110,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        image: superclaude:test
+        image: pytest-agents:test
         args: --severity-threshold=high --sarif-file-output=snyk.sarif
 
     - name: Upload Snyk results to GitHub Code Scanning

@@ -1,4 +1,4 @@
-"""Custom pytest fixtures for SuperClaude."""
+"""Custom pytest fixtures for pytest-agents."""
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -7,39 +7,39 @@ from typing import Any, Dict
 import pytest
 
 from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 
 
 @pytest.fixture(scope="session")
-def superclaude_config(request: Any) -> SuperClaudeConfig:
-    """Fixture providing SuperClaude configuration.
+def pytest_agents_config(request: Any) -> PytestAgentsConfig:
+    """Fixture providing pytest-agents configuration.
 
     Args:
         request: Pytest request object
 
     Returns:
-        SuperClaudeConfig: Configuration instance
+        PytestAgentsConfig: Configuration instance
     """
-    return SuperClaudeConfig.from_pytest_config(request.config)
+    return PytestAgentsConfig.from_pytest_config(request.config)
 
 
 @pytest.fixture(scope="session")
-def superclaude_agent(superclaude_config: SuperClaudeConfig) -> AgentBridge:
+def pytest_agents_agent(pytest_agents_config: PytestAgentsConfig) -> AgentBridge:
     """Fixture providing access to agents from tests.
 
     Args:
-        superclaude_config: Configuration fixture
+        pytest_agents_config: Configuration fixture
 
     Returns:
         AgentBridge: Agent bridge instance
 
     Example:
         @pytest.mark.agent_pm
-        def test_with_pm_agent(superclaude_agent):
-            result = superclaude_agent.invoke_agent('pm', 'track_tasks')
+        def test_with_pm_agent(pytest_agents_agent):
+            result = pytest_agents_agent.invoke_agent('pm', 'track_tasks')
             assert result['status'] == 'success'
     """
-    return AgentBridge(superclaude_config)
+    return AgentBridge(pytest_agents_config)
 
 
 @pytest.fixture
@@ -63,11 +63,11 @@ def project_context(request: Any) -> Dict[str, Any]:
 
 
 @pytest.fixture
-def agent_coordinator(superclaude_agent: AgentBridge) -> "AgentCoordinator":
+def agent_coordinator(pytest_agents_agent: AgentBridge) -> "AgentCoordinator":
     """Fixture for multi-agent coordination.
 
     Args:
-        superclaude_agent: Agent bridge fixture
+        pytest_agents_agent: Agent bridge fixture
 
     Returns:
         AgentCoordinator: Coordinator instance
@@ -79,7 +79,7 @@ def agent_coordinator(superclaude_agent: AgentBridge) -> "AgentCoordinator":
                 ('index', 'index_repository')
             ])
     """
-    return AgentCoordinator(superclaude_agent)
+    return AgentCoordinator(pytest_agents_agent)
 
 
 class AgentCoordinator:

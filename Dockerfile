@@ -66,4 +66,4 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTEST_AGENTS_PROJECT_ROOT=/app
 
 # Default command runs verification
-CMD ["superclaude", "verify"]
+CMD ["pytest-agents", "verify"]

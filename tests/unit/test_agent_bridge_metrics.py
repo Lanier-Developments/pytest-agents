@@ -1,7 +1,7 @@
 """Tests for AgentBridge metrics collection."""
 
 from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
 
 
@@ -19,7 +19,7 @@ class TestAgentBridgeMetrics:
         research_agent.parent.mkdir(parents=True)
         research_agent.write_text("console.log('mock')")
 
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=True,
@@ -47,7 +47,7 @@ class TestAgentBridgeMetrics:
             'console.log(JSON.stringify({status: "success", data: {message: "pong"}}));'
         )
 
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,
@@ -86,7 +86,7 @@ class TestAgentBridgeMetrics:
             'console.log(JSON.stringify({status: "error", data: {error: "failed"}}));'
         )
 
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,
@@ -126,7 +126,7 @@ class TestAgentBridgeMetrics:
             'console.log(JSON.stringify({status: "success", data: {}}));'
         )
 
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=True,
@@ -160,7 +160,7 @@ class TestAgentBridgeMetrics:
             'console.log(JSON.stringify({status: "success", data: {message: "pong"}}));'
         )
 
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,

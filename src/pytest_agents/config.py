@@ -1,4 +1,4 @@
-"""Configuration management for SuperClaude."""
+"""Configuration management for pytest-agents."""
 
 import os
 from dataclasses import dataclass, field
@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 
 
 @dataclass
-class SuperClaudeConfig:
+class PytestAgentsConfig:
     """Configuration for SuperClaude plugin."""
 
     # Agent configuration
@@ -50,14 +50,14 @@ class SuperClaudeConfig:
             self.agent_index_path = self.project_root / "index" / "dist" / "index.js"
 
     @classmethod
-    def from_pytest_config(cls, config: Any) -> "SuperClaudeConfig":
+    def from_pytest_config(cls, config: Any) -> "PytestAgentsConfig":
         """Create config from pytest config object.
 
         Args:
             config: Pytest config object
 
         Returns:
-            SuperClaudeConfig: Configuration instance
+            PytestAgentsConfig: Configuration instance
         """
         ini_config = config.inicfg
 
@@ -82,11 +82,11 @@ class SuperClaudeConfig:
         )
 
     @classmethod
-    def from_env(cls) -> "SuperClaudeConfig":
+    def from_env(cls) -> "PytestAgentsConfig":
         """Create config from environment variables.
 
         Returns:
-            SuperClaudeConfig: Configuration instance
+            PytestAgentsConfig: Configuration instance
         """
         return cls(
             agent_pm_enabled=os.getenv("SUPERCLAUDE_AGENT_PM_ENABLED", "true").lower()

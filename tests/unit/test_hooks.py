@@ -7,7 +7,7 @@ import pytest
 
 from pytest_agents import hooks
 from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 
 
 @pytest.mark.unit
@@ -100,7 +100,7 @@ class TestPytestHooks:
     ) -> None:
         """Test runtest setup skips if specific agent unavailable."""
         # Create bridge with no agents
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             project_root=tmp_path,
             agent_pm_enabled=False,
             agent_research_enabled=False,
@@ -127,7 +127,7 @@ class TestPytestHooks:
         pm_agent.parent.mkdir(parents=True)
         pm_agent.write_text("console.log('{}');")
 
-        config = SuperClaudeConfig(
+        config = PytestAgentsConfig(
             project_root=tmp_path, agent_pm_enabled=True, agent_pm_path=pm_agent
         )
         bridge = AgentBridge(config)
@@ -194,7 +194,7 @@ class TestPytestHooks:
         pm_agent.parent.mkdir(parents=True)
         pm_agent.write_text("console.log('{}');")
 
-        config = SuperClaudeConfig(project_root=tmp_path)
+        config = PytestAgentsConfig(project_root=tmp_path)
         bridge = AgentBridge(config)
         mock_pytest_config._pytest_agents_bridge = bridge
 

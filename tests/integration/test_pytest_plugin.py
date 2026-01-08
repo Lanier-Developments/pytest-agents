@@ -29,10 +29,10 @@ class TestPytestPluginIntegration:
         for marker in expected_markers:
             assert marker in marker_names, f"Marker '{marker}' not registered"
 
-    def test_superclaude_config_available(self, pytestconfig) -> None:
+    def test_pytest_agents_config_available(self, pytestconfig) -> None:
         """Test that SuperClaude config is available in pytest config."""
         # The config should be attached by our plugin
-        assert hasattr(pytestconfig, "_superclaude_config") or True
+        assert hasattr(pytestconfig, "_pytest_agents_config") or True
         # We allow this to pass even if not set, as it depends on plugin initialization
 
     @pytest.mark.unit

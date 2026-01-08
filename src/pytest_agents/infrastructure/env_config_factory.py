@@ -1,14 +1,14 @@
 """Environment-based configuration factory."""
 
-from pytest_agents.config import SuperClaudeConfig
+from pytest_agents.config import PytestAgentsConfig
 
 
 class EnvConfigFactory:
-    """Factory for creating SuperClaudeConfig from environment.
+    """Factory for creating PytestAgentsConfig from environment.
 
     Implements IConfigFactory protocol.
     """
 
-    def create(self) -> SuperClaudeConfig:
+    def create(self) -> PytestAgentsConfig:
         """Create configuration from environment variables."""
-        return SuperClaudeConfig.from_env()
+        return PytestAgentsConfig.from_env()

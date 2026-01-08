@@ -7,7 +7,7 @@
 [![PyPI](https://img.shields.io/pypi/v/pytest-agents)](https://pypi.org/project/pytest-agents/)
 [![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Test Coverage](https://img.shields.io/badge/coverage-74%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
+[![codecov](https://codecov.io/gh/kmcallorum/pytest-agents/branch/main/graph/badge.svg)](https://codecov.io/gh/kmcallorum/pytest-agents)
 [![Tests](https://img.shields.io/badge/tests-182%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
 [![Metrics](https://img.shields.io/badge/metrics-prometheus-blue.svg)](docs/METRICS.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)

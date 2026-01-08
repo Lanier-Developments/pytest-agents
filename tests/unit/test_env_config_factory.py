@@ -18,9 +18,7 @@ class TestEnvConfigFactory:
         assert factory is not None
 
     @patch("pytest_agents.config.PytestAgentsConfig.from_env")
-    def test_create_returns_config_from_env(
-        self, mock_from_env: patch
-    ) -> None:
+    def test_create_returns_config_from_env(self, mock_from_env: patch) -> None:
         """Test create() calls PytestAgentsConfig.from_env()."""
         factory = EnvConfigFactory()
 

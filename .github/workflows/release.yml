@@ -25,7 +25,6 @@ on:
 permissions:
   contents: write
   packages: write
-  id-token: write
 
 jobs:
   check-version:

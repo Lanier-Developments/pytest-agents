@@ -4,11 +4,11 @@
 [![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml)
 [![Release](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/kmcallorum/pytest-agents)](https://github.com/kmcallorum/pytest-agents/releases)
-[![PyPI](https://img.shields.io/pypi/v/superclaude)](https://pypi.org/project/superclaude/)
+[![PyPI](https://img.shields.io/pypi/v/pytest-agents)](https://pypi.org/project/pytest-agents/)
 [![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Test Coverage](https://img.shields.io/badge/coverage-60%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
-[![Tests](https://img.shields.io/badge/tests-223%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Test Coverage](https://img.shields.io/badge/coverage-61%25-yellow.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Tests](https://img.shields.io/badge/tests-230%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
 [![Metrics](https://img.shields.io/badge/metrics-prometheus-blue.svg)](docs/METRICS.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](docs/DOCKER.md)
@@ -32,13 +32,13 @@ A pytest plugin framework with AI agent capabilities for project management, res
 
 **From PyPI (Recommended):**
 ```bash
-pip install superclaude
+pip install pytest-agents
 ```
 
 **From Docker:**
 ```bash
 docker pull ghcr.io/kmcallorum/pytest-agents:latest
-docker run ghcr.io/kmcallorum/pytest-agents:latest superclaude verify
+docker run ghcr.io/kmcallorum/pytest-agents:latest pytest-agents verify
 ```
 
 **From Source:**
@@ -77,7 +77,7 @@ make test-ts
 
 ```
 pytest-agents/
-├── src/superclaude/     # Python pytest plugin package
+├── src/pytest_agents/   # Python pytest plugin package
 ├── tests/               # Python tests
 ├── pm/                  # TypeScript PM agent
 ├── research/            # TypeScript Research agent
@@ -133,17 +133,17 @@ result = bridge.invoke_agent('pm', 'track_tasks', {'path': './src'})
 
 ```bash
 # Via CLI
-superclaude agent pm --action track_tasks --path ./src
+pytest-agents agent pm --action track_tasks --path ./src
 ```
 
 ### Metrics and Observability
 
 ```bash
 # Start Prometheus metrics server
-superclaude metrics
+pytest-agents metrics
 
 # Custom port
-superclaude metrics --port 8080
+pytest-agents metrics --port 8080
 
 # Configure via environment
 export PYTEST_AGENTS_METRICS_ENABLED=true
@@ -178,13 +178,13 @@ pytest-agents is fully containerized for easy deployment and development.
 
 ```bash
 # Build and run verification
-docker-compose up superclaude
+docker-compose up pytest-agents
 
 # Run tests in Docker
-docker-compose --profile test up superclaude-test
+docker-compose --profile test up pytest-agents-test
 
 # Start development shell
-docker-compose --profile dev run superclaude-dev
+docker-compose --profile dev run pytest-agents-dev
 ```
 
 See [Docker Documentation](docs/DOCKER.md) for complete deployment guide.
@@ -205,7 +205,7 @@ pytest-agents implements enterprise-grade security practices:
 
 - Multi-stage Docker builds with minimal attack surface
 - Dependency pinning for reproducible builds
-- Comprehensive test coverage (60%, 223 tests)
+- Comprehensive test coverage (61%, 230 tests)
 - Automated security updates grouped by severity
 
 ### Setup and Configuration

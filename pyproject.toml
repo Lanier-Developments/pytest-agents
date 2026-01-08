@@ -69,7 +69,12 @@ markers = [
 
 [tool.coverage.run]
 source = ["src/pytest_agents"]
-omit = ["*/tests/*", "*/__pycache__/*"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/interfaces/*",  # Protocol definitions - not executable
+    "*/__init__.py",   # Import-only files
+]
 
 [tool.coverage.report]
 exclude_lines = [

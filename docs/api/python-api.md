@@ -16,7 +16,7 @@ Complete reference for pytest-agents's Python API.
 
 Dataclass for pytest-agents configuration management.
 
-**Location**: `src/superclaude/config.py`
+**Location**: `src/pytest-agents/config.py`
 
 #### Class Definition
 
@@ -117,7 +117,7 @@ print(config_dict['agent_timeout'])  # 30
 
 Client for communicating with a single TypeScript agent.
 
-**Location**: `src/superclaude/agent_bridge.py`
+**Location**: `src/pytest-agents/agent_bridge.py`
 
 #### Constructor
 
@@ -177,7 +177,7 @@ if response["status"] == "success":
 
 Bridge for managing multiple TypeScript agents.
 
-**Location**: `src/superclaude/agent_bridge.py`
+**Location**: `src/pytest-agents/agent_bridge.py`
 
 #### Constructor
 
@@ -257,7 +257,7 @@ if bridge.is_agent_available("pm"):
 
 ### Command Functions
 
-**Location**: `src/superclaude/cli.py`
+**Location**: `src/pytest-agents/cli.py`
 
 #### `main()`
 
@@ -267,10 +267,10 @@ Main CLI entry point.
 
 **Usage**:
 ```bash
-superclaude --help
-superclaude version
-superclaude verify
-superclaude agent pm list_tasks
+pytest-agents --help
+pytest-agents version
+pytest-agents verify
+pytest-agents agent pm list_tasks
 ```
 
 #### `cmd_version(args)`
@@ -334,20 +334,20 @@ Invoke an agent from command line.
 **Usage**:
 ```bash
 # Human-readable output
-superclaude agent pm list_tasks
+pytest-agents agent pm list_tasks
 
 # JSON output
-superclaude agent pm list_tasks --json
+pytest-agents agent pm list_tasks --json
 
 # With parameters
-superclaude agent pm analyze --params '{"path": "./src"}'
+pytest-agents agent pm analyze --params '{"path": "./src"}'
 ```
 
 ## Pytest Integration
 
 ### Hooks
 
-**Location**: `src/superclaude/hooks.py`
+**Location**: `src/pytest-agents/hooks.py`
 
 #### `pytest_configure(config)`
 
@@ -372,7 +372,7 @@ Modify test collection based on markers.
 
 ### Fixtures
 
-**Location**: `src/superclaude/fixtures.py`
+**Location**: `src/pytest-agents/fixtures.py`
 
 #### `pytest_agents_config`
 
@@ -405,7 +405,7 @@ def test_agent(pytest_agents_agent):
 
 ### Markers
 
-**Location**: `src/superclaude/markers.py`
+**Location**: `src/pytest-agents/markers.py`
 
 #### Custom Markers
 
@@ -434,7 +434,7 @@ def test_pm_integration(pytest_agents_agent):
 
 ### Logging
 
-**Location**: `src/superclaude/utils/logging.py`
+**Location**: `src/pytest-agents/utils/logging.py`
 
 #### `setup_logger(name, level=None, log_file=None)`
 
@@ -458,7 +458,7 @@ logger.debug("Debug information")
 
 ### Validation
 
-**Location**: `src/superclaude/utils/validation.py`
+**Location**: `src/pytest-agents/utils/validation.py`
 
 #### `validate_json(text)`
 

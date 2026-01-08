@@ -51,7 +51,7 @@ If you don't have a PyPI account yet:
 4. Fill in the form with these EXACT values:
 
    ```
-   PyPI Project Name:        superclaude
+   PyPI Project Name:        pytest-agents
    Owner:                    kmcallorum
    Repository name:          pytest-agents
    Workflow name:            release.yml
@@ -62,7 +62,7 @@ If you don't have a PyPI account yet:
 
 6. You should see the pending publisher listed:
    ```
-   superclaude (pending)
+   pytest-agents (pending)
    Owner: kmcallorum
    Repository: pytest-agents
    Workflow: release.yml
@@ -73,7 +73,7 @@ If you don't have a PyPI account yet:
 The trusted publisher is now registered. On the next release:
 
 1. The GitHub Action will publish to PyPI
-2. PyPI will automatically create the `superclaude` project
+2. PyPI will automatically create the `pytest-agents` project
 3. The "pending" status will change to "active"
 
 **Check current configuration:**
@@ -104,7 +104,7 @@ gh workflow run release.yml
 gh run watch
 
 # Check if published to PyPI
-# Visit: https://pypi.org/project/superclaude/
+# Visit: https://pypi.org/project/pytest-agents/
 ```
 
 ### 5. Verify Package Installation
@@ -117,13 +117,13 @@ python -m venv test-env
 source test-env/bin/activate  # On Windows: test-env\Scripts\activate
 
 # Install from PyPI
-pip install superclaude
+pip install pytest-agents
 
 # Verify installation
-superclaude version
+pytest-agents version
 
 # Test basic functionality
-superclaude verify
+pytest-agents verify
 
 # Cleanup
 deactivate
@@ -134,14 +134,14 @@ rm -rf test-env
 
 ### "Project name already exists"
 
-**Issue:** Someone else has already claimed the `superclaude` name on PyPI.
+**Issue:** Someone else has already claimed the `pytest-agents` name on PyPI.
 
 **Solution:**
-1. Choose a different name (e.g., `superclaude-ai`, `superclaude-framework`)
+1. Choose a different name (e.g., `pytest-agents-ai`, `pytest-agents-framework`)
 2. Update `pyproject.toml`:
    ```toml
    [project]
-   name = "superclaude-ai"  # Change this
+   name = "pytest-agents-ai"  # Change this
    ```
 3. Update the trusted publisher configuration on PyPI
 4. Commit and push the change
@@ -190,23 +190,23 @@ This will trigger a new version (e.g., 0.2.1).
 
 ```bash
 # Via pip
-pip index versions superclaude
+pip index versions pytest-agents
 
 # Via PyPI website
-# Visit: https://pypi.org/project/superclaude/#history
+# Visit: https://pypi.org/project/pytest-agents/#history
 ```
 
 ### Download Statistics
 
 View package download stats:
-- PyPI Stats: https://pypistats.org/packages/superclaude
-- Libraries.io: https://libraries.io/pypi/superclaude
+- PyPI Stats: https://pypistats.org/packages/pytest-agents
+- Libraries.io: https://libraries.io/pypi/pytest-agents
 
 ### Yanking a Release
 
 If you need to remove a bad release:
 
-1. Go to https://pypi.org/project/superclaude/
+1. Go to https://pypi.org/project/pytest-agents/
 2. Select the version
 3. Click **Options** → **Yank release**
 4. Provide a reason (e.g., "Critical security issue")
@@ -268,7 +268,7 @@ If publishing multiple packages from one repo:
 **pyproject.toml:**
 ```toml
 [project]
-name = "superclaude-core"
+name = "pytest-agents-core"
 
 [project.optional-dependencies]
 cli = [...]
@@ -293,7 +293,7 @@ PyPI will mark these as pre-releases automatically.
 
 Install pre-releases:
 ```bash
-pip install --pre superclaude
+pip install --pre pytest-agents
 ```
 
 ### Test PyPI

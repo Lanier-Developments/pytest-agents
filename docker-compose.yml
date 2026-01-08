@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   # pytest-agents main service
-  superclaude:
+  pytest-agents:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: superclaude
+    container_name: pytest-agents
     volumes:
       # Mount source code for development
       - ./src:/app/src:ro
@@ -24,16 +24,16 @@ services:
       - PYTEST_AGENTS_LOG_LEVEL=INFO
       - PYTEST_AGENTS_ENABLE_AGENT_CACHING=true
       - PYTEST_AGENTS_ENABLE_PARALLEL_AGENTS=false
-    command: ["superclaude", "verify"]
+    command: ["pytest-agents", "verify"]
     networks:
-      - superclaude-network
+      - pytest-agents-network
 
   # Test runner service
-  superclaude-test:
+  pytest-agents-test:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: superclaude-test
+    container_name: pytest-agents-test
     volumes:
       - ./src:/app/src:ro
       - ./tests:/app/tests:ro
@@ -41,18 +41,18 @@ services:
     environment:
       - PYTEST_AGENTS_PROJECT_ROOT=/app
       - PYTHONUNBUFFERED=1
-    command: ["uv", "run", "pytest", "-v", "--cov=src/superclaude", "--cov-report=html"]
+    command: ["uv", "run", "pytest", "-v", "--cov=src/pytest_agents", "--cov-report=html"]
     networks:
-      - superclaude-network
+      - pytest-agents-network
     profiles:
       - test
 
   # Development shell service
-  superclaude-dev:
+  pytest-agents-dev:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: superclaude-dev
+    container_name: pytest-agents-dev
     volumes:
       - .:/app
       - agent-data:/app/.agent-memory
@@ -63,12 +63,12 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - superclaude-network
+      - pytest-agents-network
     profiles:
       - dev
 
 networks:
-  superclaude-network:
+  pytest-agents-network:
     driver: bridge
 
 volumes:

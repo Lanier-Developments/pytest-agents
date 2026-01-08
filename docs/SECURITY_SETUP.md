@@ -227,7 +227,7 @@ make test
 snyk test
 
 # Docker security scan (requires Snyk CLI)
-snyk container test superclaude:latest
+snyk container test pytest-agents:latest
 ```
 
 ## Installing Snyk CLI (Optional)
@@ -245,8 +245,8 @@ snyk auth
 snyk test --file=pyproject.toml
 
 # Test Docker image
-docker build -t superclaude:test .
-snyk container test superclaude:test
+docker build -t pytest-agents:test .
+snyk container test pytest-agents:test
 
 # Test TypeScript agent
 cd pm && snyk test

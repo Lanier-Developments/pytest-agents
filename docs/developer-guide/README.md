@@ -56,7 +56,7 @@ pytest-agents uses modern Python tooling:
 
 #### Making Changes to Python Code
 
-1. Make your changes in `src/superclaude/`
+1. Make your changes in `src/pytest-agents/`
 2. Format code: `make format`
 3. Lint code: `make lint`
 4. Run tests: `make test-python`
@@ -100,7 +100,7 @@ cd index && npm run build
 
 ```
 pytest-agents/
-├── src/superclaude/          # Python package
+├── src/pytest-agents/          # Python package
 │   ├── __init__.py           # Package initialization
 │   ├── plugin.py             # Pytest plugin entry point
 │   ├── hooks.py              # Pytest hooks implementation
@@ -149,7 +149,7 @@ make test-python
 uv run pytest tests/unit/test_config.py -v
 
 # With coverage
-uv run pytest --cov=src/superclaude --cov-report=html
+uv run pytest --cov=src/pytest-agents --cov-report=html
 
 # TypeScript tests
 cd pm && npm test
@@ -349,7 +349,7 @@ cd pm && rm -rf dist node_modules && npm install && npm run build
 rm -rf .coverage htmlcov/
 
 # Run tests fresh
-uv run pytest --cov=src/superclaude --cov-report=html
+uv run pytest --cov=src/pytest-agents --cov-report=html
 ```
 
 ### Getting Help

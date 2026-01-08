@@ -138,8 +138,8 @@ Each release creates:
 
 ### 2. PyPI Package
 
-- **Location**: https://pypi.org/project/superclaude/
-- **Install**: `pip install superclaude`
+- **Location**: https://pypi.org/project/pytest-agents/
+- **Install**: `pip install pytest-agents`
 - **Contains**:
   - Python wheel (`.whl`)
   - Source distribution (`.tar.gz`)
@@ -172,7 +172,7 @@ pytest-agents uses **Trusted Publishing** (recommended by PyPI) instead of API t
 2. Configure trusted publisher:
    - Go to https://pypi.org/manage/account/publishing/
    - Add pending publisher:
-     - Project: `superclaude`
+     - Project: `pytest-agents`
      - Owner: `kmcallorum`
      - Repo: `pytest-agents`
      - Workflow: `release.yml`
@@ -195,11 +195,11 @@ The release workflow updates versions in:
 1. **pyproject.toml**
    ```toml
    [project]
-   name = "superclaude"
+   name = "pytest-agents"
    version = "0.2.0"  # Updated automatically
    ```
 
-2. **src/superclaude/__init__.py**
+2. **src/pytest-agents/__init__.py**
    ```python
    __version__ = "0.2.0"  # Updated automatically
    ```
@@ -270,7 +270,7 @@ gh pr merge --squash
 gh release view v0.2.0
 
 # Verify PyPI
-pip install superclaude==0.2.0
+pip install pytest-agents==0.2.0
 
 # Verify Docker
 docker pull ghcr.io/kmcallorum/pytest-agents:0.2.0
@@ -398,7 +398,7 @@ twine upload --skip-existing --repository pypi dist/*
 ```
 
 Or via PyPI web interface:
-- Go to https://pypi.org/project/superclaude/
+- Go to https://pypi.org/project/pytest-agents/
 - Select version → Manage → Yank release
 
 ### 2. Mark GitHub Release as Pre-release
@@ -444,7 +444,7 @@ docker pull ghcr.io/kmcallorum/pytest-agents:latest
 
 ### PyPI Downloads
 
-View stats at: https://pypistats.org/packages/superclaude
+View stats at: https://pypistats.org/packages/pytest-agents
 
 ## References
 

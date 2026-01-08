@@ -16,41 +16,41 @@ This guide explains how to build and run pytest-agents using Docker containers.
 docker-compose build
 
 # Run verification
-docker-compose up superclaude
+docker-compose up pytest-agents
 
 # Run tests
-docker-compose --profile test up superclaude-test
+docker-compose --profile test up pytest-agents-test
 
 # Start development shell
-docker-compose --profile dev run superclaude-dev
+docker-compose --profile dev run pytest-agents-dev
 ```
 
 ## Docker Services
 
-### Main Service (superclaude)
+### Main Service (pytest-agents)
 
 The default service that runs the pytest-agents verification command.
 
 ```bash
-docker-compose up superclaude
+docker-compose up pytest-agents
 ```
 
-### Test Service (superclaude-test)
+### Test Service (pytest-agents-test)
 
 Runs the full test suite with coverage reporting.
 
 ```bash
-docker-compose --profile test up superclaude-test
+docker-compose --profile test up pytest-agents-test
 ```
 
 Coverage reports are saved to the `test-coverage` volume.
 
-### Development Service (superclaude-dev)
+### Development Service (pytest-agents-dev)
 
 Interactive shell for development work.
 
 ```bash
-docker-compose --profile dev run superclaude-dev
+docker-compose --profile dev run pytest-agents-dev
 ```
 
 ## Building the Image
@@ -58,13 +58,13 @@ docker-compose --profile dev run superclaude-dev
 ### Standard Build
 
 ```bash
-docker build -t superclaude:latest .
+docker build -t pytest-agents:latest .
 ```
 
 ### Multi-Architecture Build
 
 ```bash
-docker buildx build --platform linux/amd/amd64,linux/arm64 -t superclaude:latest .
+docker buildx build --platform linux/amd/amd64,linux/arm64 -t pytest-agents:latest .
 ```
 
 ## Running Containers
@@ -72,25 +72,25 @@ docker buildx build --platform linux/amd/amd64,linux/arm64 -t superclaude:latest
 ### Run Verification
 
 ```bash
-docker run --rm superclaude:latest superclaude verify
+docker run --rm pytest-agents:latest pytest-agents verify
 ```
 
 ### Run Specific Agent
 
 ```bash
-docker run --rm superclaude:latest superclaude agent pm list_tasks
+docker run --rm pytest-agents:latest pytest-agents agent pm list_tasks
 ```
 
 ### Run Tests
 
 ```bash
-docker run --rm superclaude:latest uv run pytest -v
+docker run --rm pytest-agents:latest uv run pytest -v
 ```
 
 ### Interactive Shell
 
 ```bash
-docker run --rm -it superclaude:latest /bin/bash
+docker run --rm -it pytest-agents:latest /bin/bash
 ```
 
 ## Environment Variables
@@ -102,7 +102,7 @@ docker run --rm \
   -e PYTEST_AGENTS_AGENT_PM_ENABLED=true \
   -e PYTEST_AGENTS_AGENT_TIMEOUT=60 \
   -e PYTEST_AGENTS_LOG_LEVEL=DEBUG \
-  superclaude:latest superclaude verify
+  pytest-agents:latest pytest-agents verify
 ```
 
 Available variables:
@@ -126,7 +126,7 @@ Mount source code for live updates:
 docker run --rm -it \
   -v $(pwd)/src:/app/src \
   -v $(pwd)/tests:/app/tests \
-  superclaude:latest /bin/bash
+  pytest-agents:latest /bin/bash
 ```
 
 ### Agent State Persistence
@@ -135,15 +135,15 @@ Persist agent memory and state:
 
 ```bash
 docker run --rm \
-  -v superclaude-data:/app/.agent-memory \
-  superclaude:latest superclaude verify
+  -v pytest-agents-data:/app/.agent-memory \
+  pytest-agents:latest pytest-agents verify
 ```
 
 ## Docker Compose Profiles
 
 ### Default Profile
 
-Runs only the main superclaude service:
+Runs only the main pytest-agents service:
 
 ```bash
 docker-compose up
@@ -190,7 +190,7 @@ This approach:
 
 ```bash
 # Clean build (no cache)
-docker build --no-cache -t superclaude:latest .
+docker build --no-cache -t pytest-agents:latest .
 
 # Check build logs
 docker-compose build --progress=plain
@@ -200,13 +200,13 @@ docker-compose build --progress=plain
 
 ```bash
 # View container logs
-docker-compose logs superclaude
+docker-compose logs pytest-agents
 
 # Check running containers
 docker ps -a
 
 # Inspect container
-docker inspect superclaude
+docker inspect pytest-agents
 ```
 
 ### Agent Path Issues
@@ -215,9 +215,9 @@ If agents can't be found:
 
 ```bash
 # Verify agent files exist in container
-docker run --rm superclaude:latest ls -la /app/pm/dist
-docker run --rm superclaude:latest ls -la /app/research/dist
-docker run --rm superclaude:latest ls -la /app/index/dist
+docker run --rm pytest-agents:latest ls -la /app/pm/dist
+docker run --rm pytest-agents:latest ls -la /app/research/dist
+docker run --rm pytest-agents:latest ls -la /app/index/dist
 ```
 
 ## Production Deployment
@@ -228,8 +228,8 @@ docker run --rm superclaude:latest ls -la /app/index/dist
 # docker-compose.prod.yml
 version: '3.8'
 services:
-  superclaude:
-    image: superclaude:latest
+  pytest-agents:
+    image: pytest-agents:latest
     restart: always
     environment:
       - PYTEST_AGENTS_LOG_LEVEL=WARNING
@@ -253,7 +253,7 @@ docker-compose -f docker-compose.prod.yml up -d
 Add to Dockerfile:
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD superclaude verify || exit 1
+  CMD pytest-agents verify || exit 1
 ```
 
 ## CI/CD Integration
@@ -269,9 +269,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build Docker image
-        run: docker build -t superclaude:${{ github.sha }} .
+        run: docker build -t pytest-agents:${{ github.sha }} .
       - name: Run tests in container
-        run: docker run --rm superclaude:${{ github.sha }} uv run pytest -v
+        run: docker run --rm pytest-agents:${{ github.sha }} uv run pytest -v
 ```
 
 ## Additional Resources

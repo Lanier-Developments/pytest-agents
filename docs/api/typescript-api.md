@@ -820,11 +820,11 @@ describe('MyAgent', () => {
 ### Step 7: Register with Python
 
 ```python
-# In superclaude/config.py
+# In pytest-agents/config.py
 agent_myagent_enabled: bool = True
 agent_myagent_path: Optional[Path] = None
 
-# In superclaude/agent_bridge.py
+# In pytest-agents/agent_bridge.py
 if self.config.agent_myagent_enabled and self.config.agent_myagent_path:
     self.agents["myagent"] = AgentClient(
         "myagent",

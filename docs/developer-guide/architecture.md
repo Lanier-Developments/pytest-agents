@@ -45,10 +45,10 @@ pytest-agents is a hybrid Python-TypeScript system that extends pytest with AI a
 - Hook into pytest test collection and execution
 
 **Key Files**:
-- `src/superclaude/plugin.py` - Plugin registration
-- `src/superclaude/hooks.py` - Pytest hook implementations
-- `src/superclaude/markers.py` - Custom marker definitions
-- `src/superclaude/fixtures.py` - Pytest fixtures
+- `src/pytest-agents/plugin.py` - Plugin registration
+- `src/pytest-agents/hooks.py` - Pytest hook implementations
+- `src/pytest-agents/markers.py` - Custom marker definitions
+- `src/pytest-agents/fixtures.py` - Pytest fixtures
 
 ### 2. Configuration Management (`config.py`)
 
@@ -126,10 +126,10 @@ TypeScript Agents (Node.js)
 **Purpose**: Command-line interface for pytest-agents
 
 **Commands**:
-- `superclaude version` - Show version
-- `superclaude verify` - Verify installation
-- `superclaude doctor` - Run diagnostics
-- `superclaude agent <name> <action>` - Invoke agent
+- `pytest-agents version` - Show version
+- `pytest-agents verify` - Verify installation
+- `pytest-agents doctor` - Run diagnostics
+- `pytest-agents agent <name> <action>` - Invoke agent
 
 **Design**:
 - Built with argparse
@@ -292,7 +292,7 @@ pytest-agents uses pytest's plugin system:
 ```python
 # Entry point in pyproject.toml
 [project.entry-points.pytest11]
-superclaude = "superclaude.plugin"
+pytest-agents = "pytest-agents.plugin"
 ```
 
 This allows:

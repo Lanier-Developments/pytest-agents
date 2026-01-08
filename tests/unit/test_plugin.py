@@ -62,7 +62,7 @@ class TestPytestAddoption:
         assert second_call[0][0] == "--pytest-agents-agent-timeout"
         assert second_call[1]["action"] == "store"
         assert second_call[1]["default"] == 30
-        assert second_call[1]["type"] == int
+        assert second_call[1]["type"] is int
 
 
 @pytest.mark.unit

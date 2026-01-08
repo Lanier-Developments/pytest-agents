@@ -66,7 +66,11 @@ class TestModuleImports:
 
     def test_import_infrastructure_modules(self) -> None:
         """Test infrastructure module imports."""
-        from pytest_agents.infrastructure import env_config_factory, prometheus_metrics, subprocess_runner
+        from pytest_agents.infrastructure import (
+            env_config_factory,
+            prometheus_metrics,
+            subprocess_runner,
+        )
 
         assert hasattr(env_config_factory, "EnvConfigFactory")
         assert hasattr(prometheus_metrics, "PrometheusMetrics")

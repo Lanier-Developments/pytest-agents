@@ -4,10 +4,16 @@ import threading  # pragma: no cover
 import time  # pragma: no cover
 from typing import Optional  # pragma: no cover
 
-from prometheus_client import REGISTRY, generate_latest, start_http_server  # pragma: no cover
+from prometheus_client import (  # pragma: no cover
+    REGISTRY,
+    generate_latest,
+    start_http_server,
+)
 
 from pytest_agents.agent_bridge import AgentBridge  # pragma: no cover
-from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics  # pragma: no cover
+from pytest_agents.infrastructure.prometheus_metrics import (
+    PrometheusMetrics,  # pragma: no cover
+)
 from pytest_agents.utils.logging import setup_logger  # pragma: no cover
 
 logger = setup_logger(__name__)  # pragma: no cover
@@ -117,7 +123,9 @@ class MetricsServer:  # pragma: no cover
                     agent_metrics[agent_name] = metrics_text
                     logger.debug(f"Fetched metrics from {agent_name} agent")
             except Exception as e:  # pragma: no cover
-                logger.warning(f"Failed to fetch metrics from {agent_name}: {e}")  # pragma: no cover
+                logger.warning(
+                    f"Failed to fetch metrics from {agent_name}: {e}"
+                )  # pragma: no cover
 
         return agent_metrics
 

@@ -231,7 +231,9 @@ class TestPytestHooks:
         mock_pytest_config.rootpath = tmp_path
 
         # Mock container.agent_bridge() to raise exception
-        with patch.object(hooks.container, "agent_bridge", side_effect=Exception("DI failed")):
+        with patch.object(
+            hooks.container, "agent_bridge", side_effect=Exception("DI failed")
+        ):
             # Should not raise, should fallback
             hooks.pytest_configure(mock_pytest_config)
 
@@ -251,8 +253,12 @@ class TestPytestHooks:
         mock_pytest_config.rootpath = "/nonexistent/path/that/does/not/exist"
 
         # Mock both container.agent_bridge() and AgentBridge to raise exceptions
-        with patch.object(hooks.container, "agent_bridge", side_effect=Exception("DI failed")):
-            with patch.object(hooks, "AgentBridge", side_effect=Exception("Fallback failed")):
+        with patch.object(
+            hooks.container, "agent_bridge", side_effect=Exception("DI failed")
+        ):
+            with patch.object(
+                hooks, "AgentBridge", side_effect=Exception("Fallback failed")
+            ):
                 # Should not raise even with both failures
                 hooks.pytest_configure(mock_pytest_config)
 
@@ -264,7 +270,6 @@ class TestPytestHooks:
         self, mock_pytest_config
     ) -> None:
         """Test that collection validates markers correctly."""
-        from pytest_agents.markers import MarkerRegistry
 
         session = Mock()
         items = []
@@ -363,7 +368,9 @@ class TestPytestHooks:
 
         # Test has both pm and research markers
         item.get_closest_marker = Mock(
-            side_effect=lambda m: Mock() if m in ["agent_pm", "agent_research"] else None
+            side_effect=lambda m: (
+                Mock() if m in ["agent_pm", "agent_research"] else None
+            )
         )
 
         # Should pass - both agents available

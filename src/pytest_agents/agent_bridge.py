@@ -8,7 +8,10 @@ from typing import Any, Dict, Optional, Protocol  # pragma: no cover
 
 from pytest_agents.config import PytestAgentsConfig  # pragma: no cover
 from pytest_agents.utils.logging import setup_logger  # pragma: no cover
-from pytest_agents.utils.validation import validate_agent_response, validate_json  # pragma: no cover
+from pytest_agents.utils.validation import (  # pragma: no cover
+    validate_agent_response,
+    validate_json,
+)
 
 logger = setup_logger(__name__)  # pragma: no cover
 
@@ -198,7 +201,9 @@ class AgentBridge:  # pragma: no cover
 
         logger.info(f"Initialized bridge with agents: {list(self.agents.keys())}")
 
-    def _create_client(self, name: str, path: Path, timeout: int) -> AgentClient:  # pragma: no cover
+    def _create_client(
+        self, name: str, path: Path, timeout: int
+    ) -> AgentClient:  # pragma: no cover
         """Create an AgentClient using factory or direct instantiation.
 
         Args:
@@ -279,7 +284,7 @@ class AgentBridge:  # pragma: no cover
             if self._metrics:  # pragma: no cover
                 duration = time.time() - start_time  # pragma: no cover
                 self._metrics.observe_histogram(  # pragma: no cover
-                    "pytest_agents_agent_invocation_duration_seconds",  # pragma: no cover
+                    "pytest_agents_agent_invocation_duration_seconds",
                     duration,  # pragma: no cover
                     {"agent": agent_name, "action": action},  # pragma: no cover
                 )  # pragma: no cover

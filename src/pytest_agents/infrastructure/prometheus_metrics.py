@@ -37,7 +37,9 @@ class PrometheusMetrics:  # pragma: no cover
         )
         self._configure_metric("pytest_agents_bridge_initialized_agents_total", [])
 
-    def _configure_metric(self, name: str, label_names: list[str]) -> None:  # pragma: no cover
+    def _configure_metric(
+        self, name: str, label_names: list[str]
+    ) -> None:  # pragma: no cover
         """Pre-configure a metric with its label names.
 
         Args:

@@ -55,7 +55,9 @@ def pytest_configure(config: Any) -> None:  # pragma: no cover
             config._pytest_agents_bridge = None
 
 
-def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -> None:  # pragma: no cover
+def pytest_collection_modifyitems(
+    session: Any, config: Any, items: List[Any]
+) -> None:  # pragma: no cover
     """Hook called after test collection.
 
     Args:

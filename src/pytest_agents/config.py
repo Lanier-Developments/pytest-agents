@@ -50,7 +50,9 @@ class PytestAgentsConfig:  # pragma: no cover
             self.agent_index_path = self.project_root / "index" / "dist" / "index.js"
 
     @classmethod  # pragma: no cover
-    def from_pytest_config(cls, config: Any) -> "PytestAgentsConfig":  # pragma: no cover
+    def from_pytest_config(
+        cls, config: Any
+    ) -> "PytestAgentsConfig":  # pragma: no cover
         """Create config from pytest config object.
 
         Args:

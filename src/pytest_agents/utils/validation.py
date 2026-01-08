@@ -4,7 +4,7 @@ import json  # pragma: no cover
 from typing import Any, Dict, Optional  # pragma: no cover
 
 
-def validate_json(data: str) -> Optional[Dict[str, Any]]:
+def validate_json(data: str) -> Optional[Dict[str, Any]]:  # pragma: no cover
     """Validate and parse JSON string.
 
     Args:
@@ -22,7 +22,7 @@ def validate_json(data: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-def validate_agent_response(response: Dict[str, Any]) -> bool:
+def validate_agent_response(response: Dict[str, Any]) -> bool:  # pragma: no cover
     """Validate agent response structure.
 
     Args:

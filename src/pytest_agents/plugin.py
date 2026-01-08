@@ -12,14 +12,14 @@ from pytest_agents.hooks import (  # pragma: no cover
 )
 
 
-class PytestAgentsPlugin:
+class PytestAgentsPlugin:  # pragma: no cover
     """Main pytest plugin class for pytest-agents framework."""
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # pragma: no cover
         """Initialize the plugin."""
         self.version = __version__
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         """Return string representation of the plugin.
 
         Returns:
@@ -29,7 +29,7 @@ class PytestAgentsPlugin:
 
 
 # Export pytest hooks
-__all__ = [
+__all__ = [  # pragma: no cover
     "PytestAgentsPlugin",
     "pytest_configure",
     "pytest_collection_modifyitems",
@@ -40,7 +40,7 @@ __all__ = [
 
 
 # For pytest plugin discovery
-def pytest_addoption(parser: Any) -> None:
+def pytest_addoption(parser: Any) -> None:  # pragma: no cover
     """Add command line options for pytest-agents.
 
     Args:

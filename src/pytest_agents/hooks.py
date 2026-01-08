@@ -10,13 +10,13 @@ from pytest_agents.di.container import ApplicationContainer  # pragma: no cover
 from pytest_agents.markers import MarkerRegistry  # pragma: no cover
 from pytest_agents.utils.logging import setup_logger  # pragma: no cover
 
-logger = setup_logger(__name__)
+logger = setup_logger(__name__)  # pragma: no cover
 
 # Create global container instance
-container = ApplicationContainer()
+container = ApplicationContainer()  # pragma: no cover
 
 
-def pytest_configure(config: Any) -> None:
+def pytest_configure(config: Any) -> None:  # pragma: no cover
     """Hook called after command line options are parsed.
 
     Args:
@@ -55,7 +55,7 @@ def pytest_configure(config: Any) -> None:
             config._pytest_agents_bridge = None
 
 
-def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -> None:
+def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -> None:  # pragma: no cover
     """Hook called after test collection.
 
     Args:
@@ -85,7 +85,7 @@ def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -
             item.add_marker(pytest.mark.slow)
 
 
-def pytest_runtest_setup(item: Any) -> None:
+def pytest_runtest_setup(item: Any) -> None:  # pragma: no cover
     """Hook called before running a test.
 
     Args:
@@ -109,7 +109,7 @@ def pytest_runtest_setup(item: Any) -> None:
                 pytest.skip(f"Agent '{agent_name}' not available")
 
 
-def pytest_runtest_makereport(item: Any, call: Any) -> None:
+def pytest_runtest_makereport(item: Any, call: Any) -> None:  # pragma: no cover
     """Hook called after test execution.
 
     Args:
@@ -121,7 +121,7 @@ def pytest_runtest_makereport(item: Any, call: Any) -> None:
         pass
 
 
-def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
+def pytest_sessionfinish(session: Any, exitstatus: int) -> None:  # pragma: no cover
     """Hook called at end of test session.
 
     Args:

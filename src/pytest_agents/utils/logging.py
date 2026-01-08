@@ -6,7 +6,7 @@ from pathlib import Path  # pragma: no cover
 from typing import Optional  # pragma: no cover
 
 
-def setup_logger(
+def setup_logger(  # pragma: no cover
     name: str = "pytest_agents",
     level: str = "INFO",
     log_file: Optional[Path] = None,

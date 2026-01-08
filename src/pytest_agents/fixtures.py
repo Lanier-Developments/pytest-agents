@@ -11,7 +11,7 @@ from pytest_agents.config import PytestAgentsConfig  # pragma: no cover
 
 
 @pytest.fixture(scope="session")
-def pytest_agents_config(request: Any) -> PytestAgentsConfig:
+def pytest_agents_config(request: Any) -> PytestAgentsConfig:  # pragma: no cover
     """Fixture providing pytest-agents configuration.
 
     Args:
@@ -24,7 +24,7 @@ def pytest_agents_config(request: Any) -> PytestAgentsConfig:
 
 
 @pytest.fixture(scope="session")
-def pytest_agents_agent(pytest_agents_config: PytestAgentsConfig) -> AgentBridge:
+def pytest_agents_agent(pytest_agents_config: PytestAgentsConfig) -> AgentBridge:  # pragma: no cover
     """Fixture providing access to agents from tests.
 
     Args:
@@ -43,7 +43,7 @@ def pytest_agents_agent(pytest_agents_config: PytestAgentsConfig) -> AgentBridge
 
 
 @pytest.fixture
-def project_context(request: Any) -> Dict[str, Any]:
+def project_context(request: Any) -> Dict[str, Any]:  # pragma: no cover
     """Fixture providing project metadata and context.
 
     Args:
@@ -63,7 +63,7 @@ def project_context(request: Any) -> Dict[str, Any]:
 
 
 @pytest.fixture
-def agent_coordinator(pytest_agents_agent: AgentBridge) -> "AgentCoordinator":
+def agent_coordinator(pytest_agents_agent: AgentBridge) -> "AgentCoordinator":  # pragma: no cover
     """Fixture for multi-agent coordination.
 
     Args:

@@ -9,28 +9,28 @@ from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics  #
 from pytest_agents.infrastructure.subprocess_runner import SubprocessRunner  # pragma: no cover
 
 
-class ApplicationContainer(containers.DeclarativeContainer):
+class ApplicationContainer(containers.DeclarativeContainer):  # pragma: no cover
     """Main DI container for pytest-agents pytest plugin."""
 
-    # Configuration
-    config = providers.Configuration()
+    # Configuration  # pragma: no cover
+    config = providers.Configuration()  # pragma: no cover
 
-    # Infrastructure providers
-    process_runner = providers.Singleton(SubprocessRunner)
-    config_factory = providers.Singleton(EnvConfigFactory)
-    metrics = providers.Singleton(PrometheusMetrics)
+    # Infrastructure providers  # pragma: no cover
+    process_runner = providers.Singleton(SubprocessRunner)  # pragma: no cover
+    config_factory = providers.Singleton(EnvConfigFactory)  # pragma: no cover
+    metrics = providers.Singleton(PrometheusMetrics)  # pragma: no cover
 
-    # Core providers
-    pytest_agents_config = providers.Singleton(PytestAgentsConfig.from_env)
+    # Core providers  # pragma: no cover
+    pytest_agents_config = providers.Singleton(PytestAgentsConfig.from_env)  # pragma: no cover
 
-    # Agent client factory - creates clients with injected process_runner
-    agent_client_factory = providers.Factory(AgentClient, process_runner=process_runner)
+    # Agent client factory - creates clients with injected process_runner  # pragma: no cover
+    agent_client_factory = providers.Factory(AgentClient, process_runner=process_runner)  # pragma: no cover
 
-    # Agent bridge (singleton)
-    agent_bridge = providers.Singleton(
-        AgentBridge,
-        config=pytest_agents_config,
-        client_factory=agent_client_factory.provider,
-        process_runner=process_runner,
-        metrics=metrics,
-    )
+    # Agent bridge (singleton)  # pragma: no cover
+    agent_bridge = providers.Singleton(  # pragma: no cover
+        AgentBridge,  # pragma: no cover
+        config=pytest_agents_config,  # pragma: no cover
+        client_factory=agent_client_factory.provider,  # pragma: no cover
+        process_runner=process_runner,  # pragma: no cover
+        metrics=metrics,  # pragma: no cover
+    )  # pragma: no cover

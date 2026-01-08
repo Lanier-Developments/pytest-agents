@@ -1,7 +1,7 @@
 .PHONY: help install test test-python test-ts lint format clean doctor verify install-plugin reinstall-plugin test-plugin benchmark benchmark-compare benchmark-save
 
 help:
-	@echo "SuperClaude Development Commands"
+	@echo "pytest-agents Development Commands"
 	@echo "================================="
 	@echo "make install          - Install Python package with dev dependencies"
 	@echo "make test            - Run all tests (Python + TypeScript)"

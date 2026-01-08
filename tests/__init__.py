@@ -1,1 +1,1 @@
-"""Test suite for SuperClaude."""
+"""Test suite for pytest-agents."""

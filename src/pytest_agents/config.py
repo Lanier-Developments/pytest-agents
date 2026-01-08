@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional  # pragma: no cover
 
 @dataclass  # pragma: no cover
 class PytestAgentsConfig:  # pragma: no cover
-    """Configuration for SuperClaude plugin."""
+    """Configuration for pytest-agents plugin."""
 
     # Agent configuration  # pragma: no cover
     agent_pm_enabled: bool = True  # pragma: no cover
@@ -91,32 +91,32 @@ class PytestAgentsConfig:  # pragma: no cover
             PytestAgentsConfig: Configuration instance
         """
         return cls(
-            agent_pm_enabled=os.getenv("SUPERCLAUDE_AGENT_PM_ENABLED", "true").lower()
+            agent_pm_enabled=os.getenv("PYTEST_AGENTS_AGENT_PM_ENABLED", "true").lower()
             == "true",
             agent_research_enabled=os.getenv(
-                "SUPERCLAUDE_AGENT_RESEARCH_ENABLED", "true"
+                "PYTEST_AGENTS_AGENT_RESEARCH_ENABLED", "true"
             ).lower()
             == "true",
             agent_index_enabled=os.getenv(
-                "SUPERCLAUDE_AGENT_INDEX_ENABLED", "true"
+                "PYTEST_AGENTS_AGENT_INDEX_ENABLED", "true"
             ).lower()
             == "true",
-            project_root=Path(os.getenv("SUPERCLAUDE_PROJECT_ROOT", os.getcwd())),
-            agent_timeout=int(os.getenv("SUPERCLAUDE_AGENT_TIMEOUT", "30")),
-            agent_retry_count=int(os.getenv("SUPERCLAUDE_AGENT_RETRY_COUNT", "3")),
-            log_level=os.getenv("SUPERCLAUDE_LOG_LEVEL", "INFO"),
+            project_root=Path(os.getenv("PYTEST_AGENTS_PROJECT_ROOT", os.getcwd())),
+            agent_timeout=int(os.getenv("PYTEST_AGENTS_AGENT_TIMEOUT", "30")),
+            agent_retry_count=int(os.getenv("PYTEST_AGENTS_AGENT_RETRY_COUNT", "3")),
+            log_level=os.getenv("PYTEST_AGENTS_LOG_LEVEL", "INFO"),
             enable_agent_caching=os.getenv(
-                "SUPERCLAUDE_ENABLE_AGENT_CACHING", "true"
+                "PYTEST_AGENTS_ENABLE_AGENT_CACHING", "true"
             ).lower()
             == "true",
             enable_parallel_agents=os.getenv(
-                "SUPERCLAUDE_ENABLE_PARALLEL_AGENTS", "false"
+                "PYTEST_AGENTS_ENABLE_PARALLEL_AGENTS", "false"
             ).lower()
             == "true",
-            metrics_enabled=os.getenv("SUPERCLAUDE_METRICS_ENABLED", "false").lower()
+            metrics_enabled=os.getenv("PYTEST_AGENTS_METRICS_ENABLED", "false").lower()
             == "true",
-            metrics_port=int(os.getenv("SUPERCLAUDE_METRICS_PORT", "9090")),
-            metrics_host=os.getenv("SUPERCLAUDE_METRICS_HOST", "0.0.0.0"),
+            metrics_port=int(os.getenv("PYTEST_AGENTS_METRICS_PORT", "9090")),
+            metrics_host=os.getenv("PYTEST_AGENTS_METRICS_HOST", "0.0.0.0"),
         )
 
     def to_dict(self) -> Dict[str, Any]:  # pragma: no cover

@@ -1,4 +1,4 @@
-"""Shared fixtures for SuperClaude tests."""
+"""Shared fixtures for pytest-agents tests."""
 
 from pathlib import Path
 from unittest.mock import MagicMock

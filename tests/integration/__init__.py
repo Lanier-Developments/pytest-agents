@@ -1,1 +1,1 @@
-"""Integration tests for SuperClaude."""
+"""Integration tests for pytest-agents."""

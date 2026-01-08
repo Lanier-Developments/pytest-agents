@@ -140,7 +140,7 @@ def cmd_metrics(args: argparse.Namespace) -> int:
     port = args.port if args.port else config.metrics_port  # pragma: no cover
     host = args.host if args.host else config.metrics_host  # pragma: no cover
 
-    print("Starting SuperClaude metrics server")  # pragma: no cover
+    print("Starting pytest-agents metrics server")  # pragma: no cover
     print(f"Listening on http://{host}:{port}/metrics")  # pragma: no cover
     print("Press Ctrl+C to stop")  # pragma: no cover
 
@@ -180,11 +180,11 @@ def main() -> int:
         int: Exit code
     """
     parser = argparse.ArgumentParser(
-        description="SuperClaude - Pytest plugin framework with AI agents",
+        description="pytest-agents - Pytest plugin framework with AI agents",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--version", action="version", version=f"SuperClaude v{__version__}"
+        "--version", action="version", version=f"pytest-agents v{__version__}"
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Command to run")

@@ -1,1 +1,1 @@
-"""Unit tests for SuperClaude."""
+"""Unit tests for pytest-agents."""

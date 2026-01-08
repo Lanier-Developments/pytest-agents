@@ -4,7 +4,7 @@
 
 set -e
 
-echo "🔒 SuperClaude Security Verification"
+echo "🔒 pytest-agents Security Verification"
 echo "======================================"
 echo ""
 

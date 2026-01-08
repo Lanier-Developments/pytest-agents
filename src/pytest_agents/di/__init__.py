@@ -1,1 +1,1 @@
-"""Dependency injection container for SuperClaude."""
+"""Dependency injection container for pytest-agents."""

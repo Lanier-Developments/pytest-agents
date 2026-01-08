@@ -1,4 +1,4 @@
-"""Validation utilities for SuperClaude."""
+"""Validation utilities for pytest-agents."""
 
 import json  # pragma: no cover
 from typing import Any, Dict, Optional  # pragma: no cover

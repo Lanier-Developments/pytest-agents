@@ -1,4 +1,4 @@
-"""Performance benchmark tests for SuperClaude agents."""
+"""Performance benchmark tests for pytest-agents agents."""
 
 from pathlib import Path
 
@@ -66,7 +66,7 @@ class TestConfigPerformance:
 
     def test_config_from_env_performance(self, benchmark, monkeypatch) -> None:
         """Benchmark configuration loading from environment."""
-        monkeypatch.setenv("SUPERCLAUDE_PROJECT_ROOT", "/tmp/test")
+        monkeypatch.setenv("PYTEST_AGENTS_PROJECT_ROOT", "/tmp/test")
 
         def load_config():
             return PytestAgentsConfig.from_env()

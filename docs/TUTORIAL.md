@@ -357,8 +357,8 @@ pytest_agents_log_level = "INFO"
 Or via environment variables:
 
 ```bash
-export SUPERCLAUDE_AGENT_TIMEOUT=60
-export SUPERCLAUDE_LOG_LEVEL=DEBUG
+export PYTEST_AGENTS_AGENT_TIMEOUT=60
+export PYTEST_AGENTS_LOG_LEVEL=DEBUG
 pytest
 ```
 

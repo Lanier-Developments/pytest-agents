@@ -1,4 +1,4 @@
-"""Pytest hook implementations for SuperClaude."""
+"""Pytest hook implementations for pytest-agents."""
 
 from typing import Any, List, Optional  # pragma: no cover
 

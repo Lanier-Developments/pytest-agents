@@ -52,9 +52,9 @@ class TestPytestAgentsConfig:
 
     def test_from_env(self, monkeypatch) -> None:
         """Test creating config from environment variables."""
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "false")
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_TIMEOUT", "45")
-        monkeypatch.setenv("SUPERCLAUDE_LOG_LEVEL", "WARNING")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_PM_ENABLED", "false")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_TIMEOUT", "45")
+        monkeypatch.setenv("PYTEST_AGENTS_LOG_LEVEL", "WARNING")
 
         config = PytestAgentsConfig.from_env()
         assert config.agent_pm_enabled is False
@@ -103,15 +103,15 @@ class TestPytestAgentsConfig:
 
     def test_from_env_comprehensive(self, monkeypatch, temp_project_dir: Path) -> None:
         """Test creating config from all environment variables."""
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "false")
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_RESEARCH_ENABLED", "false")
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_INDEX_ENABLED", "true")
-        monkeypatch.setenv("SUPERCLAUDE_PROJECT_ROOT", str(temp_project_dir))
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_TIMEOUT", "60")
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_RETRY_COUNT", "5")
-        monkeypatch.setenv("SUPERCLAUDE_LOG_LEVEL", "DEBUG")
-        monkeypatch.setenv("SUPERCLAUDE_ENABLE_AGENT_CACHING", "false")
-        monkeypatch.setenv("SUPERCLAUDE_ENABLE_PARALLEL_AGENTS", "true")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_PM_ENABLED", "false")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_RESEARCH_ENABLED", "false")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_INDEX_ENABLED", "true")
+        monkeypatch.setenv("PYTEST_AGENTS_PROJECT_ROOT", str(temp_project_dir))
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_TIMEOUT", "60")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_RETRY_COUNT", "5")
+        monkeypatch.setenv("PYTEST_AGENTS_LOG_LEVEL", "DEBUG")
+        monkeypatch.setenv("PYTEST_AGENTS_ENABLE_AGENT_CACHING", "false")
+        monkeypatch.setenv("PYTEST_AGENTS_ENABLE_PARALLEL_AGENTS", "true")
 
         config = PytestAgentsConfig.from_env()
         assert config.agent_pm_enabled is False
@@ -177,9 +177,9 @@ class TestPytestAgentsConfig:
 
     def test_from_env_metrics_configuration(self, monkeypatch) -> None:
         """Test creating config with metrics from environment."""
-        monkeypatch.setenv("SUPERCLAUDE_METRICS_ENABLED", "true")
-        monkeypatch.setenv("SUPERCLAUDE_METRICS_PORT", "8080")
-        monkeypatch.setenv("SUPERCLAUDE_METRICS_HOST", "127.0.0.1")
+        monkeypatch.setenv("PYTEST_AGENTS_METRICS_ENABLED", "true")
+        monkeypatch.setenv("PYTEST_AGENTS_METRICS_PORT", "8080")
+        monkeypatch.setenv("PYTEST_AGENTS_METRICS_HOST", "127.0.0.1")
 
         config = PytestAgentsConfig.from_env()
         assert config.metrics_enabled is True
@@ -189,17 +189,17 @@ class TestPytestAgentsConfig:
     def test_from_env_boolean_parsing_variations(self, monkeypatch) -> None:
         """Test various boolean string values in environment."""
         # Test TRUE value
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "TRUE")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_PM_ENABLED", "TRUE")
         config = PytestAgentsConfig.from_env()
         assert config.agent_pm_enabled is True
 
         # Test False value
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "False")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_PM_ENABLED", "False")
         config = PytestAgentsConfig.from_env()
         assert config.agent_pm_enabled is False
 
         # Test non-true value defaults to false
-        monkeypatch.setenv("SUPERCLAUDE_AGENT_PM_ENABLED", "anything")
+        monkeypatch.setenv("PYTEST_AGENTS_AGENT_PM_ENABLED", "anything")
         config = PytestAgentsConfig.from_env()
         assert config.agent_pm_enabled is False
 

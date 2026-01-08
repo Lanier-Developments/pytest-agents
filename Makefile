@@ -51,10 +51,10 @@ doctor: verify
 
 verify:
 	@echo "Checking Python installation..."
-	@uv run python -c "import pytest-agents; print(f'SuperClaude v{pytest-agents.__version__}')"
+	@uv run python -c "import pytest_agents; print(f'pytest-agents v{pytest_agents.__version__}')"
 	@echo "Checking pytest plugin..."
 	@uv run pytest --version
-	@uv run pytest --markers | grep pytest-agents || true
+	@uv run pytest --markers | grep pytest_agents || true
 	@echo "Checking TypeScript builds..."
 	@if [ -d "pm" ]; then cd pm && npm run build; fi
 	@if [ -d "research" ]; then cd research && npm run build; fi

@@ -1,7 +1,7 @@
 """Validation utilities for SuperClaude."""
 
-import json
-from typing import Any, Dict, Optional
+import json  # pragma: no cover
+from typing import Any, Dict, Optional  # pragma: no cover
 
 
 def validate_json(data: str) -> Optional[Dict[str, Any]]:

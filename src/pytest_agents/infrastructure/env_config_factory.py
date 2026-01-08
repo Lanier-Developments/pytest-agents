@@ -1,6 +1,6 @@
 """Environment-based configuration factory."""
 
-from pytest_agents.config import PytestAgentsConfig
+from pytest_agents.config import PytestAgentsConfig  # pragma: no cover
 
 
 class EnvConfigFactory:

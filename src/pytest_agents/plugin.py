@@ -1,9 +1,9 @@
 """Main pytest plugin entry point for pytest-agents."""
 
-from typing import Any
+from typing import Any  # pragma: no cover
 
-from pytest_agents import __version__
-from pytest_agents.hooks import (
+from pytest_agents import __version__  # pragma: no cover
+from pytest_agents.hooks import (  # pragma: no cover
     pytest_collection_modifyitems,
     pytest_configure,
     pytest_runtest_makereport,

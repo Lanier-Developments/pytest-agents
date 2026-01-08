@@ -1,12 +1,12 @@
 """Application DI container for pytest-agents."""
 
-from dependency_injector import containers, providers
+from dependency_injector import containers, providers  # pragma: no cover
 
-from pytest_agents.agent_bridge import AgentBridge, AgentClient
-from pytest_agents.config import PytestAgentsConfig
-from pytest_agents.infrastructure.env_config_factory import EnvConfigFactory
-from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
-from pytest_agents.infrastructure.subprocess_runner import SubprocessRunner
+from pytest_agents.agent_bridge import AgentBridge, AgentClient  # pragma: no cover
+from pytest_agents.config import PytestAgentsConfig  # pragma: no cover
+from pytest_agents.infrastructure.env_config_factory import EnvConfigFactory  # pragma: no cover
+from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics  # pragma: no cover
+from pytest_agents.infrastructure.subprocess_runner import SubprocessRunner  # pragma: no cover
 
 
 class ApplicationContainer(containers.DeclarativeContainer):

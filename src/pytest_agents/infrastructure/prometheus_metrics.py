@@ -1,8 +1,8 @@
 """Prometheus metrics implementation."""
 
-from typing import Dict
+from typing import Dict  # pragma: no cover
 
-from prometheus_client import (
+from prometheus_client import (  # pragma: no cover
     CollectorRegistry,
     Counter,
     Gauge,

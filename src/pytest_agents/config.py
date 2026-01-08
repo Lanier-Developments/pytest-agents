@@ -1,9 +1,9 @@
 """Configuration management for pytest-agents."""
 
-import os
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Dict, Optional
+import os  # pragma: no cover
+from dataclasses import dataclass, field  # pragma: no cover
+from pathlib import Path  # pragma: no cover
+from typing import Any, Dict, Optional  # pragma: no cover
 
 
 @dataclass

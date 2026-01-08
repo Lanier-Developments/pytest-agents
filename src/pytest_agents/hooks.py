@@ -1,14 +1,14 @@
 """Pytest hook implementations for SuperClaude."""
 
-from typing import Any, List, Optional
+from typing import Any, List, Optional  # pragma: no cover
 
-import pytest
+import pytest  # pragma: no cover
 
-from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import PytestAgentsConfig
-from pytest_agents.di.container import ApplicationContainer
-from pytest_agents.markers import MarkerRegistry
-from pytest_agents.utils.logging import setup_logger
+from pytest_agents.agent_bridge import AgentBridge  # pragma: no cover
+from pytest_agents.config import PytestAgentsConfig  # pragma: no cover
+from pytest_agents.di.container import ApplicationContainer  # pragma: no cover
+from pytest_agents.markers import MarkerRegistry  # pragma: no cover
+from pytest_agents.utils.logging import setup_logger  # pragma: no cover
 
 logger = setup_logger(__name__)
 

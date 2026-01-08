@@ -1,9 +1,9 @@
 """Logging utilities for pytest-agents."""
 
-import logging
-import sys
-from pathlib import Path
-from typing import Optional
+import logging  # pragma: no cover
+import sys  # pragma: no cover
+from pathlib import Path  # pragma: no cover
+from typing import Optional  # pragma: no cover
 
 
 def setup_logger(

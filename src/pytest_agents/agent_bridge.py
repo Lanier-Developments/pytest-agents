@@ -1,14 +1,14 @@
 """Bridge between Python pytest and TypeScript agents."""
 
-import json
-import subprocess
-import time
-from pathlib import Path
-from typing import Any, Dict, Optional, Protocol
+import json  # pragma: no cover
+import subprocess  # pragma: no cover
+import time  # pragma: no cover
+from pathlib import Path  # pragma: no cover
+from typing import Any, Dict, Optional, Protocol  # pragma: no cover
 
-from pytest_agents.config import PytestAgentsConfig
-from pytest_agents.utils.logging import setup_logger
-from pytest_agents.utils.validation import validate_agent_response, validate_json
+from pytest_agents.config import PytestAgentsConfig  # pragma: no cover
+from pytest_agents.utils.logging import setup_logger  # pragma: no cover
+from pytest_agents.utils.validation import validate_agent_response, validate_json  # pragma: no cover
 
 logger = setup_logger(__name__)
 

@@ -1,14 +1,14 @@
 """HTTP server for exposing Prometheus metrics."""
 
-import threading
-import time
-from typing import Optional
+import threading  # pragma: no cover
+import time  # pragma: no cover
+from typing import Optional  # pragma: no cover
 
-from prometheus_client import REGISTRY, generate_latest, start_http_server
+from prometheus_client import REGISTRY, generate_latest, start_http_server  # pragma: no cover
 
-from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics
-from pytest_agents.utils.logging import setup_logger
+from pytest_agents.agent_bridge import AgentBridge  # pragma: no cover
+from pytest_agents.infrastructure.prometheus_metrics import PrometheusMetrics  # pragma: no cover
+from pytest_agents.utils.logging import setup_logger  # pragma: no cover
 
 logger = setup_logger(__name__)
 

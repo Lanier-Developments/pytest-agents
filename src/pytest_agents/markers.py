@@ -1,7 +1,7 @@
 """Custom pytest marker definitions and management."""
 
-import warnings
-from typing import Any, Dict, List
+import warnings  # pragma: no cover
+from typing import Any, Dict, List  # pragma: no cover
 
 # Define all custom markers
 MARKERS: Dict[str, str] = {

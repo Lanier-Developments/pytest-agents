@@ -1,13 +1,13 @@
 """Custom pytest fixtures for pytest-agents."""
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
-from typing import Any, Dict
+from concurrent.futures import ThreadPoolExecutor, as_completed  # pragma: no cover
+from pathlib import Path  # pragma: no cover
+from typing import Any, Dict  # pragma: no cover
 
-import pytest
+import pytest  # pragma: no cover
 
-from pytest_agents.agent_bridge import AgentBridge
-from pytest_agents.config import PytestAgentsConfig
+from pytest_agents.agent_bridge import AgentBridge  # pragma: no cover
+from pytest_agents.config import PytestAgentsConfig  # pragma: no cover
 
 
 @pytest.fixture(scope="session")

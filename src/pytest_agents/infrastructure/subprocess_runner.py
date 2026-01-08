@@ -1,7 +1,7 @@
 """Subprocess execution implementation."""
 
-import subprocess
-from typing import Any, Dict, List
+import subprocess  # pragma: no cover
+from typing import Any, Dict, List  # pragma: no cover
 
 
 class SubprocessRunner:

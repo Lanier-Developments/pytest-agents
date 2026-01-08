@@ -252,3 +252,176 @@ class TestAgentBridge:
 
         assert len(bridge.agents) == 0
         assert bridge.get_available_agents() == []
+
+
+@pytest.mark.unit
+class TestAgentClientWithDI:
+    """Test AgentClient with dependency injection."""
+
+    def test_invoke_with_injected_process_runner_success(
+        self, temp_project_dir: Path
+    ) -> None:
+        """Test agent invocation with injected process runner (DI path)."""
+        agent_path = temp_project_dir / "agent.js"
+        agent_path.touch()
+
+        # Create mock process runner
+        mock_runner = MagicMock()
+        mock_runner.run.return_value = {
+            "returncode": 0,
+            "stdout": '{"status": "success", "data": {"result": "via DI"}}',
+            "stderr": "",
+        }
+
+        # Create client with injected runner
+        client = AgentClient("test", agent_path, process_runner=mock_runner)
+        response = client.invoke("test_action", {"param": "value"})
+
+        # Verify DI path was used
+        assert response["status"] == "success"
+        assert response["data"]["result"] == "via DI"
+        assert response["agent"] == "test"
+
+        # Verify process runner was called correctly
+        mock_runner.run.assert_called_once()
+        call_args = mock_runner.run.call_args
+        assert call_args[0][0] == ["node", str(agent_path)]
+        assert "test_action" in call_args[1]["input"]
+
+    def test_invoke_with_injected_process_runner_error(
+        self, temp_project_dir: Path
+    ) -> None:
+        """Test agent invocation with injected process runner returning error."""
+        agent_path = temp_project_dir / "agent.js"
+        agent_path.touch()
+
+        # Create mock process runner that returns error
+        mock_runner = MagicMock()
+        mock_runner.run.return_value = {
+            "returncode": 1,
+            "stdout": "",
+            "stderr": "Error from injected runner",
+        }
+
+        client = AgentClient("test", agent_path, process_runner=mock_runner)
+        response = client.invoke("test_action")
+
+        assert response["status"] == "error"
+        assert "Error from injected runner" in response["data"]["error"]
+        mock_runner.run.assert_called_once()
+
+    def test_invoke_with_injected_process_runner_timeout(
+        self, temp_project_dir: Path
+    ) -> None:
+        """Test timeout handling with injected process runner."""
+        agent_path = temp_project_dir / "agent.js"
+        agent_path.touch()
+
+        # Create mock process runner that raises timeout
+        mock_runner = MagicMock()
+        mock_runner.run.side_effect = subprocess.TimeoutExpired("node", 5)
+
+        client = AgentClient("test", agent_path, process_runner=mock_runner, timeout=5)
+        response = client.invoke("test_action")
+
+        assert response["status"] == "error"
+        assert "Timeout" in response["data"]["error"]
+        mock_runner.run.assert_called_once()
+
+    def test_invoke_with_injected_process_runner_invalid_json(
+        self, temp_project_dir: Path
+    ) -> None:
+        """Test invalid JSON handling with injected process runner."""
+        agent_path = temp_project_dir / "agent.js"
+        agent_path.touch()
+
+        # Create mock process runner returning invalid JSON
+        mock_runner = MagicMock()
+        mock_runner.run.return_value = {
+            "returncode": 0,
+            "stdout": "not valid json",
+            "stderr": "",
+        }
+
+        client = AgentClient("test", agent_path, process_runner=mock_runner)
+        response = client.invoke("test_action")
+
+        assert response["status"] == "error"
+        assert "Invalid JSON response" in response["data"]["error"]
+
+    def test_invoke_with_injected_process_runner_exception(
+        self, temp_project_dir: Path
+    ) -> None:
+        """Test exception handling with injected process runner."""
+        agent_path = temp_project_dir / "agent.js"
+        agent_path.touch()
+
+        # Create mock process runner that raises exception
+        mock_runner = MagicMock()
+        mock_runner.run.side_effect = Exception("DI runner exception")
+
+        client = AgentClient("test", agent_path, process_runner=mock_runner)
+        response = client.invoke("test_action")
+
+        assert response["status"] == "error"
+        assert "DI runner exception" in response["data"]["error"]
+
+
+@pytest.mark.unit
+class TestAgentBridgeWithDI:
+    """Test AgentBridge with dependency injection."""
+
+    def test_bridge_with_injected_process_runner(self, temp_project_dir: Path) -> None:
+        """Test bridge initialization with injected process runner."""
+        # Create agent file
+        pm_path = temp_project_dir / "pm" / "dist" / "index.js"
+        pm_path.parent.mkdir(parents=True, exist_ok=True)
+        pm_path.touch()
+
+        # Create mock process runner
+        mock_runner = MagicMock()
+        mock_runner.run.return_value = {
+            "returncode": 0,
+            "stdout": '{"status": "success", "data": {"result": "DI bridge"}}',
+            "stderr": "",
+        }
+
+        config = PytestAgentsConfig(
+            project_root=temp_project_dir, agent_pm_enabled=True
+        )
+
+        # Create bridge with injected runner
+        bridge = AgentBridge(config, process_runner=mock_runner)
+        response = bridge.invoke_agent("pm", "test_action")
+
+        assert response["status"] == "success"
+        assert response["data"]["result"] == "DI bridge"
+        mock_runner.run.assert_called_once()
+
+    def test_bridge_with_client_factory(self, temp_project_dir: Path) -> None:
+        """Test bridge with custom client factory (DI pattern)."""
+        pm_path = temp_project_dir / "pm" / "dist" / "index.js"
+        pm_path.parent.mkdir(parents=True, exist_ok=True)
+        pm_path.touch()
+
+        # Create mock client factory
+        mock_client = MagicMock()
+        mock_client.invoke.return_value = {
+            "status": "success",
+            "data": {"result": "factory client"},
+            "agent": "pm",
+        }
+
+        def mock_factory(name, agent_path, timeout=30, process_runner=None):
+            return mock_client
+
+        config = PytestAgentsConfig(
+            project_root=temp_project_dir, agent_pm_enabled=True
+        )
+
+        bridge = AgentBridge(config, client_factory=mock_factory)
+        response = bridge.invoke_agent("pm", "test_action")
+
+        assert response["status"] == "success"
+        assert response["data"]["result"] == "factory client"
+        mock_client.invoke.assert_called_once_with("test_action", None)

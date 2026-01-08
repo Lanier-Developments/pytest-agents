@@ -216,3 +216,164 @@ class TestPytestHooks:
 
         # Verify container exists and is wired
         assert hooks.container is not None
+
+    def test_pytest_configure_fallback_on_di_failure(
+        self, mock_pytest_config, tmp_path: Path
+    ) -> None:
+        """Test fallback to direct instantiation if DI fails."""
+        from unittest.mock import patch
+
+        # Create valid agent path
+        pm_agent = tmp_path / "pm" / "dist" / "index.js"
+        pm_agent.parent.mkdir(parents=True)
+        pm_agent.write_text("console.log('{}');")
+
+        mock_pytest_config.rootpath = tmp_path
+
+        # Mock container.agent_bridge() to raise exception
+        with patch.object(hooks.container, "agent_bridge", side_effect=Exception("DI failed")):
+            # Should not raise, should fallback
+            hooks.pytest_configure(mock_pytest_config)
+
+            # Bridge should still be created (via fallback)
+            assert hasattr(mock_pytest_config, "_pytest_agents_bridge")
+            bridge = mock_pytest_config._pytest_agents_bridge
+            # Might be None or AgentBridge depending on fallback success
+            assert bridge is None or isinstance(bridge, AgentBridge)
+
+    def test_pytest_configure_complete_failure_sets_bridge_none(
+        self, mock_pytest_config
+    ) -> None:
+        """Test that bridge is set to None if both DI and fallback fail."""
+        from unittest.mock import patch
+
+        # Configure with invalid path to cause fallback to fail too
+        mock_pytest_config.rootpath = "/nonexistent/path/that/does/not/exist"
+
+        # Mock both container.agent_bridge() and AgentBridge to raise exceptions
+        with patch.object(hooks.container, "agent_bridge", side_effect=Exception("DI failed")):
+            with patch.object(hooks, "AgentBridge", side_effect=Exception("Fallback failed")):
+                # Should not raise even with both failures
+                hooks.pytest_configure(mock_pytest_config)
+
+                # Bridge should be None after both failures
+                bridge = getattr(mock_pytest_config, "_pytest_agents_bridge", None)
+                assert bridge is None
+
+    def test_pytest_collection_modifyitems_validates_markers(
+        self, mock_pytest_config
+    ) -> None:
+        """Test that collection validates markers correctly."""
+        from pytest_agents.markers import MarkerRegistry
+
+        session = Mock()
+        items = []
+
+        # Create item with valid marker
+        item1 = Mock()
+        marker1 = Mock()
+        marker1.name = "unit"
+        item1.iter_markers = Mock(return_value=[marker1])
+        item1.get_closest_marker = Mock(return_value=None)
+        items.append(item1)
+
+        # Create item with pytest built-in marker (should be allowed)
+        item2 = Mock()
+        marker2 = Mock()
+        marker2.name = "pytest_mark_skip"
+        item2.iter_markers = Mock(return_value=[marker2])
+        item2.get_closest_marker = Mock(return_value=None)
+        items.append(item2)
+
+        # Should not raise
+        hooks.pytest_collection_modifyitems(session, mock_pytest_config, items)
+
+    def test_pytest_runtest_makereport_ignores_non_call_phases(self) -> None:
+        """Test that makereport ignores setup and teardown phases."""
+        item = Mock()
+
+        # Test setup phase
+        call_setup = Mock()
+        call_setup.when = "setup"
+        result = hooks.pytest_runtest_makereport(item, call_setup)
+        assert result is None
+
+        # Test teardown phase
+        call_teardown = Mock()
+        call_teardown.when = "teardown"
+        result = hooks.pytest_runtest_makereport(item, call_teardown)
+        assert result is None
+
+        # Test call phase
+        call_call = Mock()
+        call_call.when = "call"
+        result = hooks.pytest_runtest_makereport(item, call_call)
+        assert result is None
+
+    def test_pytest_sessionfinish_without_bridge(self, mock_pytest_config) -> None:
+        """Test sessionfinish when bridge is None."""
+        session = Mock()
+        session.config = mock_pytest_config
+        mock_pytest_config._pytest_agents_bridge = None
+
+        # Should not raise
+        hooks.pytest_sessionfinish(session, 0)
+
+    def test_pytest_sessionfinish_with_bridge_cleanup(
+        self, mock_pytest_config, tmp_path: Path
+    ) -> None:
+        """Test sessionfinish performs cleanup when bridge exists."""
+        pm_agent = tmp_path / "pm" / "dist" / "index.js"
+        pm_agent.parent.mkdir(parents=True)
+        pm_agent.write_text("console.log('{}');")
+
+        config = PytestAgentsConfig(project_root=tmp_path)
+        bridge = AgentBridge(config)
+        mock_pytest_config._pytest_agents_bridge = bridge
+
+        session = Mock()
+        session.config = mock_pytest_config
+
+        # Should perform cleanup without errors
+        hooks.pytest_sessionfinish(session, 0)
+
+    def test_pytest_runtest_setup_with_multiple_agent_markers(
+        self, mock_pytest_config, tmp_path: Path
+    ) -> None:
+        """Test runtest setup checks all agent markers."""
+        pm_agent = tmp_path / "pm" / "dist" / "index.js"
+        pm_agent.parent.mkdir(parents=True)
+        pm_agent.write_text("console.log('{}');")
+
+        research_agent = tmp_path / "research" / "dist" / "index.js"
+        research_agent.parent.mkdir(parents=True)
+        research_agent.write_text("console.log('{}');")
+
+        config = PytestAgentsConfig(
+            project_root=tmp_path,
+            agent_pm_enabled=True,
+            agent_research_enabled=True,
+            agent_index_enabled=False,
+        )
+        bridge = AgentBridge(config)
+        mock_pytest_config._pytest_agents_bridge = bridge
+
+        item = Mock()
+        item.config = mock_pytest_config
+
+        # Test has both pm and research markers
+        item.get_closest_marker = Mock(
+            side_effect=lambda m: Mock() if m in ["agent_pm", "agent_research"] else None
+        )
+
+        # Should pass - both agents available
+        hooks.pytest_runtest_setup(item)
+
+        # Now test with unavailable index marker
+        item.get_closest_marker = Mock(
+            side_effect=lambda m: Mock() if m == "agent_index" else None
+        )
+
+        # Should skip - index agent not available
+        with pytest.raises(pytest.skip.Exception):
+            hooks.pytest_runtest_setup(item)

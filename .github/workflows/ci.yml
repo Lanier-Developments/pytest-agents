@@ -36,7 +36,36 @@ jobs:
 
     - name: Run Python tests with coverage
       run: |
-        pytest --cov=src/pytest_agents --cov-report=xml --cov-report=term
+        pytest --cov=src/pytest_agents --cov-report=xml --cov-report=term --cov-report=json
+
+    - name: Extract coverage percentage
+      if: matrix.python-version == '3.11' && github.ref == 'refs/heads/main'
+      id: coverage
+      run: |
+        COVERAGE=$(python -c "import json; print(int(json.load(open('coverage.json'))['totals']['percent_covered']))")
+        echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+        echo "Coverage: $COVERAGE%"
+
+    - name: Create coverage badge
+      if: matrix.python-version == '3.11' && github.ref == 'refs/heads/main'
+      run: |
+        mkdir -p .github/badges
+        COVERAGE=${{ steps.coverage.outputs.coverage }}
+        COLOR="red"
+        if [ "$COVERAGE" -ge 90 ]; then COLOR="brightgreen"; fi
+        if [ "$COVERAGE" -ge 80 ] && [ "$COVERAGE" -lt 90 ]; then COLOR="green"; fi
+        if [ "$COVERAGE" -ge 70 ] && [ "$COVERAGE" -lt 80 ]; then COLOR="yellow"; fi
+        if [ "$COVERAGE" -ge 60 ] && [ "$COVERAGE" -lt 70 ]; then COLOR="orange"; fi
+        curl "https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}.svg" -o .github/badges/coverage.svg
+
+    - name: Commit coverage badge
+      if: matrix.python-version == '3.11' && github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add .github/badges/coverage.svg || true
+        git diff --staged --quiet || git commit -m "docs: update coverage badge [skip ci]"
+        git push || true
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
@@ -45,6 +74,7 @@ jobs:
         flags: python
         name: python-${{ matrix.python-version }}
       if: matrix.python-version == '3.11'
+      continue-on-error: true
 
   typescript-tests:
     name: TypeScript Tests

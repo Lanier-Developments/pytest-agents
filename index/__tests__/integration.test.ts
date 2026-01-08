@@ -77,9 +77,23 @@ export { AuthService } from './auth';
   });
 
   afterAll(() => {
-    // Cleanup
+    // Cleanup test project
     if (fs.existsSync(testProjectPath)) {
       fs.rmSync(testProjectPath, { recursive: true, force: true });
+    }
+
+    // Cleanup index file
+    const indexFile = path.join(process.cwd(), '.index-agent-state.json');
+    if (fs.existsSync(indexFile)) {
+      fs.unlinkSync(indexFile);
+    }
+  });
+
+  afterEach(() => {
+    // Clean up index file after each test
+    const indexFile = path.join(process.cwd(), '.index-agent-state.json');
+    if (fs.existsSync(indexFile)) {
+      fs.unlinkSync(indexFile);
     }
   });
 

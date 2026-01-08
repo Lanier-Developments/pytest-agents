@@ -4,8 +4,6 @@
 
 import 'reflect-metadata';
 import { container } from 'tsyringe';
-import * as fs from 'fs';
-import * as path from 'path';
 import { TOKENS } from './tokens';
 
 // Infrastructure implementations
@@ -67,12 +65,6 @@ export function setupContainer(): void {
 export function resetContainer(): void {
   container.clearInstances();
 
-  // Clear storage cache
+  // Clear storage cache to force new instance on next setupContainer()
   storageInstanceCache = null;
-
-  // Clean up test index file if it exists
-  const indexFile = path.join(process.cwd(), '.index-agent-state.json');
-  if (fs.existsSync(indexFile)) {
-    fs.unlinkSync(indexFile);
-  }
 }

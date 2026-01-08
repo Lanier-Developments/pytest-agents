@@ -16,6 +16,16 @@
 
 A pytest plugin framework with AI agent capabilities for project management, research, and code indexing.
 
+## Quick Start
+
+```bash
+# Install from PyPI
+pip install pytest-agents
+
+# Verify installation
+pytest-agents verify
+```
+
 ## Features
 
 - **Pytest Plugin**: Extended pytest with custom markers and AI agent integration

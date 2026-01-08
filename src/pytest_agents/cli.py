@@ -23,7 +23,7 @@ def cmd_version(args: argparse.Namespace) -> int:
     Returns:
         int: Exit code
     """
-    print(f"SuperClaude v{__version__}")
+    print(f"pytest-agents v{__version__}")
     return 0
 
 
@@ -36,7 +36,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
     Returns:
         int: Exit code
     """
-    print(f"SuperClaude v{__version__}")
+    print(f"pytest-agents v{__version__}")
     print("=" * 40)
 
     config = PytestAgentsConfig.from_env()

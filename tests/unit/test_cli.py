@@ -21,7 +21,7 @@ class TestCLICommands:
 
         assert exit_code == 0
         captured = capsys.readouterr()
-        assert "SuperClaude v" in captured.out
+        assert "pytest-agents v" in captured.out
 
     @patch("pytest_agents.cli.AgentBridge")
     @patch("pytest_agents.cli.PytestAgentsConfig.from_env")

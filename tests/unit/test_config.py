@@ -164,7 +164,7 @@ class TestPytestAgentsConfig:
         config = PytestAgentsConfig()
         assert config.metrics_enabled is False
         assert config.metrics_port == 9090
-        assert config.metrics_host == "0.0.0.0"
+        assert config.metrics_host == "127.0.0.1"  # Secure default: localhost only
 
     def test_metrics_configuration_custom(self) -> None:
         """Test metrics configuration with custom values."""

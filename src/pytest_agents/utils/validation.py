@@ -1,7 +1,10 @@
 """Validation utilities for pytest-agents."""
 
 import json  # pragma: no cover
+import logging  # pragma: no cover
 from typing import Any, Dict, Optional  # pragma: no cover
+
+logger = logging.getLogger(__name__)  # pragma: no cover
 
 
 def validate_json(data: str) -> Optional[Dict[str, Any]]:  # pragma: no cover
@@ -17,8 +20,16 @@ def validate_json(data: str) -> Optional[Dict[str, Any]]:  # pragma: no cover
         parsed = json.loads(data)
         if isinstance(parsed, dict):
             return parsed
+        logger.warning(
+            "JSON validation failed: expected dict, got %s",
+            type(parsed).__name__,
+        )
         return None
-    except (json.JSONDecodeError, TypeError):
+    except json.JSONDecodeError as e:
+        logger.warning("JSON validation failed: %s (position %d)", e.msg, e.pos)
+        return None
+    except TypeError as e:
+        logger.warning("JSON validation failed: %s", str(e))
         return None
 
 

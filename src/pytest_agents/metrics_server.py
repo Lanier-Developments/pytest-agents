@@ -25,7 +25,7 @@ class MetricsServer:  # pragma: no cover
     def __init__(  # pragma: no cover
         self,
         port: int = 9090,
-        host: str = "0.0.0.0",
+        host: str = "127.0.0.1",
         metrics: Optional[PrometheusMetrics] = None,
         agent_bridge: Optional[AgentBridge] = None,
     ) -> None:
@@ -53,6 +53,12 @@ class MetricsServer:  # pragma: no cover
             logger.warning("Metrics server is already running")  # pragma: no cover
             return  # pragma: no cover
 
+        if self.host == "0.0.0.0":
+            logger.warning(
+                "Metrics server binding to 0.0.0.0 exposes metrics to all "
+                "network interfaces. Ensure appropriate firewall/network "
+                "security controls are in place."
+            )
         logger.info(f"Starting metrics server on {self.host}:{self.port}")
 
         try:
@@ -132,7 +138,7 @@ class MetricsServer:  # pragma: no cover
 
 def start_metrics_server(  # pragma: no cover
     port: int = 9090,
-    host: str = "0.0.0.0",
+    host: str = "127.0.0.1",
     metrics: Optional[PrometheusMetrics] = None,
     agent_bridge: Optional[AgentBridge] = None,
     block: bool = True,

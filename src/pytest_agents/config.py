@@ -5,6 +5,55 @@ from dataclasses import dataclass, field  # pragma: no cover
 from pathlib import Path  # pragma: no cover
 from typing import Any, Dict, Optional  # pragma: no cover
 
+# Security constants for configuration validation
+MIN_TIMEOUT_SECONDS = 1  # pragma: no cover
+MAX_TIMEOUT_SECONDS = 3600  # 1 hour max  # pragma: no cover
+MIN_RETRY_COUNT = 0  # pragma: no cover
+MAX_RETRY_COUNT = 10  # pragma: no cover
+
+
+def _validate_timeout(  # pragma: no cover
+    value: int, field_name: str = "timeout"
+) -> int:
+    """Validate timeout value is within acceptable range.
+
+    Args:
+        value: Timeout value in seconds
+        field_name: Name of field for error messages
+
+    Returns:
+        int: Validated timeout value
+
+    Raises:
+        ValueError: If timeout is out of range
+    """
+    if not MIN_TIMEOUT_SECONDS <= value <= MAX_TIMEOUT_SECONDS:
+        raise ValueError(
+            f"{field_name} must be between {MIN_TIMEOUT_SECONDS} and "
+            f"{MAX_TIMEOUT_SECONDS} seconds, got {value}"
+        )
+    return value
+
+
+def _validate_retry_count(value: int) -> int:  # pragma: no cover
+    """Validate retry count is within acceptable range.
+
+    Args:
+        value: Retry count
+
+    Returns:
+        int: Validated retry count
+
+    Raises:
+        ValueError: If retry count is out of range
+    """
+    if not MIN_RETRY_COUNT <= value <= MAX_RETRY_COUNT:
+        raise ValueError(
+            f"retry_count must be between {MIN_RETRY_COUNT} and "
+            f"{MAX_RETRY_COUNT}, got {value}"
+        )
+    return value
+
 
 @dataclass  # pragma: no cover
 class PytestAgentsConfig:  # pragma: no cover
@@ -36,10 +85,16 @@ class PytestAgentsConfig:  # pragma: no cover
     # Metrics server configuration  # pragma: no cover
     metrics_enabled: bool = False  # pragma: no cover
     metrics_port: int = 9090  # pragma: no cover
-    metrics_host: str = "0.0.0.0"  # pragma: no cover
+    metrics_host: str = "127.0.0.1"  # pragma: no cover
 
     def __post_init__(self) -> None:  # pragma: no cover
         """Initialize paths after dataclass creation."""
+        # Validate timeout and retry count
+        self.agent_timeout = _validate_timeout(
+            self.agent_timeout, "agent_timeout"
+        )
+        self.agent_retry_count = _validate_retry_count(self.agent_retry_count)
+
         if self.agent_pm_path is None:
             self.agent_pm_path = self.project_root / "pm" / "dist" / "index.js"
         if self.agent_research_path is None:
@@ -116,15 +171,39 @@ class PytestAgentsConfig:  # pragma: no cover
             metrics_enabled=os.getenv("PYTEST_AGENTS_METRICS_ENABLED", "false").lower()
             == "true",
             metrics_port=int(os.getenv("PYTEST_AGENTS_METRICS_PORT", "9090")),
-            metrics_host=os.getenv("PYTEST_AGENTS_METRICS_HOST", "0.0.0.0"),
+            metrics_host=os.getenv("PYTEST_AGENTS_METRICS_HOST", "127.0.0.1"),
         )
 
-    def to_dict(self) -> Dict[str, Any]:  # pragma: no cover
+    def to_dict(  # pragma: no cover
+        self, mask_sensitive: bool = False
+    ) -> Dict[str, Any]:
         """Convert config to dictionary.
+
+        Args:
+            mask_sensitive: If True, mask sensitive values like paths
 
         Returns:
             Dict[str, Any]: Configuration as dictionary
         """
+        if mask_sensitive:
+            return {
+                "agent_pm_enabled": self.agent_pm_enabled,
+                "agent_research_enabled": self.agent_research_enabled,
+                "agent_index_enabled": self.agent_index_enabled,
+                "project_root": "<masked>",
+                "agent_pm_path": "<masked>" if self.agent_pm_path else None,
+                "agent_research_path": "<masked>" if self.agent_research_path else None,
+                "agent_index_path": "<masked>" if self.agent_index_path else None,
+                "agent_timeout": self.agent_timeout,
+                "agent_retry_count": self.agent_retry_count,
+                "log_level": self.log_level,
+                "log_file": "<masked>" if self.log_file else None,
+                "enable_agent_caching": self.enable_agent_caching,
+                "enable_parallel_agents": self.enable_parallel_agents,
+                "metrics_enabled": self.metrics_enabled,
+                "metrics_port": self.metrics_port,
+                "metrics_host": self.metrics_host,
+            }
         return {
             "agent_pm_enabled": self.agent_pm_enabled,
             "agent_research_enabled": self.agent_research_enabled,
@@ -147,3 +226,7 @@ class PytestAgentsConfig:  # pragma: no cover
             "metrics_port": self.metrics_port,
             "metrics_host": self.metrics_host,
         }
+
+    def __repr__(self) -> str:  # pragma: no cover
+        """Return a string representation with masked sensitive values."""
+        return f"PytestAgentsConfig({self.to_dict(mask_sensitive=True)})"

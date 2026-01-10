@@ -95,7 +95,17 @@ def cmd_agent(args: argparse.Namespace) -> int:
     bridge = AgentBridge(config)
 
     try:
-        params = json.loads(args.params) if args.params else {}
+        if args.params:
+            try:
+                params = json.loads(args.params)
+                if not isinstance(params, dict):
+                    print("Error: Parameters must be a JSON object", file=sys.stderr)
+                    return 1
+            except json.JSONDecodeError as e:
+                print(f"Error: Invalid JSON parameters: {e}", file=sys.stderr)
+                return 1
+        else:
+            params = {}
         result = bridge.invoke_agent(args.name, args.action, params)
 
         if args.json:
@@ -212,7 +222,7 @@ def main() -> int:
     metrics_parser.add_argument(
         "--port", type=int, help="Port to listen on (default: 9090)"
     )
-    metrics_parser.add_argument("--host", help="Host to bind to (default: 0.0.0.0)")
+    metrics_parser.add_argument("--host", help="Host to bind to (default: 127.0.0.1)")
 
     args = parser.parse_args()
 

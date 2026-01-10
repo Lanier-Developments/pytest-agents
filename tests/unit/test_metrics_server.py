@@ -23,10 +23,10 @@ class TestMetricsServer:
         """Test server configuration options."""
         metrics = PrometheusMetrics()
 
-        # Test default configuration
+        # Test default configuration (secure default: localhost only)
         server = MetricsServer(metrics=metrics)
         assert server.port == 9090  # Default port
-        assert server.host == "0.0.0.0"  # Default host
+        assert server.host == "127.0.0.1"  # Secure default: localhost only
 
         # Test custom configuration
         server = MetricsServer(port=8080, host="localhost", metrics=metrics)
@@ -93,6 +93,7 @@ class TestMetricsServer:
         )
 
         config = PytestAgentsConfig(
+            project_root=tmp_path,
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,

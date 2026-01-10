@@ -33,6 +33,7 @@ class AgentClient:  # pragma: no cover
         agent_path: Path,
         process_runner: Optional[IProcessRunner] = None,
         timeout: int = 30,
+        project_root: Optional[Path] = None,
     ) -> None:
         """Initialize agent client.
 
@@ -41,11 +42,27 @@ class AgentClient:  # pragma: no cover
             agent_path: Path to agent's index.js file
             process_runner: Optional process runner (defaults to subprocess)
             timeout: Command timeout in seconds
+            project_root: Optional project root for path validation
+
+        Raises:
+            ValueError: If agent path is outside project root (path traversal attempt)
         """
         self.name = name
-        self.agent_path = agent_path
         self.timeout = timeout
         self._process_runner = process_runner
+
+        # Validate and resolve agent path to prevent path traversal
+        resolved_path = agent_path.resolve()
+        if project_root is not None:
+            resolved_root = project_root.resolve()
+            try:
+                resolved_path.relative_to(resolved_root)
+            except ValueError:
+                raise ValueError(
+                    f"Agent path '{agent_path}' is outside project root "
+                    f"'{project_root}'. This may indicate a path traversal attempt."
+                )
+        self.agent_path = resolved_path
 
     def invoke(  # pragma: no cover
         self, action: str, params: Optional[Dict[str, Any]] = None
@@ -222,6 +239,7 @@ class AgentBridge:  # pragma: no cover
                 agent_path=path,
                 process_runner=self._process_runner,
                 timeout=timeout,
+                project_root=self.config.project_root,
             )
 
     def invoke_agent(  # pragma: no cover

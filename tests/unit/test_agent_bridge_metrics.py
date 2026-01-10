@@ -20,6 +20,7 @@ class TestAgentBridgeMetrics:
         research_agent.write_text("console.log('mock')")
 
         config = PytestAgentsConfig(
+            project_root=tmp_path,
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=True,
@@ -48,6 +49,7 @@ class TestAgentBridgeMetrics:
         )
 
         config = PytestAgentsConfig(
+            project_root=tmp_path,
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,
@@ -87,6 +89,7 @@ class TestAgentBridgeMetrics:
         )
 
         config = PytestAgentsConfig(
+            project_root=tmp_path,
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,
@@ -127,6 +130,7 @@ class TestAgentBridgeMetrics:
         )
 
         config = PytestAgentsConfig(
+            project_root=tmp_path,
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=True,
@@ -161,6 +165,7 @@ class TestAgentBridgeMetrics:
         )
 
         config = PytestAgentsConfig(
+            project_root=tmp_path,
             agent_pm_enabled=True,
             agent_pm_path=pm_agent,
             agent_research_enabled=False,

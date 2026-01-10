@@ -55,6 +55,7 @@ def coordinator(tmp_path):
     )
 
     config = PytestAgentsConfig(
+        project_root=tmp_path,
         agent_pm_enabled=True,
         agent_pm_path=pm_agent,
         agent_research_enabled=True,

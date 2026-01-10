@@ -61,6 +61,13 @@ COPY tests/ ./tests/
 # Copy configuration files
 COPY Makefile README.md ./
 
+# Create non-root user for security
+RUN useradd --create-home --uid 1000 appuser && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTEST_AGENTS_PROJECT_ROOT=/app

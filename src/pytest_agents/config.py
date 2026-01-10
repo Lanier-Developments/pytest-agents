@@ -90,9 +90,7 @@ class PytestAgentsConfig:  # pragma: no cover
     def __post_init__(self) -> None:  # pragma: no cover
         """Initialize paths after dataclass creation."""
         # Validate timeout and retry count
-        self.agent_timeout = _validate_timeout(
-            self.agent_timeout, "agent_timeout"
-        )
+        self.agent_timeout = _validate_timeout(self.agent_timeout, "agent_timeout")
         self.agent_retry_count = _validate_retry_count(self.agent_retry_count)
 
         if self.agent_pm_path is None:

@@ -21,7 +21,6 @@ class IProcessRunner(Protocol):
         Returns:
             Dict with returncode, stdout, stderr
         """
-        ...
 
 
 class IFileSystem(Protocol):
@@ -36,7 +35,6 @@ class IFileSystem(Protocol):
         Returns:
             File contents as string
         """
-        ...
 
     def write_file(self, path: Path, content: str) -> None:
         """Write content to file.
@@ -45,7 +43,6 @@ class IFileSystem(Protocol):
             path: Path to file
             content: Content to write
         """
-        ...
 
     def exists(self, path: Path) -> bool:
         """Check if path exists.
@@ -56,7 +53,6 @@ class IFileSystem(Protocol):
         Returns:
             True if path exists
         """
-        ...
 
 
 class IAgentClient(Protocol):
@@ -74,7 +70,6 @@ class IAgentClient(Protocol):
         Returns:
             Agent response dictionary
         """
-        ...
 
 
 class IConfigFactory(Protocol):
@@ -86,7 +81,6 @@ class IConfigFactory(Protocol):
         Returns:
             PytestAgentsConfig instance
         """
-        ...
 
 
 class IMetrics(Protocol):
@@ -101,7 +95,6 @@ class IMetrics(Protocol):
             name: Metric name
             labels: Optional labels for the metric
         """
-        ...
 
     def set_gauge(
         self, name: str, value: float, labels: Dict[str, str] | None = None
@@ -113,7 +106,6 @@ class IMetrics(Protocol):
             value: Metric value
             labels: Optional labels for the metric
         """
-        ...
 
     def observe_histogram(
         self, name: str, value: float, labels: Dict[str, str] | None = None
@@ -125,7 +117,6 @@ class IMetrics(Protocol):
             value: Value to observe
             labels: Optional labels for the metric
         """
-        ...
 
     def get_metrics(self) -> str:
         """Get metrics in Prometheus text format.
@@ -133,4 +124,3 @@ class IMetrics(Protocol):
         Returns:
             Metrics in Prometheus exposition format
         """
-        ...

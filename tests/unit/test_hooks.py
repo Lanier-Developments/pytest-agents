@@ -297,23 +297,20 @@ class TestPytestHooks:
         """Test that makereport ignores setup and teardown phases."""
         item = Mock()
 
-        # Test setup phase
+        # Test setup phase - hook should return None for non-call phases
         call_setup = Mock()
         call_setup.when = "setup"
-        result = hooks.pytest_runtest_makereport(item, call_setup)
-        assert result is None
+        assert hooks.pytest_runtest_makereport(item, call_setup) is None
 
         # Test teardown phase
         call_teardown = Mock()
         call_teardown.when = "teardown"
-        result = hooks.pytest_runtest_makereport(item, call_teardown)
-        assert result is None
+        assert hooks.pytest_runtest_makereport(item, call_teardown) is None
 
         # Test call phase
         call_call = Mock()
         call_call.when = "call"
-        result = hooks.pytest_runtest_makereport(item, call_call)
-        assert result is None
+        assert hooks.pytest_runtest_makereport(item, call_call) is None
 
     def test_pytest_sessionfinish_without_bridge(self, mock_pytest_config) -> None:
         """Test sessionfinish when bridge is None."""

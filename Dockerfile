@@ -24,11 +24,12 @@ RUN cd pm && npm run build && \
 # Stage 2: Python runtime with Node.js
 FROM python:3.11-slim
 
-# Install Node.js in Python image
+# Install Node.js in Python image and apply security updates
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends curl && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
+    apt-get install -y --no-install-recommends nodejs && \
     npm install -g npm@latest && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

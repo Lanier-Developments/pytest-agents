@@ -21,7 +21,8 @@ class IProcessRunner(Protocol):  # pragma: no cover
 
     def run(  # pragma: no cover
         self, cmd: list[str], input: str = "", timeout: int = 30
-    ) -> Dict[str, Any]: ...
+    ) -> Dict[str, Any]:
+        """Execute command and return result."""
 
 
 class AgentClient:  # pragma: no cover

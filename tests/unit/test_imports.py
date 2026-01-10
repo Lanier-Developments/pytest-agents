@@ -9,9 +9,9 @@ class TestModuleImports:
 
     def test_import_main_package(self) -> None:
         """Test main package imports."""
-        import pytest_agents
+        from pytest_agents import __version__
 
-        assert pytest_agents.__version__ is not None
+        assert __version__ is not None
 
     def test_import_config(self) -> None:
         """Test config module imports."""

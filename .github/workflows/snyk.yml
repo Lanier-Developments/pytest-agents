@@ -115,9 +115,6 @@ jobs:
         image: pytest-agents:test
         args: --severity-threshold=high --sarif-file-output=snyk.sarif
 
-    - name: Upload Snyk results to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v4
-      if: always() && hashFiles('snyk.sarif') != ''
-      with:
-        sarif_file: snyk.sarif
-        category: snyk-docker
+    # Note: Docker SARIF upload disabled - Snyk produces multi-run SARIF files
+    # which CodeQL rejects. Results still visible in Snyk dashboard.
+    # See: https://github.blog/changelog/2025-07-21-code-scanning-will-stop-combining-multiple-sarif-runs-uploaded-in-the-same-sarif-file/

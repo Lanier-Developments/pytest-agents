@@ -48,6 +48,7 @@ jobs:
       if: always() && hashFiles('snyk.sarif') != ''
       with:
         sarif_file: snyk.sarif
+        category: snyk-python
 
   snyk-npm:
     name: Snyk npm Security Scan
@@ -84,6 +85,7 @@ jobs:
       if: always() && hashFiles(format('snyk-{0}.sarif', matrix.agent)) != ''
       with:
         sarif_file: snyk-${{ matrix.agent }}.sarif
+        category: snyk-npm-${{ matrix.agent }}
 
   snyk-docker:
     name: Snyk Docker Security Scan
@@ -118,3 +120,4 @@ jobs:
       if: always() && hashFiles('snyk.sarif') != ''
       with:
         sarif_file: snyk.sarif
+        category: snyk-docker

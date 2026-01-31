@@ -22,15 +22,19 @@ RUN cd pm && npm run build && \
     cd ../index && npm run build
 
 # Stage 2: Python runtime with Node.js
-FROM python:3.11-slim
+# Use explicit bookworm tag for reproducibility and security tracking
+FROM python:3.11-slim-bookworm
 
 # Install Node.js in Python image and apply security updates
+# Note: Running apt-get upgrade before other installs ensures base image patches are applied
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends curl && \
+    apt-get dist-upgrade -y && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && \
     npm install -g npm@latest && \
+    apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

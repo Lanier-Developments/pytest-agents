@@ -22,21 +22,16 @@ RUN cd pm && npm run build && \
     cd ../index && npm run build
 
 # Stage 2: Python runtime with Node.js
-# Use explicit bookworm tag for reproducibility and security tracking
-FROM python:3.11-slim-bookworm
+# Using Alpine for smaller attack surface and fewer Debian-specific vulnerabilities
+FROM python:3.11-alpine
 
-# Install Node.js in Python image and apply security updates
-# Note: Running apt-get upgrade before other installs ensures base image patches are applied
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get dist-upgrade -y && \
-    apt-get install -y --no-install-recommends curl ca-certificates && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y --no-install-recommends nodejs && \
-    npm install -g npm@latest && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Install Node.js and build dependencies
+# Alpine uses musl libc instead of glibc, avoiding Debian-specific CVEs
+RUN apk add --no-cache \
+    nodejs \
+    npm \
+    git \
+    && npm install -g npm@latest
 
 WORKDIR /app
 
@@ -66,8 +61,8 @@ COPY tests/ ./tests/
 # Copy configuration files
 COPY Makefile README.md ./
 
-# Create non-root user for security
-RUN useradd --create-home --uid 1000 appuser && \
+# Create non-root user for security (Alpine uses adduser)
+RUN adduser -D -u 1000 appuser && \
     chown -R appuser:appuser /app
 
 # Switch to non-root user

@@ -22,7 +22,7 @@
   "author": "Kevin McAllorum",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^25.0.3",
+    "@types/node": "^25.1.0",
     "prom-client": "^15.1.3",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.10.0"

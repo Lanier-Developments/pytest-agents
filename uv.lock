@@ -317,7 +317,7 @@ wheels = [
 
 [[package]]
 name = "pytest-agents"
-version = "1.0.10"
+version = "1.0.15"
 source = { editable = "." }
 dependencies = [
     { name = "dependency-injector" },

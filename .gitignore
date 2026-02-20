@@ -69,6 +69,7 @@ index/dist/
 
 # Agent memory/state
 *.agent-state.json
+.*.agent-state.json
 .agent-memory/
 
 # Coverage

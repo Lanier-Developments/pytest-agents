@@ -8,7 +8,7 @@
     "build": "tsc",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "lint": "eslint src/ --ext .ts",
+    "lint": "eslint src/",
     "format": "prettier --write 'src/**/*.ts' '__tests__/**/*.ts'",
     "dev": "tsc --watch",
     "clean": "rm -rf dist"
@@ -31,7 +31,7 @@
     "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.56.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.3",
     "jest": "^30.2.0",
     "prettier": "^3.8.1",
     "ts-jest": "^29.1.0",

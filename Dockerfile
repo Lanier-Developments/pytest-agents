@@ -23,7 +23,7 @@ RUN cd pm && npm run build && \
 
 # Stage 2: Python runtime with Node.js
 # Using Alpine for smaller attack surface and fewer Debian-specific vulnerabilities
-FROM python:3.11-alpine
+FROM python:3.14-alpine
 
 # Install Node.js and build dependencies
 # Alpine uses musl libc instead of glibc, avoiding Debian-specific CVEs

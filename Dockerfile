@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile for pytest-agents
 # Stage 1: Build TypeScript agents
-FROM node:20-alpine AS ts-builder
+FROM node:26-alpine AS ts-builder
 
 WORKDIR /build
 

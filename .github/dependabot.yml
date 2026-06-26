@@ -1,7 +1,15 @@
 version: 2
+
+# Grouping strategy:
+#   minor + patch updates are batched into a single PR per ecosystem/directory
+#   to avoid PR floods (this repo previously had 24 open at once). Major updates
+#   are intentionally left ungrouped so each gets its own PR for review.
 updates:
-  # Python dependencies
-  - package-ecosystem: "pip"
+  # ---------------------------------------------------------------------------
+  # Python framework (uv-managed: pyproject.toml + uv.lock)
+  # Must be "uv", NOT "pip" — the pip ecosystem does not update uv.lock.
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -10,47 +18,16 @@ updates:
       - "python"
     open-pull-requests-limit: 5
     groups:
-      security-updates:
+      python-minor-patch:
         patterns:
           - "*"
         update-types:
-          - "security"
+          - "minor"
+          - "patch"
 
-  # PM Agent dependencies
-  - package-ecosystem: "npm"
-    directory: "/pm"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
-      - "typescript"
-      - "pm-agent"
-    open-pull-requests-limit: 5
-    groups:
-      security-updates:
-        patterns:
-          - "*"
-        update-types:
-          - "security"
-
-  # Research Agent dependencies
-  - package-ecosystem: "npm"
-    directory: "/research"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
-      - "typescript"
-      - "research-agent"
-    open-pull-requests-limit: 5
-    groups:
-      security-updates:
-        patterns:
-          - "*"
-        update-types:
-          - "security"
-
-  # Index Agent dependencies
+  # ---------------------------------------------------------------------------
+  # TypeScript agents (each has its own package.json / package-lock.json)
+  # ---------------------------------------------------------------------------
   - package-ecosystem: "npm"
     directory: "/index"
     schedule:
@@ -61,13 +38,50 @@ updates:
       - "index-agent"
     open-pull-requests-limit: 5
     groups:
-      security-updates:
+      index-minor-patch:
         patterns:
           - "*"
         update-types:
-          - "security"
+          - "minor"
+          - "patch"
 
-  # GitHub Actions
+  - package-ecosystem: "npm"
+    directory: "/pm"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "typescript"
+      - "pm-agent"
+    open-pull-requests-limit: 5
+    groups:
+      pm-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "npm"
+    directory: "/research"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "typescript"
+      - "research-agent"
+    open-pull-requests-limit: 5
+    groups:
+      research-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ---------------------------------------------------------------------------
+  # GitHub Actions (.github/workflows)
+  # ---------------------------------------------------------------------------
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -77,8 +91,28 @@ updates:
       - "github-actions"
     open-pull-requests-limit: 5
     groups:
-      security-updates:
+      actions-minor-patch:
         patterns:
           - "*"
         update-types:
-          - "security"
+          - "minor"
+          - "patch"
+
+  # ---------------------------------------------------------------------------
+  # Docker (root Dockerfile + docker-compose.yml)
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "docker"
+    open-pull-requests-limit: 5
+    groups:
+      docker-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

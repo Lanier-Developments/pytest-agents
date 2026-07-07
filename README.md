@@ -8,7 +8,7 @@
 [![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 ![Coverage](.github/badges/coverage.svg)
-[![Tests](https://img.shields.io/badge/tests-182%20passed-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
 [![Metrics](https://img.shields.io/badge/metrics-prometheus-blue.svg)](docs/METRICS.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](docs/DOCKER.md)
@@ -36,7 +36,7 @@ pytest-agents verify
 - **Dependency Injection**: Full DI implementation across Python and TypeScript components
 - **Skills System**: Extensible runtime skills for specialized tasks
 
-## Quick Start
+## Getting Started
 
 ### Installation
 
@@ -215,7 +215,7 @@ pytest-agents implements enterprise-grade security practices:
 
 - Multi-stage Docker builds with minimal attack surface
 - Dependency pinning for reproducible builds
-- Comprehensive test coverage (61%, 230 tests)
+- Comprehensive automated test suite with coverage enforced in CI
 - Automated security updates grouped by severity
 
 ### Setup and Configuration
@@ -250,4 +250,3 @@ MIT
 ## Author
 
 Kevin McAllorum
-# Security scanning now enabled!

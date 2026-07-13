@@ -36,7 +36,7 @@ jobs:
       changelog: ${{ steps.check.outputs.changelog }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
@@ -116,7 +116,7 @@ jobs:
       version: ${{ needs.check-version.outputs.new_version }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
@@ -221,7 +221,7 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         ref: v${{ needs.release.outputs.version }}
 
@@ -256,7 +256,7 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         ref: v${{ needs.release.outputs.version }}
 

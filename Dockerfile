@@ -25,13 +25,16 @@ RUN cd pm && npm run build && \
 # Using Alpine for smaller attack surface and fewer Debian-specific vulnerabilities
 FROM python:3.14-alpine
 
-# Install Node.js and build dependencies
-# Alpine uses musl libc instead of glibc, avoiding Debian-specific CVEs
+# Install the Node.js runtime and git.
+# npm is intentionally omitted: at runtime the agents are launched via
+# `node <agent>/dist/index.js` (see agent_bridge.py) using node_modules copied
+# from the build stage, so the package manager is never invoked here. Dropping
+# npm removes /usr/lib/node_modules/npm and the high-severity CVEs in its
+# bundled dependencies (tar, pacote, sigstore, brace-expansion, picomatch),
+# and further shrinks the runtime attack surface.
 RUN apk add --no-cache \
     nodejs \
-    npm \
-    git \
-    && npm install -g npm@latest
+    git
 
 WORKDIR /app
 

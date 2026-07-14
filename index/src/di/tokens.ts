@@ -10,6 +10,11 @@ export const TOKENS = {
   IPathResolver: Symbol.for('IPathResolver'),
   IMetrics: Symbol.for('IMetrics'),
 
+  // Configuration
+  // Root directory used to derive the index persistence file. Injectable so
+  // tests can isolate state per-suite instead of sharing one file under cwd.
+  ProjectPath: Symbol.for('ProjectPath'),
+
   // Tools
   IASTParser: Symbol.for('IASTParser'),
 

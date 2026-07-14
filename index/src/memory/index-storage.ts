@@ -16,7 +16,7 @@ export class IndexStorage {
     @inject(TOKENS.IFileWriter) private fileWriter: IFileWriter,
     @inject(TOKENS.IPathResolver) private pathResolver: IPathResolver,
     @inject(TOKENS.ILogger) private logger: ILogger,
-    projectPath: string
+    @inject(TOKENS.ProjectPath) projectPath: string
   ) {
     this.storageFile = this.pathResolver.join(projectPath, '.index-agent-state.json');
   }

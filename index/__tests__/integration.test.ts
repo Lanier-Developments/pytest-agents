@@ -7,11 +7,13 @@ import { container } from 'tsyringe';
 import { setupContainer, resetContainer } from '../src/di/container';
 import { IndexAgent } from '../src/agent';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 describe('Index Agent Integration', () => {
   let agent: IndexAgent;
   let testProjectPath: string;
+  let stateDir: string;
 
   beforeAll(() => {
     testProjectPath = path.join(__dirname, 'integration-test-project');
@@ -81,25 +83,21 @@ export { AuthService } from './auth';
     if (fs.existsSync(testProjectPath)) {
       fs.rmSync(testProjectPath, { recursive: true, force: true });
     }
-
-    // Cleanup index file
-    const indexFile = path.join(process.cwd(), '.index-agent-state.json');
-    if (fs.existsSync(indexFile)) {
-      fs.unlinkSync(indexFile);
-    }
   });
 
   afterEach(() => {
-    // Clean up index file after each test
-    const indexFile = path.join(process.cwd(), '.index-agent-state.json');
-    if (fs.existsSync(indexFile)) {
-      fs.unlinkSync(indexFile);
+    // Clean up this test's isolated state directory
+    if (fs.existsSync(stateDir)) {
+      fs.rmSync(stateDir, { recursive: true, force: true });
     }
   });
 
   beforeEach(() => {
     resetContainer();
-    setupContainer();
+    // Isolate the index persistence file per test so this suite can't race
+    // with others on a shared .index-agent-state.json under the working dir.
+    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'index-agent-int-'));
+    setupContainer(stateDir);
     agent = container.resolve(IndexAgent);
   });
 

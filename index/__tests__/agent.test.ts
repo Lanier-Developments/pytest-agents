@@ -7,15 +7,20 @@ import { container } from 'tsyringe';
 import { setupContainer, resetContainer } from '../src/di/container';
 import { IndexAgent } from '../src/agent';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 describe('IndexAgent', () => {
   let agent: IndexAgent;
   let testDir: string;
+  let stateDir: string;
 
   beforeEach(() => {
     resetContainer();
-    setupContainer();
+    // Isolate the index persistence file per test so parallel suites can't
+    // race on a shared .index-agent-state.json under the working directory.
+    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'index-agent-'));
+    setupContainer(stateDir);
     testDir = path.join(__dirname, 'test-project');
     agent = container.resolve(IndexAgent);
 
@@ -46,6 +51,9 @@ const PI = 3.14159;
     // Cleanup
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
+    }
+    if (fs.existsSync(stateDir)) {
+      fs.rmSync(stateDir, { recursive: true, force: true });
     }
   });
 

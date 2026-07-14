@@ -27,15 +27,21 @@ export { TOKENS };
 let storageInstanceCache: IndexStorage | null = null;
 
 /**
- * Setup and configure the DI container
+ * Setup and configure the DI container.
+ *
+ * @param projectPath Root directory used to derive the index persistence file
+ *   (`.index-agent-state.json`). Defaults to the current working directory for
+ *   production; tests pass an isolated temp dir so parallel suites don't share
+ *   a single state file.
  */
-export function setupContainer(): void {
+export function setupContainer(projectPath: string = process.cwd()): void {
   // Register infrastructure implementations as singletons
   container.registerSingleton(TOKENS.IFileReader, FsFileReader);
   container.registerSingleton(TOKENS.IFileWriter, FsFileWriter);
   container.registerSingleton(TOKENS.ILogger, ConsoleLogger);
   container.registerSingleton(TOKENS.IPathResolver, PathResolver);
   container.registerSingleton(TOKENS.IMetrics, PrometheusMetrics);
+  container.registerInstance(TOKENS.ProjectPath, projectPath);
 
   // Register tools
   container.register(TOKENS.IASTParser, { useClass: ASTParser });
@@ -53,7 +59,7 @@ export function setupContainer(): void {
       container.resolve(TOKENS.IFileWriter),
       container.resolve(TOKENS.IPathResolver),
       container.resolve(TOKENS.ILogger),
-      process.cwd()
+      projectPath
     );
   }
   container.registerInstance(TOKENS.IIndexStorage, storageInstanceCache);

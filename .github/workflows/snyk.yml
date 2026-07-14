@@ -97,14 +97,18 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v4
 
+    # Build fresh (no layer cache, re-pull base images) so the scan evaluates
+    # current packages. A cached `apk add npm && npm install -g npm@latest`
+    # layer otherwise freezes an old, vulnerable global npm and reports stale
+    # base-image findings that newer npm/Alpine releases have already fixed.
     - name: Build Docker image
       uses: docker/build-push-action@v7
       with:
         context: .
         load: true
         tags: pytest-agents:test
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        no-cache: true
+        pull: true
 
     - name: Run Snyk to check Docker image for vulnerabilities
       uses: snyk/actions/docker@master

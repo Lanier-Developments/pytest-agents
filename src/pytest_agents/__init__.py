@@ -1,6 +1,6 @@
 """pytest-agents - Pytest plugin framework with AI agent capabilities."""
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 from pytest_agents.plugin import PytestAgentsPlugin
 

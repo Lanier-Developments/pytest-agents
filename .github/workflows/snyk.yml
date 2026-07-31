@@ -44,7 +44,7 @@ jobs:
         args: --severity-threshold=high --sarif-file-output=snyk.sarif
 
     - name: Upload Snyk results to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v4
+      uses: github/codeql-action/upload-sarif@v4.37.3
       if: always() && hashFiles('snyk.sarif') != ''
       with:
         sarif_file: snyk.sarif
@@ -81,7 +81,7 @@ jobs:
         snyk test --severity-threshold=high --sarif-file-output=../snyk-${{ matrix.agent }}.sarif || true
 
     - name: Upload Snyk results to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v4
+      uses: github/codeql-action/upload-sarif@v4.37.3
       if: always() && hashFiles(format('snyk-{0}.sarif', matrix.agent)) != ''
       with:
         sarif_file: snyk-${{ matrix.agent }}.sarif
@@ -143,7 +143,7 @@ jobs:
         echo "Merged $(jq '.runs | length' snyk.sarif) run(s) into 1; results: $(jq '.runs[0].results | length' snyk-container.sarif)"
 
     - name: Upload Snyk Docker results to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v4
+      uses: github/codeql-action/upload-sarif@v4.37.3
       if: always() && hashFiles('snyk-container.sarif') != ''
       with:
         sarif_file: snyk-container.sarif

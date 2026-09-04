@@ -22,17 +22,17 @@
   "author": "Kevin McAllorum",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.4.0",
     "prom-client": "^15.1.3",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.10.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/eslint-plugin": "^8.69.0",
     "@typescript-eslint/parser": "^8.57.1",
-    "eslint": "^10.8.0",
-    "jest": "^30.2.0",
+    "eslint": "^10.9.1",
+    "jest": "^30.5.1",
     "prettier": "^3.9.6",
     "ts-jest": "^29.4.12",
     "typescript": "^6.0.3"

@@ -96,11 +96,11 @@ export class KnowledgeGraphManager {
       const currentNode = this.graph.nodes.get(current.id);
       if (!currentNode) continue;
 
-      for (const relatedId of currentNode.relatedNodes) {
-        if (relatedId !== nodeId) {
-          related.add(relatedId);
-        }
-        if (current.depth < maxDepth) {
+      if (current.depth < maxDepth) {
+        for (const relatedId of currentNode.relatedNodes) {
+          if (relatedId !== nodeId) {
+            related.add(relatedId);
+          }
           queue.push({ id: relatedId, depth: current.depth + 1 });
         }
       }

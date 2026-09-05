@@ -110,9 +110,9 @@ export class CitationTracker {
   private formatChicago(source: Source, _citation: Citation): string {
     const author = source.author || 'Unknown';
     const title = source.title;
-    const year = source.date ? source.date.getFullYear() : 'n.d.';
+    const year = source.date ? `${source.date.getFullYear()}.` : 'n.d.';
 
-    let formatted = `${author}. ${title}. ${year}.`;
+    let formatted = `${author}. ${title}. ${year}`;
 
     if (source.url) {
       formatted += ` ${source.url}.`;

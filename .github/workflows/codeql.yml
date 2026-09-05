@@ -30,10 +30,13 @@ jobs:
         language:
           - python
           - javascript-typescript
+          - actions
         include:
           - language: python
             build-mode: none
           - language: javascript-typescript
+            build-mode: none
+          - language: actions
             build-mode: none
 
     steps:

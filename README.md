@@ -47,8 +47,8 @@ pip install pytest-agents
 
 **From Docker:**
 ```bash
-docker pull ghcr.io/kmcallorum/pytest-agents:latest
-docker run ghcr.io/kmcallorum/pytest-agents:latest pytest-agents verify
+docker pull ghcr.io/lanier-developments/pytest-agents:latest
+docker run ghcr.io/lanier-developments/pytest-agents:latest pytest-agents verify
 ```
 
 **From Source:**

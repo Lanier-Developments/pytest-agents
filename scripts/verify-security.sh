@@ -93,7 +93,7 @@ gh run list --limit 5 --json name,status,conclusion --jq '.[] | "\(.name): \(.st
 echo ""
 
 echo "Security dashboard:"
-echo "  https://github.com/kmcallorum/pytest-agents/security"
+echo "  https://github.com/Lanier-Developments/pytest-agents/security"
 echo ""
 
 echo "Next steps:"

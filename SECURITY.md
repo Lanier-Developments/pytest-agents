@@ -17,7 +17,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 **DO NOT** open a public GitHub issue for security vulnerabilities. Instead, please report them privately:
 
 1. **GitHub Security Advisories** (Preferred)
-   - Navigate to the [Security Advisories](https://github.com/kmcallorum/pytest-agents/security/advisories) page
+   - Navigate to the [Security Advisories](https://github.com/Lanier-Developments/pytest-agents/security/advisories) page
    - Click "Report a vulnerability"
    - Provide detailed information about the vulnerability
 
@@ -134,7 +134,7 @@ We release security updates as follows:
 - **Medium**: Next minor version
 - **Low**: Next major version
 
-Subscribe to [GitHub Security Advisories](https://github.com/kmcallorum/pytest-agents/security/advisories) for notifications.
+Subscribe to [GitHub Security Advisories](https://github.com/Lanier-Developments/pytest-agents/security/advisories) for notifications.
 
 ## Compliance
 
@@ -149,7 +149,7 @@ pytest-agents development follows:
 
 Current security posture:
 
-- **CodeQL**: ![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)
+- **CodeQL**: ![CodeQL](https://github.com/Lanier-Developments/pytest-agents/actions/workflows/codeql.yml/badge.svg)
 - **Dependency Scanning**: Automated via Dependabot
 - **Last Security Audit**: 2026-01-02
 

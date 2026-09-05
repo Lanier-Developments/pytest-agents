@@ -7,6 +7,8 @@ import { container } from 'tsyringe';
 import { setupContainer, resetContainer } from '../src/di/container';
 import { TaskTracker } from '../src/capabilities/task-tracking';
 import { Task } from '../src/types';
+import { ITaskParser } from '../src/interfaces/capabilities';
+import { ILogger } from '../src/interfaces/core';
 
 describe('TaskTracker', () => {
   let tracker: TaskTracker;
@@ -198,6 +200,63 @@ describe('TaskTracker', () => {
 
       tracker.removeTask('test1');
       expect(tracker.getTask('test1')).toBeUndefined();
+    });
+  });
+
+  describe('trackTasks', () => {
+    const makeTask = (id: string): Task => ({
+      id,
+      description: `task ${id}`,
+      type: 'todo',
+      file: 'test.ts',
+      line: 1,
+      priority: 2,
+      dependencies: [],
+      tags: [],
+      createdAt: new Date(),
+    });
+
+    it('parses the project directory, stores found tasks, and returns them', async () => {
+      const parsedTasks = [makeTask('p1'), makeTask('p2')];
+      const parser: jest.Mocked<ITaskParser> = {
+        parseFile: jest.fn(),
+        parseDirectory: jest.fn().mockReturnValue(parsedTasks),
+      };
+      const logger: jest.Mocked<ILogger> = {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+      };
+      const trackerWithMocks = new TaskTracker(parser, logger);
+
+      const result = await trackerWithMocks.trackTasks('/project');
+
+      expect(parser.parseDirectory).toHaveBeenCalledWith('/project');
+      expect(result).toEqual(parsedTasks);
+      expect(trackerWithMocks.getAllTasks()).toHaveLength(2);
+      expect(trackerWithMocks.getTask('p1')).toEqual(parsedTasks[0]);
+      expect(logger.info).toHaveBeenCalledWith(expect.stringContaining('Tracking tasks in /project'));
+      expect(logger.info).toHaveBeenCalledWith(expect.stringContaining('Found 2 tasks'));
+    });
+
+    it('handles an empty result from the parser', async () => {
+      const parser: jest.Mocked<ITaskParser> = {
+        parseFile: jest.fn(),
+        parseDirectory: jest.fn().mockReturnValue([]),
+      };
+      const logger: jest.Mocked<ILogger> = {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+      };
+      const trackerWithMocks = new TaskTracker(parser, logger);
+
+      const result = await trackerWithMocks.trackTasks('/empty');
+
+      expect(result).toEqual([]);
+      expect(trackerWithMocks.getAllTasks()).toEqual([]);
     });
   });
 

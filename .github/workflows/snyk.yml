@@ -27,7 +27,7 @@ jobs:
         python-version: '3.11'
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v7
+      uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
       with:
         version: "latest"
 
@@ -36,7 +36,7 @@ jobs:
         uv pip install --system -e ".[dev]"
 
     - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/python@master
+      uses: snyk/actions/python@12140f4059e244892ae643824a95459a102120dd # master
       continue-on-error: true
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -95,14 +95,14 @@ jobs:
     - uses: actions/checkout@v7
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v4
+      uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4
 
     # Build fresh (no layer cache, re-pull base images) so the scan evaluates
     # current packages. A cached `apk add npm && npm install -g npm@latest`
     # layer otherwise freezes an old, vulnerable global npm and reports stale
     # base-image findings that newer npm/Alpine releases have already fixed.
     - name: Build Docker image
-      uses: docker/build-push-action@v7
+      uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
       with:
         context: .
         load: true
@@ -111,7 +111,7 @@ jobs:
         pull: true
 
     - name: Run Snyk to check Docker image for vulnerabilities
-      uses: snyk/actions/docker@master
+      uses: snyk/actions/docker@12140f4059e244892ae643824a95459a102120dd # master
       continue-on-error: true
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

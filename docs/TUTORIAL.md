@@ -25,7 +25,7 @@ pip install pytest-agents
 ### From Source
 
 ```bash
-git clone https://github.com/kmcallorum/pytest-agents.git
+git clone https://github.com/Lanier-Developments/pytest-agents.git
 cd pytest-agents
 pip install -e ".[dev]"
 ```
@@ -464,7 +464,7 @@ jobs:
 - Check out [API Documentation](api/python-api.md) for detailed API reference
 - See [Metrics Guide](METRICS.md) for observability setup
 - Read [Architecture Overview](developer-guide/architecture.md) to understand internals
-- Join discussions at https://github.com/kmcallorum/pytest-agents/discussions
+- Join discussions at https://github.com/Lanier-Developments/pytest-agents/discussions
 
 ---
 
@@ -508,5 +508,5 @@ cd ../index && npm install && npm run build
 ---
 
 **Questions or Issues?**
-- Report bugs: https://github.com/kmcallorum/pytest-agents/issues
-- Ask questions: https://github.com/kmcallorum/pytest-agents/discussions
+- Report bugs: https://github.com/Lanier-Developments/pytest-agents/issues
+- Ask questions: https://github.com/Lanier-Developments/pytest-agents/discussions

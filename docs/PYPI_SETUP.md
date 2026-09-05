@@ -52,7 +52,7 @@ If you don't have a PyPI account yet:
 
    ```
    PyPI Project Name:        pytest-agents
-   Owner:                    kmcallorum
+   Owner:                    Lanier-Developments
    Repository name:          pytest-agents
    Workflow name:            release.yml
    Environment name:         (leave blank)
@@ -63,7 +63,7 @@ If you don't have a PyPI account yet:
 6. You should see the pending publisher listed:
    ```
    pytest-agents (pending)
-   Owner: kmcallorum
+   Owner: Lanier-Developments
    Repository: pytest-agents
    Workflow: release.yml
    ```

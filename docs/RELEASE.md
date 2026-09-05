@@ -130,7 +130,7 @@ Each release creates:
 
 ### 1. GitHub Release
 
-- **Location**: https://github.com/kmcallorum/pytest-agents/releases
+- **Location**: https://github.com/Lanier-Developments/pytest-agents/releases
 - **Contains**:
   - Release notes (auto-generated changelog)
   - Git tag (e.g., `v0.2.0`)
@@ -146,7 +146,7 @@ Each release creates:
 
 ### 3. Docker Images
 
-- **Location**: https://ghcr.io/kmcallorum/pytest-agents
+- **Location**: https://ghcr.io/lanier-developments/pytest-agents
 - **Tags**:
   - `latest`: Most recent release
   - `X.Y.Z`: Specific version (e.g., `0.2.0`)
@@ -156,8 +156,8 @@ Each release creates:
 
 **Pull image:**
 ```bash
-docker pull ghcr.io/kmcallorum/pytest-agents:latest
-docker pull ghcr.io/kmcallorum/pytest-agents:0.2.0
+docker pull ghcr.io/lanier-developments/pytest-agents:latest
+docker pull ghcr.io/lanier-developments/pytest-agents:0.2.0
 ```
 
 ## Prerequisites for Publishing
@@ -173,7 +173,7 @@ pytest-agents uses **Trusted Publishing** (recommended by PyPI) instead of API t
    - Go to https://pypi.org/manage/account/publishing/
    - Add pending publisher:
      - Project: `pytest-agents`
-     - Owner: `kmcallorum`
+     - Owner: `Lanier-Developments`
      - Repo: `pytest-agents`
      - Workflow: `release.yml`
 3. Done! Next release will auto-publish to PyPI
@@ -273,7 +273,7 @@ gh release view v0.2.0
 pip install pytest-agents==0.2.0
 
 # Verify Docker
-docker pull ghcr.io/kmcallorum/pytest-agents:0.2.0
+docker pull ghcr.io/lanier-developments/pytest-agents:0.2.0
 ```
 
 ## Troubleshooting
@@ -439,7 +439,7 @@ gh run watch
 gh api /user/packages/container/pytest-agents/versions
 
 # Pull latest
-docker pull ghcr.io/kmcallorum/pytest-agents:latest
+docker pull ghcr.io/lanier-developments/pytest-agents:latest
 ```
 
 ### PyPI Downloads

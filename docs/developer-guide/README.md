@@ -24,7 +24,7 @@ Welcome to the pytest-agents developer guide. This guide will help you understan
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/kmcallorum/pytest-agents.git
+git clone https://github.com/Lanier-Developments/pytest-agents.git
 cd pytest-agents
 ```
 
@@ -354,7 +354,7 @@ uv run pytest --cov=src/pytest-agents --cov-report=html
 
 ### Getting Help
 
-- Check existing [issues](https://github.com/kmcallorum/pytest-agents/issues)
+- Check existing [issues](https://github.com/Lanier-Developments/pytest-agents/issues)
 - Review [architecture documentation](architecture.md)
 - Read API documentation: [Python](../api/python-api.md) | [TypeScript](../api/typescript-api.md)
 

@@ -14,10 +14,10 @@ gh run list --workflow=codeql.yml --limit 1
 gh run list --workflow=snyk.yml --limit 1
 
 # Check for security alerts
-gh api /repos/kmcallorum/pytest-agents/code-scanning/alerts
+gh api /repos/Lanier-Developments/pytest-agents/code-scanning/alerts
 
 # View security dashboard
-open https://github.com/kmcallorum/pytest-agents/security
+open https://github.com/Lanier-Developments/pytest-agents/security
 ```
 
 ## Detailed Verification
@@ -26,14 +26,14 @@ open https://github.com/kmcallorum/pytest-agents/security
 
 **Check via GitHub CLI:**
 ```bash
-gh api /repos/kmcallorum/pytest-agents \
+gh api /repos/Lanier-Developments/pytest-agents \
   --jq '.security_and_analysis.advanced_security.status'
 ```
 
 **Expected Output:** `"enabled"`
 
 **Check via Web:**
-1. Go to: https://github.com/kmcallorum/pytest-agents/settings/security_analysis
+1. Go to: https://github.com/Lanier-Developments/pytest-agents/settings/security_analysis
 2. "Code scanning" should show as "Enabled"
 3. You should see "CodeQL" listed
 
@@ -79,7 +79,7 @@ gh pr list --author app/dependabot --limit 5
 
 **Check Dependabot Alerts:**
 ```bash
-gh api /repos/kmcallorum/pytest-agents/dependabot/alerts
+gh api /repos/Lanier-Developments/pytest-agents/dependabot/alerts
 ```
 
 ### 4. View Security Dashboard
@@ -87,27 +87,27 @@ gh api /repos/kmcallorum/pytest-agents/dependabot/alerts
 **Command Line:**
 ```bash
 # Overall security status
-gh repo view kmcallorum/pytest-agents --json securityPolicyUrl,isSecurityPolicyEnabled
+gh repo view Lanier-Developments/pytest-agents --json securityPolicyUrl,isSecurityPolicyEnabled
 
 # Code scanning alerts (should be empty if no issues)
-gh api /repos/kmcallorum/pytest-agents/code-scanning/alerts \
+gh api /repos/Lanier-Developments/pytest-agents/code-scanning/alerts \
   --jq '.[] | {rule: .rule.id, severity: .rule.severity, state: .state}'
 
 # Dependabot alerts
-gh api /repos/kmcallorum/pytest-agents/dependabot/alerts \
+gh api /repos/Lanier-Developments/pytest-agents/dependabot/alerts \
   --jq '.[] | {package: .security_advisory.package.name, severity: .security_advisory.severity}'
 ```
 
 **Web Dashboard:**
 ```bash
 # Open security overview
-open https://github.com/kmcallorum/pytest-agents/security
+open https://github.com/Lanier-Developments/pytest-agents/security
 
 # Open code scanning
-open https://github.com/kmcallorum/pytest-agents/security/code-scanning
+open https://github.com/Lanier-Developments/pytest-agents/security/code-scanning
 
 # Open Dependabot
-open https://github.com/kmcallorum/pytest-agents/security/dependabot
+open https://github.com/Lanier-Developments/pytest-agents/security/dependabot
 ```
 
 ## Troubleshooting
@@ -177,7 +177,7 @@ cat .github/dependabot.yml
 **Trigger Manual Check:**
 ```bash
 # Dependabot runs automatically, but you can check alerts
-gh api /repos/kmcallorum/pytest-agents/dependabot/alerts
+gh api /repos/Lanier-Developments/pytest-agents/dependabot/alerts
 ```
 
 **Note:** Dependabot runs on GitHub's schedule, not immediately
@@ -223,7 +223,7 @@ echo "Snyk Status:"
 gh run list --workflow=snyk.yml --limit 1
 echo ""
 echo "Open Security Alerts:"
-gh api /repos/kmcallorum/pytest-agents/code-scanning/alerts --jq 'length'
+gh api /repos/Lanier-Developments/pytest-agents/code-scanning/alerts --jq 'length'
 echo ""
 echo "Dependabot PRs:"
 gh pr list --author app/dependabot --json number,title
@@ -244,7 +244,7 @@ Your security scanning is properly configured when:
 
 After verification:
 
-1. **Monitor the Security tab:** https://github.com/kmcallorum/pytest-agents/security
+1. **Monitor the Security tab:** https://github.com/Lanier-Developments/pytest-agents/security
 2. **Review alerts weekly:** Check for new vulnerabilities
 3. **Merge Dependabot PRs:** Keep dependencies updated
 4. **Configure notifications:** Settings → Notifications → Security alerts

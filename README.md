@@ -1,14 +1,14 @@
 # pytest-agents
 
-[![CI](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/codeql.yml)
-[![Release](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml/badge.svg)](https://github.com/kmcallorum/pytest-agents/actions/workflows/release.yml)
-[![GitHub Release](https://img.shields.io/github/v/release/kmcallorum/pytest-agents)](https://github.com/kmcallorum/pytest-agents/releases)
+[![CI](https://github.com/Lanier-Developments/pytest-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/Lanier-Developments/pytest-agents/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Lanier-Developments/pytest-agents/actions/workflows/codeql.yml/badge.svg)](https://github.com/Lanier-Developments/pytest-agents/actions/workflows/codeql.yml)
+[![Release](https://github.com/Lanier-Developments/pytest-agents/actions/workflows/release.yml/badge.svg)](https://github.com/Lanier-Developments/pytest-agents/actions/workflows/release.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/Lanier-Developments/pytest-agents)](https://github.com/Lanier-Developments/pytest-agents/releases)
 [![PyPI](https://img.shields.io/pypi/v/pytest-agents)](https://pypi.org/project/pytest-agents/)
 [![Security Policy](https://img.shields.io/badge/security-policy-blue.svg)](SECURITY.md)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 ![Coverage](.github/badges/coverage.svg)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/kmcallorum/pytest-agents)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/Lanier-Developments/pytest-agents)
 [![Metrics](https://img.shields.io/badge/metrics-prometheus-blue.svg)](docs/METRICS.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](docs/DOCKER.md)
@@ -54,7 +54,7 @@ docker run ghcr.io/kmcallorum/pytest-agents:latest pytest-agents verify
 **From Source:**
 ```bash
 # Clone repository
-git clone https://github.com/kmcallorum/pytest-agents.git
+git clone https://github.com/Lanier-Developments/pytest-agents.git
 cd pytest-agents
 
 # Install with uv
@@ -224,7 +224,7 @@ pytest-agents implements enterprise-grade security practices:
 
 ### Reporting Vulnerabilities
 
-Please report security vulnerabilities privately via [GitHub Security Advisories](https://github.com/kmcallorum/pytest-agents/security/advisories).
+Please report security vulnerabilities privately via [GitHub Security Advisories](https://github.com/Lanier-Developments/pytest-agents/security/advisories).
 
 See [SECURITY.md](SECURITY.md) for complete security policy and disclosure guidelines.
 

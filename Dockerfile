@@ -25,6 +25,11 @@ RUN cd pm && npm run build && \
 # Using Alpine for smaller attack surface and fewer Debian-specific vulnerabilities
 FROM python:3.14-alpine
 
+# Patch pre-installed base image packages (e.g. util-linux/libuuid CVEs)
+# before adding anything else, so the image ships whatever fixed versions
+# the Alpine repo has published since python:3.14-alpine was last built.
+RUN apk update && apk upgrade --no-cache
+
 # Install the Node.js runtime and git.
 # npm is intentionally omitted: at runtime the agents are launched via
 # `node <agent>/dist/index.js` (see agent_bridge.py) using node_modules copied

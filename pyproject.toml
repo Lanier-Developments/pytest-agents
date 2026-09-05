@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
-    {name = "Kevin McAllorum", email = "kmcallorum@example.com"}
+    {name = "Kevin McAllorum", email = "kevin_mcallorum@linux.com"}
 ]
 keywords = ["pytest", "testing", "ai", "agents", "multi-agent", "typescript"]
 classifiers = [

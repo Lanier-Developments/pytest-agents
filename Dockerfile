@@ -21,6 +21,14 @@ RUN cd pm && npm run build && \
     cd ../research && npm run build && \
     cd ../index && npm run build
 
+# Drop devDependencies (jest, eslint, typescript, ...) before node_modules is
+# copied into the runtime image; only the compiled dist/ and production deps
+# are needed to run the agents, and the dev toolchain carries most of the
+# transitive CVEs (brace-expansion, uri-js, deepmerge).
+RUN cd pm && npm prune --omit=dev && \
+    cd ../research && npm prune --omit=dev && \
+    cd ../index && npm prune --omit=dev
+
 # Stage 2: Python runtime with Node.js
 # Using Alpine for smaller attack surface and fewer Debian-specific vulnerabilities
 FROM python:3.14-alpine
@@ -58,7 +66,7 @@ COPY --from=ts-builder /build/pm/dist ./pm/dist
 COPY --from=ts-builder /build/research/dist ./research/dist
 COPY --from=ts-builder /build/index/dist ./index/dist
 
-# Copy node_modules for runtime
+# Copy production-only node_modules for runtime
 COPY --from=ts-builder /build/pm/node_modules ./pm/node_modules
 COPY --from=ts-builder /build/research/node_modules ./research/node_modules
 COPY --from=ts-builder /build/index/node_modules ./index/node_modules

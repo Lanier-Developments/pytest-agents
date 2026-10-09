@@ -36,7 +36,7 @@ jobs:
         uv pip install --system -e ".[dev]"
 
     - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/python@12140f4059e244892ae643824a95459a102120dd # master
+      uses: snyk/actions/python@11b673cfb4b0dc0d860a1323caa199d54950dcce # master
       continue-on-error: true
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

@@ -31,7 +31,7 @@ RUN cd pm && npm prune --omit=dev && \
 
 # Stage 2: Python runtime with Node.js
 # Using Alpine for smaller attack surface and fewer Debian-specific vulnerabilities
-FROM python:3.14-alpine
+FROM python:3.15-alpine
 
 # Patch pre-installed base image packages (e.g. util-linux/libuuid CVEs)
 # before adding anything else, so the image ships whatever fixed versions
